@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "queue_type": "stegtalk_managed_completion_queue",
+  "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
+  "repo": "StegVerse-Labs/StegTalk",
+  "branch": "feature/stegtalk-managed-completion-v5",
+  "production_ready": false,
+  "tasks": [
+    {
+      "id": "ST-001",
+      "title": "Install full staged source tree",
+      "priority": 1,
+      "status": "pending",
+      "done_when": "src, tests, scripts, docs, and CI exist in live branch"
+    },
+    {
+      "id": "ST-002",
+      "title": "Run managed completion verifier in CI",
+      "priority": 2,
+      "status": "pending",
+      "done_when": "GitHub Actions verifies managed completion state"
+    },
+    {
+      "id": "ST-003",
+      "title": "Open install PR with boundary statement",
+      "priority": 3,
+      "status": "pending",
+      "done_when": "PR exists and states non-production boundary"
+    },
+    {
+      "id": "ST-004",
+      "title": "Recalculate live repo delta",
+      "priority": 4,
+      "status": "pending",
+      "done_when": "line 4 delta is recalculated from live branch file verification"
+    }
+  ]
+}
