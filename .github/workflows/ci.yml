@@ -20,5 +20,7 @@ jobs:
         run: python scripts/verify_managed_completion.py
       - name: Determine next managed task
         run: python scripts/managed_next_task.py
+      - name: Summarize queue execution state
+        run: python scripts/queue_status.py
       - name: Run managed completion tests
-        run: python -m pytest tests/test_managed_completion.py
+        run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
