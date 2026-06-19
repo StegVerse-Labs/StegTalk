@@ -12,17 +12,21 @@
 This implementation pass is done when the repo contains:
 
 - a local-first runtime module,
+- scoped interaction helpers,
 - a schema bundle,
 - a StegWeather example,
-- tests covering create, recognize, rely, publish, revoke, and fork.
+- tests covering create, recognize, rely, publish, revoke, fork, scoped messaging, feed visibility, attention, compensation, and contributor split receipts.
 
 ## Installed Files
 
 ```text
 src/stegtalk/entity_runtime.py
+src/stegtalk/entity_interactions.py
+src/stegtalk/entity_runtime_exports.py
 schemas/entity-runtime.schema.json
 examples/stegweather_entity_runtime_demo.json
 tests/test_entity_runtime.py
+tests/test_entity_interactions.py
 ```
 
 ## Runtime Flow
@@ -34,6 +38,12 @@ Create Entity
 → Generate Receipts
 → Publish Entity
 → Build Discovery Record
+→ Send Scoped Message
+→ Create Feed Item
+→ Explain Visibility
+→ Create Attention Receipt
+→ Settle Compensation
+→ Settle Contributor Splits
 → Revoke Reliance
 → Fork Entity
 ```
