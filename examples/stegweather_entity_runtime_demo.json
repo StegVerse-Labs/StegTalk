@@ -1,0 +1,57 @@
+{
+  "entity_card": {
+    "identity": {
+      "id": "stegweather",
+      "display_name": "StegWeather",
+      "type": "service",
+      "alias": "StegWeather",
+      "lineage": "Rigel/StegWeather"
+    },
+    "declarations": {
+      "purpose": "personalized weather intelligence",
+      "capabilities": ["forecasts", "local_alerts", "user_messaging"],
+      "boundaries": ["not_dispatch_authority", "not_official_alert_authority", "no_personal_data_resale"],
+      "promises": ["local alerts when configured data sources are available"],
+      "version_policy": "newest_stable"
+    },
+    "relationship": {
+      "recognition": {"status": "recognized", "since": "2026-06-19T00:00:00Z"},
+      "reliance": {"status": "active", "scope": "local", "terms": "stegweather_public_reliance_v1"},
+      "representation": {"allowed": false, "representative": null},
+      "compensation": {"model": "per_active_reliance", "rate": "contract_defined", "recipient": "Rigel"}
+    },
+    "state": {
+      "local_status": "installed",
+      "published_status": "published",
+      "active_users": 1,
+      "active_reliance_count": 1
+    },
+    "receipts": {"latest": null, "chain_head": null}
+  },
+  "relationship_contract": {
+    "parties": {"user_identity": "Sarah", "entity_identity": "stegweather"},
+    "relationship_type": ["recognition", "reliance"],
+    "scope": "local",
+    "permissions": {
+      "may_message": true,
+      "may_notify": "weather_alerts_only",
+      "may_read_local_state": ["location_region", "weather_preferences"],
+      "may_write_local_state": false,
+      "may_request_payment": true,
+      "may_publish_updates": true,
+      "may_represent_user": false
+    },
+    "compensation": {
+      "model": "per_active_reliance",
+      "rate": "contract_defined",
+      "recipient": "Rigel",
+      "settlement_token": "StegCoin"
+    },
+    "boundaries": {
+      "cannot_sell_personal_data": true,
+      "cannot_export_private_state_without_permission": true,
+      "cannot_execute_consequence_without_authority": true
+    },
+    "receipts": {"created": null, "updated": null, "chain_head": null}
+  }
+}
