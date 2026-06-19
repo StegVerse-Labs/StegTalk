@@ -1,10 +1,13 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
-  "branch": "feature/stegtalk-managed-completion-v5",
+  "branch": "main",
+  "issue_number": 3,
+  "issue_url": "https://github.com/StegVerse-Labs/StegTalk/issues/3",
   "production_ready": false,
+  "managed_completion_capable": true,
   "tasks": [
     {
       "id": "ST-001",
@@ -17,14 +20,14 @@
       "id": "ST-002",
       "title": "Run managed completion verifier in CI",
       "priority": 2,
-      "status": "pending",
+      "status": "ready",
       "done_when": "GitHub Actions verifies managed completion state"
     },
     {
       "id": "ST-003",
       "title": "Open install PR with boundary statement",
       "priority": 3,
-      "status": "pending",
+      "status": "complete",
       "done_when": "PR exists and states non-production boundary"
     },
     {
@@ -33,6 +36,13 @@
       "priority": 4,
       "status": "pending",
       "done_when": "line 4 delta is recalculated from live branch file verification"
+    },
+    {
+      "id": "ST-005",
+      "title": "Mirror queue status into GitHub issue",
+      "priority": 5,
+      "status": "complete",
+      "done_when": "GitHub issue mirrors task queue and points back to repository source of truth"
     }
   ]
 }
