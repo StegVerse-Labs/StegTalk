@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.1.0",
+  "schema_version": "2.2.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -23,6 +23,7 @@
     {"id": "ST-012", "title": "Build boundary module", "priority": 12, "status": "complete", "done_when": "repo contains boundary module, tests, and CI coverage"},
     {"id": "ST-013", "title": "Refresh activation state", "priority": 13, "status": "complete", "done_when": "activation state reflects completed local prototype stages"},
     {"id": "ST-014", "title": "Run release candidate review", "priority": 14, "status": "complete", "done_when": "repo contains local prototype review artifact, verifier, tests, and CI coverage"},
-    {"id": "ST-015", "title": "Build release status verifier", "priority": 15, "status": "pending", "done_when": "repo reports release status from activation and review artifacts"}
+    {"id": "ST-015", "title": "Build release status verifier", "priority": 15, "status": "complete", "done_when": "repo contains release status verifier, tests, and CI coverage"},
+    {"id": "ST-016", "title": "Build managed release handoff", "priority": 16, "status": "pending", "done_when": "repo contains a handoff artifact summarizing local candidate status and next build lane"}
   ]
 }
