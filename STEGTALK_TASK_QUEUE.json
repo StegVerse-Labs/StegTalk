@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.7.0",
+  "schema_version": "1.8.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -19,6 +19,7 @@
     {"id": "ST-008", "title": "Build contact routing", "priority": 8, "status": "complete", "done_when": "repo contains contact routing module, example, demo, tests, CI coverage, and verifier coverage"},
     {"id": "ST-009", "title": "Build local inbox projection", "priority": 9, "status": "complete", "done_when": "repo contains local inbox module, example, demo, tests, CI coverage, and verifier coverage"},
     {"id": "ST-010", "title": "Build local persistence", "priority": 10, "status": "complete", "done_when": "repo contains local store module, example, demo, tests, CI coverage, and verifier coverage"},
-    {"id": "ST-011", "title": "Build activation readiness verifier", "priority": 11, "status": "pending", "done_when": "repo reports local prototype activation readiness without production claims"}
+    {"id": "ST-011", "title": "Build activation readiness verifier", "priority": 11, "status": "complete", "done_when": "repo contains activation state, readiness verifier, tests, and CI coverage"},
+    {"id": "ST-012", "title": "Build adapter boundary", "priority": 12, "status": "pending", "done_when": "repo contains a neutral adapter interface and mock delivery receipt path"}
   ]
 }
