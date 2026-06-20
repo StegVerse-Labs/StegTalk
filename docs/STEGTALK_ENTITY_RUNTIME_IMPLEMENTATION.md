@@ -15,6 +15,7 @@ This implementation pass is done when the repo contains:
 - scoped interaction helpers,
 - a schema bundle,
 - a StegWeather example,
+- a runnable demo trace builder,
 - tests covering create, recognize, rely, publish, revoke, fork, scoped messaging, feed visibility, attention, compensation, and contributor split receipts.
 
 ## Installed Files
@@ -25,8 +26,10 @@ src/stegtalk/entity_interactions.py
 src/stegtalk/entity_runtime_exports.py
 schemas/entity-runtime.schema.json
 examples/stegweather_entity_runtime_demo.json
+scripts/run_entity_runtime_demo.py
 tests/test_entity_runtime.py
 tests/test_entity_interactions.py
+tests/test_entity_runtime_demo.py
 ```
 
 ## Runtime Flow
@@ -47,6 +50,20 @@ Create Entity
 → Revoke Reliance
 → Fork Entity
 ```
+
+## Demo Command
+
+```bash
+python scripts/run_entity_runtime_demo.py
+```
+
+The command writes:
+
+```text
+examples/stegweather_runtime_trace.json
+```
+
+That generated trace is intentionally not committed by default because receipt identifiers include runtime timestamps.
 
 ## Boundary
 
