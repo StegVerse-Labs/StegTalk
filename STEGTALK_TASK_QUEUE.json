@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -22,6 +22,7 @@
     {"id": "ST-011", "title": "Build activation readiness verifier", "priority": 11, "status": "complete", "done_when": "repo contains activation state, readiness verifier, tests, and CI coverage"},
     {"id": "ST-012", "title": "Build boundary module", "priority": 12, "status": "complete", "done_when": "repo contains boundary module, tests, and CI coverage"},
     {"id": "ST-013", "title": "Refresh activation state", "priority": 13, "status": "complete", "done_when": "activation state reflects completed local prototype stages"},
-    {"id": "ST-014", "title": "Run release candidate review", "priority": 14, "status": "pending", "done_when": "repo contains a release candidate review report for the local prototype"}
+    {"id": "ST-014", "title": "Run release candidate review", "priority": 14, "status": "complete", "done_when": "repo contains local prototype review artifact, verifier, tests, and CI coverage"},
+    {"id": "ST-015", "title": "Build release status verifier", "priority": 15, "status": "pending", "done_when": "repo reports release status from activation and review artifacts"}
   ]
 }
