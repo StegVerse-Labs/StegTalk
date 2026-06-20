@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.3.0",
+  "schema_version": "2.4.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -25,6 +25,7 @@
     {"id": "ST-014", "title": "Run release candidate review", "priority": 14, "status": "complete", "done_when": "repo contains local prototype review artifact, verifier, tests, and CI coverage"},
     {"id": "ST-015", "title": "Build release status verifier", "priority": 15, "status": "complete", "done_when": "repo contains release status verifier, tests, and CI coverage"},
     {"id": "ST-016", "title": "Build managed release handoff", "priority": 16, "status": "complete", "done_when": "repo contains release handoff artifact, verifier, tests, and CI coverage"},
-    {"id": "ST-017", "title": "Choose next build lane", "priority": 17, "status": "pending", "done_when": "repo records whether next lane is mobile shell or public discovery"}
+    {"id": "ST-017", "title": "Choose next build lane", "priority": 17, "status": "complete", "done_when": "repo records public discovery as next lane and mobile shell as deferred lane"},
+    {"id": "ST-018", "title": "Build public discovery record runtime", "priority": 18, "status": "pending", "done_when": "repo can create public discovery records from entity cards without exposing private state"}
   ]
 }
