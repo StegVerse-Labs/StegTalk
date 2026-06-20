@@ -1,0 +1,11 @@
+{
+  "trace_type": "stegtalk_local_store_demo_fixture",
+  "collections": [
+    "entity_cards",
+    "relationship_contracts",
+    "message_envelopes",
+    "receipts",
+    "inboxes"
+  ],
+  "expected_minimum_record_count": 4
+}
