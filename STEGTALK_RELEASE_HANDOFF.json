@@ -1,9 +1,10 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "artifact_type": "stegtalk_release_handoff",
   "repo": "StegVerse-Labs/StegTalk",
-  "source_queue_task": "ST-016",
+  "source_queue_task": "ST-023",
   "local_candidate_ready": true,
+  "public_discovery_ready": true,
   "production_ready": false,
   "completed_local_lanes": [
     "entity_runtime",
@@ -14,8 +15,12 @@
     "boundary_module",
     "activation_readiness",
     "local_prototype_review",
-    "release_status"
+    "release_status",
+    "public_discovery_record",
+    "public_discovery_index",
+    "public_discovery_search",
+    "public_discovery_demo"
   ],
-  "next_build_lane": "mobile_shell_or_public_discovery",
+  "next_build_lane": "mobile_shell",
   "handoff_condition_met": true
 }
