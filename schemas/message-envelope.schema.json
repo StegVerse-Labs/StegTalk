@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/stegtalk/message-envelope.schema.json",
+  "title": "StegTalk Local Message Envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "envelope_type",
+    "sender_entity",
+    "receiver_entity",
+    "message_type",
+    "scope",
+    "body",
+    "metadata",
+    "created_at",
+    "envelope_hash"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "envelope_type": {"const": "stegtalk_local_message_envelope"},
+    "sender_entity": {"type": "string", "minLength": 1},
+    "receiver_entity": {"type": "string", "minLength": 1},
+    "message_type": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "minLength": 1},
+    "body": {"type": "string", "minLength": 1},
+    "metadata": {"type": "object"},
+    "created_at": {"type": "string"},
+    "envelope_hash": {"type": "string", "pattern": "^sha256:"},
+    "receipt_ref": {"type": "string"},
+    "receipt_chain_head": {"type": "string", "pattern": "^sha256:"},
+    "envelope_with_receipt_hash": {"type": "string", "pattern": "^sha256:"}
+  }
+}
