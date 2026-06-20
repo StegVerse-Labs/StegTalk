@@ -25,6 +25,6 @@ jobs:
       - name: Run managed completion tests
         run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
       - name: Run runtime tests
-        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py tests/test_message_envelope.py tests/test_contact_routing.py tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_local_prototype_review.py tests/test_release_status.py
+        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py tests/test_message_envelope.py tests/test_contact_routing.py tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py
       - name: Run runtime demos
         run: python scripts/run_entity_runtime_demo.py && python scripts/run_message_envelope_demo.py && python scripts/run_contact_routing_demo.py && python scripts/run_local_inbox_demo.py && python scripts/run_local_store_demo.py && python scripts/verify_activation_readiness.py
