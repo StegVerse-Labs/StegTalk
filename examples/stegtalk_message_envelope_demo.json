@@ -1,0 +1,18 @@
+{
+  "message_envelope": {
+    "schema_version": "1.0.0",
+    "envelope_type": "stegtalk_local_message_envelope",
+    "sender_entity": "Rigel",
+    "receiver_entity": "Auri",
+    "message_type": "text",
+    "scope": "private",
+    "body": "Route this request to StegWeather if weather context is detected.",
+    "metadata": {
+      "intent_hint": "routing",
+      "relationship_basis": "recognized_contact"
+    },
+    "created_at": "2026-06-20T00:00:00Z",
+    "envelope_hash": "sha256:example"
+  },
+  "note": "This fixture is illustrative. Runtime-generated envelopes use deterministic hashes over the generated envelope content."
+}
