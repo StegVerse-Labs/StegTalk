@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.8.0",
+  "schema_version": "1.9.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -14,12 +14,13 @@
     {"id": "ST-003", "title": "Open install PR with boundary statement", "priority": 3, "status": "complete", "done_when": "PR exists, states non-production boundary, and has been merged"},
     {"id": "ST-004", "title": "Recalculate live repo delta", "priority": 4, "status": "complete", "done_when": "live branch verification confirms entity runtime source, tests, docs, schema, examples, and CI are present"},
     {"id": "ST-005", "title": "Mirror queue status into GitHub issue", "priority": 5, "status": "complete", "done_when": "GitHub issue mirrors task queue and points back to repository source of truth"},
-    {"id": "ST-006", "title": "Define activation milestone map", "priority": 6, "status": "complete", "done_when": "queue defines staged path from local entity runtime to message envelope, routing, inbox, local store, adapter boundary, and activation gate"},
+    {"id": "ST-006", "title": "Define activation milestone map", "priority": 6, "status": "complete", "done_when": "queue defines staged path from local entity runtime to message envelope, routing, inbox, local store, boundary, and activation gate"},
     {"id": "ST-007", "title": "Build local message envelope", "priority": 7, "status": "complete", "done_when": "repo contains a local message envelope module, schema, example, tests, demo, CI coverage, and verifier coverage"},
     {"id": "ST-008", "title": "Build contact routing", "priority": 8, "status": "complete", "done_when": "repo contains contact routing module, example, demo, tests, CI coverage, and verifier coverage"},
     {"id": "ST-009", "title": "Build local inbox projection", "priority": 9, "status": "complete", "done_when": "repo contains local inbox module, example, demo, tests, CI coverage, and verifier coverage"},
     {"id": "ST-010", "title": "Build local persistence", "priority": 10, "status": "complete", "done_when": "repo contains local store module, example, demo, tests, CI coverage, and verifier coverage"},
     {"id": "ST-011", "title": "Build activation readiness verifier", "priority": 11, "status": "complete", "done_when": "repo contains activation state, readiness verifier, tests, and CI coverage"},
-    {"id": "ST-012", "title": "Build adapter boundary", "priority": 12, "status": "pending", "done_when": "repo contains a neutral adapter interface and mock delivery receipt path"}
+    {"id": "ST-012", "title": "Build boundary module", "priority": 12, "status": "complete", "done_when": "repo contains boundary module, tests, and CI coverage"},
+    {"id": "ST-013", "title": "Refresh activation state", "priority": 13, "status": "pending", "done_when": "activation state reflects completed local prototype stages"}
   ]
 }
