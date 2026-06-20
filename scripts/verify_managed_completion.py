@@ -6,6 +6,15 @@ REQUIRED = [
     "STEGTALK_MANAGED_COMPLETION.md",
     "STEGTALK_TASK_QUEUE.json",
     "src/stegtalk/__init__.py",
+    "src/stegtalk/entity_runtime.py",
+    "src/stegtalk/entity_interactions.py",
+    "src/stegtalk/entity_runtime_exports.py",
+    "schemas/entity-runtime.schema.json",
+    "examples/stegweather_entity_runtime_demo.json",
+    "scripts/run_entity_runtime_demo.py",
+    "tests/test_entity_runtime.py",
+    "tests/test_entity_interactions.py",
+    "tests/test_entity_runtime_demo.py",
     ".github/workflows/ci.yml",
 ]
 
