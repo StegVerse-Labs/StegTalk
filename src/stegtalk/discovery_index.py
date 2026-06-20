@@ -40,6 +40,36 @@ def search_index(index: JsonObject, query: str) -> list[JsonObject]:
     return [record for record in index.get("records", []) if record.get("entity_id") in matching_ids]
 
 
+def search_discovery(index: JsonObject, query: str, *, limit: int = 10) -> JsonObject:
+    query_terms = {term for term in _normalize(query).split() if term}
+    scored = []
+    for record in index.get("records", []):
+        record_terms = _record_terms(record)
+        matched_terms = sorted(query_terms.intersection(record_terms))
+        if matched_terms:
+            scored.append(
+                {
+                    "entity_id": record["entity_id"],
+                    "display_name": record["display_name"],
+                    "score": len(matched_terms),
+                    "matched_terms": matched_terms,
+                    "record": record,
+                }
+            )
+    scored.sort(key=lambda item: (-item["score"], item["display_name"].lower()))
+    result = {
+        "schema_version": "1.0.0",
+        "result_type": "stegtalk_discovery_search_result",
+        "query": query,
+        "query_terms": sorted(query_terms),
+        "result_count": min(len(scored), limit),
+        "results": scored[:limit],
+        "created_at": utc_now(),
+    }
+    result["result_hash"] = stable_hash(result)
+    return result
+
+
 def _record_terms(record: JsonObject) -> set[str]:
     parts = [
         record.get("entity_id", ""),
