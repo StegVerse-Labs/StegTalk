@@ -1,0 +1,8 @@
+{
+  "trace_type": "stegtalk_contact_routing_demo_fixture",
+  "sender_entity": "Rigel",
+  "receiver_hint": "weather",
+  "expected_result": "routed",
+  "expected_selected_entity": "stegweather",
+  "note": "Runtime-generated contact routing traces include timestamps and receipt hashes."
+}
