@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/stegtalk/entity-runtime.schema.json",
+  "title": "StegTalk Entity Runtime v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "entity_card": { "$ref": "#/$defs/entity_card" },
+    "relationship_contract": { "$ref": "#/$defs/relationship_contract" },
+    "change_request": { "$ref": "#/$defs/change_request" },
+    "receipt": { "$ref": "#/$defs/receipt" },
+    "discovery_record": { "$ref": "#/$defs/discovery_record" }
+  },
+  "$defs": {
+    "entity_card": {
+      "type": "object",
+      "required": ["identity", "declarations", "relationship", "state", "receipts"],
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "type": "object",
+          "required": ["id", "display_name", "type", "alias"],
+          "additionalProperties": true,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "display_name": { "type": "string", "minLength": 1 },
+            "type": { "type": "string", "minLength": 1 },
+            "alias": { "type": "string", "minLength": 1 },
+            "lineage": { "type": ["string", "null"] }
+          }
+        },
+        "declarations": {
+          "type": "object",
+          "required": ["purpose", "capabilities", "boundaries", "promises", "version_policy"],
+          "additionalProperties": true,
+          "properties": {
+            "purpose": { "type": "string" },
+            "capabilities": { "type": "array", "items": { "type": "string" } },
+            "boundaries": { "type": "array", "items": { "type": "string" } },
+            "promises": { "type": "array", "items": { "type": "string" } },
+            "version_policy": { "type": "string" }
+          }
+        },
+        "relationship": { "type": "object", "additionalProperties": true },
+        "state": { "type": "object", "additionalProperties": true },
+        "receipts": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "relationship_contract": {
+      "type": "object",
+      "required": ["parties", "relationship_type", "scope", "permissions", "compensation", "boundaries", "receipts"],
+      "additionalProperties": false,
+      "properties": {
+        "parties": {
+          "type": "object",
+          "required": ["user_identity", "entity_identity"],
+          "additionalProperties": false,
+          "properties": {
+            "user_identity": { "type": "string" },
+            "entity_identity": { "type": "string" }
+          }
+        },
+        "relationship_type": { "type": "array", "items": { "type": "string" } },
+        "scope": { "type": "string" },
+        "permissions": { "type": "object", "additionalProperties": true },
+        "compensation": { "type": "object", "additionalProperties": true },
+        "boundaries": { "type": "object", "additionalProperties": true },
+        "receipts": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "change_request": {
+      "type": "object",
+      "required": ["requester", "target_entity", "requested_change", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "requester": { "type": "string" },
+        "target_entity": { "type": "string" },
+        "relationship_contract_ref": { "type": ["string", "null"] },
+        "requested_change": {
+          "type": "object",
+          "required": ["type", "scope", "reason"],
+          "additionalProperties": true,
+          "properties": {
+            "type": { "type": "string" },
+            "scope": { "type": "string" },
+            "reason": { "type": "string" }
+          }
+        },
+        "required_conditions": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string" }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["id", "type", "receipt_chain_head"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "receipt_chain_head": { "type": "string" }
+      }
+    },
+    "discovery_record": {
+      "type": "object",
+      "required": ["entity_id", "display_name", "type", "purpose", "capabilities", "boundaries"],
+      "additionalProperties": true,
+      "properties": {
+        "entity_id": { "type": "string" },
+        "display_name": { "type": "string" },
+        "type": { "type": "string" },
+        "purpose": { "type": "string" },
+        "capabilities": { "type": "array", "items": { "type": "string" } },
+        "boundaries": { "type": "array", "items": { "type": "string" } },
+        "recognition_count": { "type": "integer", "minimum": 0 },
+        "reliance_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
