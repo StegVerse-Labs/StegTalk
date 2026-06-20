@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_next_build_lane",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source_queue_task": "ST-017",
+  "selected_lane": "public_discovery",
+  "deferred_lane": "mobile_shell",
+  "next_task": "build_public_discovery_record_runtime",
+  "production_ready": false
+}
