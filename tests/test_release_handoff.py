@@ -6,5 +6,5 @@ def test_release_handoff_names_next_lane_without_production_claim():
     assert result["ok"] is True
     assert result["local_candidate_ready"] is True
     assert result["production_ready"] is False
-    assert result["next_build_lane"] == "mobile_shell_or_public_discovery"
-    assert result["completed_lane_count"] >= 9
+    assert result["next_build_lane"] == "mobile_shell"
+    assert result["completed_lane_count"] >= 13
