@@ -1,0 +1,6 @@
+{
+  "trace_type": "stegtalk_local_inbox_demo_fixture",
+  "owner_entity": "Auri",
+  "expected_feed_type": "recipient",
+  "expected_item_count": 1
+}
