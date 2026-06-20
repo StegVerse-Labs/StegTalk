@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "review_type": "stegtalk_local_prototype_review",
+  "repo": "StegVerse-Labs/StegTalk",
+  "activation_target": "local_entity_message_prototype",
+  "production_ready": false,
+  "local_candidate_ready": true,
+  "reviewed_runtime_path": [
+    "entity_runtime",
+    "message_envelope",
+    "contact_routing",
+    "local_inbox_projection",
+    "local_persistence",
+    "adapter_boundary",
+    "activation_readiness_check"
+  ],
+  "evidence_files": [
+    "src/stegtalk/entity_runtime.py",
+    "src/stegtalk/entity_interactions.py",
+    "src/stegtalk/message_envelope.py",
+    "src/stegtalk/contact_routing.py",
+    "src/stegtalk/local_inbox.py",
+    "src/stegtalk/local_store.py",
+    "src/stegtalk/adapter_boundary.py",
+    "STEGTALK_ACTIVATION_STATE.json",
+    "scripts/verify_activation_readiness.py"
+  ],
+  "test_files": [
+    "tests/test_entity_runtime.py",
+    "tests/test_entity_interactions.py",
+    "tests/test_entity_runtime_demo.py",
+    "tests/test_message_envelope.py",
+    "tests/test_contact_routing.py",
+    "tests/test_local_inbox.py",
+    "tests/test_local_store.py",
+    "tests/test_activation_readiness.py",
+    "tests/test_boundary.py"
+  ],
+  "remaining_work": [
+    "mobile_shell",
+    "public_discovery",
+    "full_account_model",
+    "external_connector_policy",
+    "release_status_verifier"
+  ],
+  "next_task": "build_release_status_verifier"
+}
