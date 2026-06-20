@@ -24,15 +24,7 @@ jobs:
         run: python scripts/queue_status.py
       - name: Run managed completion tests
         run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
-      - name: Run entity runtime tests
-        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py
-      - name: Run entity runtime demo
-        run: python scripts/run_entity_runtime_demo.py
-      - name: Run message envelope tests
-        run: python -m pytest tests/test_message_envelope.py
-      - name: Run message envelope demo
-        run: python scripts/run_message_envelope_demo.py
-      - name: Run contact routing tests
-        run: python -m pytest tests/test_contact_routing.py
-      - name: Run contact routing demo
-        run: python scripts/run_contact_routing_demo.py
+      - name: Run runtime tests
+        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py tests/test_message_envelope.py tests/test_contact_routing.py tests/test_local_inbox.py
+      - name: Run runtime demos
+        run: python scripts/run_entity_runtime_demo.py && python scripts/run_message_envelope_demo.py && python scripts/run_contact_routing_demo.py && python scripts/run_local_inbox_demo.py
