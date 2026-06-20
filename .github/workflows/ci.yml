@@ -28,3 +28,7 @@ jobs:
         run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py
       - name: Run entity runtime demo
         run: python scripts/run_entity_runtime_demo.py
+      - name: Run message envelope tests
+        run: python -m pytest tests/test_message_envelope.py
+      - name: Run message envelope demo
+        run: python scripts/run_message_envelope_demo.py
