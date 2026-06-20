@@ -1,4 +1,4 @@
-from stegtalk.discovery_index import build_discovery_index, lookup_record, search_index
+from stegtalk.discovery_index import build_discovery_index, lookup_record, search_discovery, search_index
 from stegtalk.entity_runtime import create_entity_card
 from stegtalk.public_discovery import create_public_discovery_record
 
@@ -35,3 +35,25 @@ def test_discovery_lookup_and_search_return_public_records():
     results = search_index(index, "forecast weather")
     assert [record["entity_id"] for record in results] == ["stegweather"]
     assert search_index(index, "missingterm") == []
+
+
+def test_discovery_search_returns_scored_result_envelope():
+    weather = make_record("stegweather", "StegWeather", "personalized weather intelligence", ["forecasts"])
+    route = make_record("auriroute", "AuriRoute", "assistant routing", ["routing"])
+    index = build_discovery_index([weather, route])
+    result = search_discovery(index, "weather forecasts", limit=5)
+    assert result["result_type"] == "stegtalk_discovery_search_result"
+    assert result["result_count"] == 1
+    assert result["results"][0]["entity_id"] == "stegweather"
+    assert result["results"][0]["score"] == 2
+    assert result["result_hash"].startswith("sha256:")
+
+
+def test_discovery_search_respects_limit():
+    records = [
+        make_record("one", "OneWeather", "weather one", ["weather"]),
+        make_record("two", "TwoWeather", "weather two", ["weather"]),
+    ]
+    result = search_discovery(build_discovery_index(records), "weather", limit=1)
+    assert result["result_count"] == 1
+    assert len(result["results"]) == 1
