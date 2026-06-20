@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "queue_type": "stegtalk_managed_completion_queue",
   "goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
   "repo": "StegVerse-Labs/StegTalk",
@@ -48,8 +48,36 @@
       "id": "ST-006",
       "title": "Define activation milestone map",
       "priority": 6,
+      "status": "complete",
+      "done_when": "queue defines staged path from local entity runtime to message envelope, routing, inbox, local store, adapter boundary, and activation gate"
+    },
+    {
+      "id": "ST-007",
+      "title": "Build local message envelope",
+      "priority": 7,
       "status": "pending",
-      "done_when": "repo contains a staged activation map from local entity runtime to StegTalk messaging prototype"
+      "done_when": "repo contains a local message envelope module, schema, example, and tests"
+    },
+    {
+      "id": "ST-008",
+      "title": "Build contact routing",
+      "priority": 8,
+      "status": "pending",
+      "done_when": "repo can route local messages to entity contacts, Auri, LLM aliases, or services"
+    },
+    {
+      "id": "ST-009",
+      "title": "Build local inbox projection",
+      "priority": 9,
+      "status": "pending",
+      "done_when": "repo can project local envelopes and receipts into controlled feed views"
+    },
+    {
+      "id": "ST-010",
+      "title": "Build local persistence",
+      "priority": 10,
+      "status": "pending",
+      "done_when": "repo can store and reload entity cards, contracts, envelopes, and receipts locally"
     }
   ]
 }
