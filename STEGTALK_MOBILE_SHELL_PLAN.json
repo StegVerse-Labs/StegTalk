@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_plan",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source_task": "ST-024",
+  "production_ready": false,
+  "goal": "define the first local mobile shell boundary for StegTalk",
+  "planned_files": [
+    "src/stegtalk/mobile_shell.py",
+    "tests/test_mobile_shell.py",
+    "examples/mobile_shell_demo.json"
+  ],
+  "minimum_capabilities": [
+    "load_local_identity",
+    "show_local_contacts",
+    "create_local_message",
+    "show_local_inbox",
+    "run_public_discovery_search"
+  ],
+  "deferred_capabilities": [
+    "native_ios_ui",
+    "native_android_ui",
+    "push_notifications",
+    "external_account_sync"
+  ],
+  "next_task": "build_mobile_shell_state"
+}
