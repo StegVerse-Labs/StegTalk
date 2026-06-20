@@ -9,12 +9,17 @@ REQUIRED = [
     "src/stegtalk/entity_runtime.py",
     "src/stegtalk/entity_interactions.py",
     "src/stegtalk/entity_runtime_exports.py",
+    "src/stegtalk/message_envelope.py",
     "schemas/entity-runtime.schema.json",
+    "schemas/message-envelope.schema.json",
     "examples/stegweather_entity_runtime_demo.json",
+    "examples/stegtalk_message_envelope_demo.json",
     "scripts/run_entity_runtime_demo.py",
+    "scripts/run_message_envelope_demo.py",
     "tests/test_entity_runtime.py",
     "tests/test_entity_interactions.py",
     "tests/test_entity_runtime_demo.py",
+    "tests/test_message_envelope.py",
     ".github/workflows/ci.yml",
 ]
 
