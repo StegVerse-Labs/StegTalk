@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.5.0",
+  "schema_version": "2.6.0",
   "queue_type": "stegtalk_queue",
   "goal": "continue building",
   "repo": "StegVerse-Labs/StegTalk",
@@ -25,6 +25,7 @@
     {"id": "ST-016", "title": "Build handoff", "priority": 16, "status": "complete"},
     {"id": "ST-017", "title": "Choose next lane", "priority": 17, "status": "complete"},
     {"id": "ST-018", "title": "Build discovery record", "priority": 18, "status": "complete"},
-    {"id": "ST-019", "title": "Build discovery index", "priority": 19, "status": "pending"}
+    {"id": "ST-019", "title": "Build discovery index", "priority": 19, "status": "complete"},
+    {"id": "ST-020", "title": "Build discovery search", "priority": 20, "status": "pending"}
   ]
 }
