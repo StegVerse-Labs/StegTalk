@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "stegtalk_public_discovery_record",
+  "entity_id": "stegweather",
+  "display_name": "StegWeather",
+  "entity_type": "service",
+  "purpose": "personalized weather intelligence",
+  "capabilities": ["forecasts", "local_alerts"],
+  "boundaries": ["not_official_alert_authority"],
+  "lineage": "Rigel/StegWeather",
+  "published_status": "published",
+  "recognition_count": 1,
+  "reliance_count": 1,
+  "compensation_model": "per_active_reliance",
+  "record_hash": "sha256:example"
+}
