@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "state_type": "stegtalk_activation_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "activation_target": "local_entity_message_prototype",
+  "production_ready": false,
+  "local_runtime_ready": true,
+  "completed_stages": [
+    "entity_runtime",
+    "message_envelope",
+    "contact_routing",
+    "local_inbox_projection",
+    "local_persistence"
+  ],
+  "remaining_stages": [
+    "adapter_boundary",
+    "release_candidate_review"
+  ],
+  "required_files": [
+    "src/stegtalk/entity_runtime.py",
+    "src/stegtalk/entity_interactions.py",
+    "src/stegtalk/message_envelope.py",
+    "src/stegtalk/contact_routing.py",
+    "src/stegtalk/local_inbox.py",
+    "src/stegtalk/local_store.py",
+    "tests/test_entity_runtime.py",
+    "tests/test_entity_interactions.py",
+    "tests/test_message_envelope.py",
+    "tests/test_contact_routing.py",
+    "tests/test_local_inbox.py",
+    "tests/test_local_store.py"
+  ]
+}
