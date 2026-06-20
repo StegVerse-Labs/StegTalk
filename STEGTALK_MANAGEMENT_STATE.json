@@ -1,15 +1,23 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "state_type": "stegtalk_managed_completion_state",
   "repo": "StegVerse-Labs/StegTalk",
   "branch": "main",
   "production_ready": false,
   "managed_completion_capable": true,
+  "entity_runtime_installed": true,
+  "entity_runtime_ci_enforced": true,
   "handoff_condition_met": true,
   "self_executing_ci_ready": true,
+  "next_task": {
+    "id": "ST-006",
+    "title": "Define activation milestone map",
+    "status": "pending"
+  },
   "next_manager_command": "python scripts/managed_next_task.py",
   "verification_command": "python scripts/verify_managed_completion.py",
-  "ci_command": "python -m pytest tests/test_managed_completion.py",
+  "ci_command": "python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py",
+  "demo_command": "python scripts/run_entity_runtime_demo.py",
   "current_goal": "continue building without manual actions until completion or ecosystem-managed task handoff is capable",
-  "latest_remediation": "Added pyproject.toml and updated CI to install the package plus pytest before running manager checks."
+  "latest_remediation": "Merged entity runtime, interaction receipts, runnable demo, package exports, CI coverage, and verifier coverage."
 }
