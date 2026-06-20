@@ -32,3 +32,7 @@ jobs:
         run: python -m pytest tests/test_message_envelope.py
       - name: Run message envelope demo
         run: python scripts/run_message_envelope_demo.py
+      - name: Run contact routing tests
+        run: python -m pytest tests/test_contact_routing.py
+      - name: Run contact routing demo
+        run: python scripts/run_contact_routing_demo.py
