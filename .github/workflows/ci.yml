@@ -24,3 +24,7 @@ jobs:
         run: python scripts/queue_status.py
       - name: Run managed completion tests
         run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
+      - name: Run entity runtime tests
+        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py
+      - name: Run entity runtime demo
+        run: python scripts/run_entity_runtime_demo.py
