@@ -1,11 +1,12 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "artifact_type": "stegtalk_release_handoff",
   "repo": "StegVerse-Labs/StegTalk",
-  "source_queue_task": "post_shell_review",
+  "source": "STEGTALK_MIRROR_HANDOFF.md",
   "local_candidate_ready": true,
   "public_discovery_ready": true,
   "shell_ready": true,
+  "account_ready": true,
   "production_ready": false,
   "completed_local_lanes": [
     "entity_runtime",
@@ -25,8 +26,10 @@
     "shell_state",
     "shell_actions",
     "shell_demo",
-    "shell_review"
+    "shell_review",
+    "account_model",
+    "account_session"
   ],
-  "next_build_lane": "account_model",
+  "next_build_lane": "candidate_status_report",
   "handoff_condition_met": true
 }
