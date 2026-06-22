@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_candidate_status",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source": "STEGTALK_MIRROR_HANDOFF.md",
+  "candidate_status": "non_production_local_prototype_candidate",
+  "production_ready": false,
+  "release_status_command": "python scripts/report_release_status.py",
+  "required_ready_flags": [
+    "local_candidate_ready",
+    "public_discovery_ready",
+    "shell_ready",
+    "account_ready"
+  ],
+  "completed_lanes": [
+    "entity_runtime",
+    "message_envelope",
+    "contact_routing",
+    "local_inbox_projection",
+    "local_persistence",
+    "boundary_module",
+    "activation_readiness",
+    "public_discovery",
+    "shell_lane",
+    "account_lane"
+  ],
+  "remaining_internal_tasks": [
+    "tag_or_release_candidate_marker",
+    "post_release_propagation_tasks"
+  ],
+  "external_update_targets": [
+    "StegVerse-Labs/Site",
+    "GCAT-BCAT-Engine/Publisher",
+    "admissibility-wiki",
+    "stegguardian-wiki"
+  ]
+}
