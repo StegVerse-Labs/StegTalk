@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_local_candidate",
+  "repo": "StegVerse-Labs/StegTalk",
+  "name": "local-prototype-candidate-1",
+  "production_ready": false,
+  "source_handoff": "STEGTALK_MIRROR_HANDOFF.md",
+  "source_status": "STEGTALK_CANDIDATE_STATUS.json",
+  "next_targets": [
+    "StegVerse-Labs/Site",
+    "GCAT-BCAT-Engine/Publisher",
+    "admissibility-wiki",
+    "stegguardian-wiki"
+  ]
+}
