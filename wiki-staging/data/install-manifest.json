@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_type": "stegtalk_wiki_install_manifest",
+  "source_repo": "StegVerse-Labs/StegTalk",
+  "target_repo_candidates": [
+    "StegVerse-Labs/stegtalk-wiki",
+    "StegVerse-Labs/StegTalk-wiki",
+    "StegVerse-Labs/StegTalk-Wiki"
+  ],
+  "target_repo_status": "not_found",
+  "production_ready": false,
+  "copy_map": [
+    {"source": "wiki-staging/README.md", "target": "README.md"},
+    {"source": "wiki-staging/pages/message-lifecycle.md", "target": "pages/message-lifecycle.md"},
+    {"source": "wiki-staging/pages/contact-routing.md", "target": "pages/contact-routing.md"},
+    {"source": "wiki-staging/pages/local-inbox-and-store.md", "target": "pages/local-inbox-and-store.md"},
+    {"source": "wiki-staging/pages/public-discovery.md", "target": "pages/public-discovery.md"},
+    {"source": "wiki-staging/pages/shell-runtime.md", "target": "pages/shell-runtime.md"},
+    {"source": "wiki-staging/pages/account-runtime.md", "target": "pages/account-runtime.md"},
+    {"source": "wiki-staging/pages/wiki-overlap-map.md", "target": "pages/wiki-overlap-map.md"},
+    {"source": "wiki-staging/data/page-index.json", "target": "data/page-index.json"},
+    {"source": "wiki-staging/receipts/wiki-staging-receipt.json", "target": "receipts/wiki-staging-receipt.json"}
+  ],
+  "manual_tasks_remaining": []
+}
