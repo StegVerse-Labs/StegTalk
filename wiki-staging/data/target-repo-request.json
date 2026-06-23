@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "request_type": "stegtalk_wiki_target_repo_request",
+  "source_repo": "StegVerse-Labs/StegTalk",
+  "requested_repo_candidates": [
+    "StegVerse-Labs/stegtalk-wiki",
+    "StegVerse-Labs/StegTalk-wiki",
+    "StegVerse-Labs/StegTalk-Wiki"
+  ],
+  "preferred_repo": "StegVerse-Labs/stegtalk-wiki",
+  "current_status": "target_repo_not_found",
+  "reason": "StegTalk-owned runtime documentation is staged and installer-verifiable, but no dedicated wiki target repository is currently visible to the connector.",
+  "staged_package_ready": true,
+  "manual_inventory_required": false,
+  "production_ready": false,
+  "next_step_when_repo_exists": "copy files according to wiki-staging/data/install-manifest.json"
+}
