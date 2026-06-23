@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "index_type": "stegtalk_wiki_staging_index",
+  "source_repo": "StegVerse-Labs/StegTalk",
+  "target_repo_status": "not_found",
+  "production_ready": false,
+  "pages": [
+    "wiki-staging/README.md",
+    "wiki-staging/pages/message-lifecycle.md",
+    "wiki-staging/pages/contact-routing.md",
+    "wiki-staging/pages/local-inbox-and-store.md",
+    "wiki-staging/pages/public-discovery.md",
+    "wiki-staging/pages/shell-runtime.md",
+    "wiki-staging/pages/account-runtime.md",
+    "wiki-staging/pages/wiki-overlap-map.md"
+  ],
+  "linked_wikis": [
+    "StegVerse-002/stegguardian-wiki",
+    "StegVerse-Labs/admissibility-wiki",
+    "StegVerse-Labs/Site"
+  ],
+  "manual_tasks_remaining": [],
+  "next_automation_step": "install staged pages into dedicated StegTalk wiki repo when available"
+}
