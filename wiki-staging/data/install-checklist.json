@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "checklist_type": "stegtalk_wiki_install_checklist",
+  "source_repo": "StegVerse-Labs/StegTalk",
+  "target_repo_status": "not_found",
+  "checks": [
+    {"id": "SW-001", "description": "target repo exists", "status": "blocked_until_repo_exists"},
+    {"id": "SW-002", "description": "handoff file staged", "status": "complete"},
+    {"id": "SW-003", "description": "README staged", "status": "complete"},
+    {"id": "SW-004", "description": "runtime pages staged", "status": "complete"},
+    {"id": "SW-005", "description": "overlap map staged", "status": "complete"},
+    {"id": "SW-006", "description": "page index staged", "status": "complete"},
+    {"id": "SW-007", "description": "install manifest staged", "status": "complete"},
+    {"id": "SW-008", "description": "install reporter covered by CI", "status": "complete"}
+  ],
+  "manual_tasks_remaining": [],
+  "next_automation_step": "copy manifest targets into dedicated wiki repo when target repo exists"
+}
