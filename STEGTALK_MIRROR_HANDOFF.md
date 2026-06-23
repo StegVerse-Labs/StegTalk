@@ -23,31 +23,41 @@ The repo is a non-production local prototype with the following built lanes:
 
 ## Current Priority
 
-Refresh final release status and release handoff after the account lane, then determine whether the repo is ready for tagging as a non-production local prototype candidate.
+StegTalk local candidate build and known propagation targets are complete. No additional StegTalk propagation target is currently known from this handoff.
 
-## Remaining Known Installs
+## Local Candidate Install Complete
 
 Destination: `StegVerse-Labs/StegTalk`
 
-- account-lane release handoff refresh
-- final local prototype status report
-- tag/release candidate marker if CI and status remain green
+- `STEGTALK_RELEASE_HANDOFF.json`
+- `STEGTALK_CANDIDATE_STATUS.json`
+- `STEGTALK_LOCAL_CANDIDATE.json`
+
+## Downstream Propagation Complete
 
 Destination: `StegVerse-Labs/Site`
 
-- publish/update StegTalk local prototype status after tag/release
+- `SITE_MIRROR_HANDOFF.md`
+- `data/stegtalk-local-candidate.json`
+- `data/stegtalk-local-candidate-receipt.json`
 
 Destination: `GCAT-BCAT-Engine/Publisher`
 
-- publish/update StegTalk local prototype status after tag/release
+- `PUBLISHER_MIRROR_HANDOFF.md`
+- `data/stegtalk-local-candidate.json`
+- `data/stegtalk-local-candidate-publisher-receipt.json`
 
-Destination: `admissibility-wiki`
+Destination: `StegVerse-Labs/admissibility-wiki`
 
-- add/update StegTalk admissibility boundary notes after tag/release
+- `ADMISSIBILITY_MIRROR_HANDOFF.md`
+- `pages/stegtalk-admissibility-boundary.md`
+- `receipts/stegtalk-admissibility-boundary-receipt.json`
 
-Destination: `stegguardian-wiki`
+Destination: `StegVerse-002/stegguardian-wiki`
 
-- add/update StegTalk guardian/account boundary notes after tag/release
+- `STEGGUARDIAN_WIKI_MIRROR_HANDOFF.md`
+- `pages/stegtalk-guardian-account-boundary.md`
+- `receipts/stegtalk-boundary-receipt.json`
 
 ## Build Rule
 
@@ -55,4 +65,8 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Activation Boundary
 
-`production_ready` remains false. The repo may be tagged only as a non-production local prototype candidate unless a later review explicitly changes that state.
+`production_ready` remains false. The repo is recorded only as a non-production local prototype candidate unless a later review explicitly changes that state.
+
+## Next Integration Candidate
+
+No additional StegTalk propagation target is currently known from this handoff.
