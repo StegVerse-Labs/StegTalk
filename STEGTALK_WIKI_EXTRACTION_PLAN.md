@@ -2,65 +2,52 @@
 
 ## Status
 
-A dedicated StegTalk wiki repository was not found during repository search. Until that repository exists, this file records the planned split between StegTalk-owned documentation and overlapping ecosystem wiki pages.
+A dedicated StegTalk wiki repository was not found during repository search. The StegTalk wiki package is now staged, indexed, receipted, and covered by CI inside `StegVerse-Labs/StegTalk`.
 
-## StegTalk-Owned Wiki Scope
+## Staged Package
 
-StegTalk should own pages describing product/runtime behavior:
+Source location: `wiki-staging/`
 
-- message lifecycle
-- contact routing
-- local inbox projection
-- local persistence
-- public discovery record, index, search, and demo
-- shell state and shell actions
-- account profile and account session runtime
-- local prototype candidate status
+Installed staged files:
 
-## StegGuardian Overlap
+- `wiki-staging/README.md`
+- `wiki-staging/pages/message-lifecycle.md`
+- `wiki-staging/pages/contact-routing.md`
+- `wiki-staging/pages/local-inbox-and-store.md`
+- `wiki-staging/pages/public-discovery.md`
+- `wiki-staging/pages/shell-runtime.md`
+- `wiki-staging/pages/account-runtime.md`
+- `wiki-staging/pages/wiki-overlap-map.md`
+- `wiki-staging/data/page-index.json`
+- `wiki-staging/data/install-manifest.json`
+- `wiki-staging/data/install-checklist.json`
+- `wiki-staging/data/target-repo-request.json`
+- `wiki-staging/receipts/wiki-staging-receipt.json`
 
-StegGuardian owns guardian, recovery, account authority, device trust, and protective boundary concepts that overlap with StegTalk account/session behavior.
+## Verification
 
-Linked pages:
+Installed verification files:
 
-- `StegVerse-002/stegguardian-wiki/pages/stegtalk-guardian-account-boundary.md`
-- `StegVerse-002/stegguardian-wiki/pages/guardian-account-boundary-vocabulary.md`
-- `StegVerse-002/stegguardian-wiki/pages/recovery-authority.md`
-- `StegVerse-002/stegguardian-wiki/pages/account-federation.md`
-- `StegVerse-002/stegguardian-wiki/pages/device-bound-guardian-enforcement.md`
+- `scripts/report_wiki_staging_install.py`
+- `scripts/report_wiki_target_blocker.py`
+- `tests/test_wiki_staging_install.py`
+- `tests/test_wiki_target_blocker.py`
 
-## Admissibility Overlap
+CI verifies staged source files and the target-repo blocker report.
 
-Admissibility owns standing, authority, execution, and transition validity concepts that overlap with StegTalk account/session and guardian-recovery flows.
+## Linked Wikis
 
-Linked page:
+- `StegVerse-002/stegguardian-wiki`
+- `StegVerse-Labs/admissibility-wiki`
+- `StegVerse-Labs/Site`
 
-- `StegVerse-Labs/admissibility-wiki/pages/stegtalk-admissibility-boundary.md`
+## Remaining Open Check
 
-## Site Overlap
+- `SW-001`: target repo exists
 
-Site owns public-facing explanation, navigation, and demo visibility. It should publish StegTalk concept summaries, not merely mirror repo status.
+Preferred target repo:
 
-Linked records:
-
-- `StegVerse-Labs/Site/data/stegtalk-local-candidate.json`
-- `StegVerse-Labs/Site/data/stegtalk-local-candidate-receipt.json`
-
-## Next Automated Task
-
-When a StegTalk wiki repository exists, install:
-
-- `STEGTALK_WIKI_MIRROR_HANDOFF.md`
-- `README.md`
-- `pages/message-lifecycle.md`
-- `pages/contact-routing.md`
-- `pages/local-inbox-and-store.md`
-- `pages/public-discovery.md`
-- `pages/shell-runtime.md`
-- `pages/account-runtime.md`
-- `pages/wiki-overlap-map.md`
-- `data/page-index.json`
-- `receipts/wiki-extraction-receipt.json`
+- `StegVerse-Labs/stegtalk-wiki`
 
 ## Boundary
 
