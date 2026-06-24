@@ -2,13 +2,13 @@
 
 ## Status
 
-A dedicated StegTalk wiki repository was not found during repository search. The StegTalk wiki package is now staged, indexed, receipted, and covered by CI inside `StegVerse-Labs/StegTalk`.
+The dedicated StegTalk wiki repository now exists at `StegVerse-Labs/stegtalk-wiki`. The staged package from `StegVerse-Labs/StegTalk` has been installed into that target wiki with page index, receipt, and README navigation.
 
-## Staged Package
+## Source Package
 
 Source location: `wiki-staging/`
 
-Installed staged files:
+Staged source files retained for traceability:
 
 - `wiki-staging/README.md`
 - `wiki-staging/pages/message-lifecycle.md`
@@ -24,16 +24,32 @@ Installed staged files:
 - `wiki-staging/data/target-repo-request.json`
 - `wiki-staging/receipts/wiki-staging-receipt.json`
 
+## Target Install Complete
+
+Destination: `StegVerse-Labs/stegtalk-wiki`
+
+Installed target files:
+
+- `STEGTALK_WIKI_MIRROR_HANDOFF.md`
+- `README.md`
+- `pages/message-lifecycle.md`
+- `pages/contact-routing.md`
+- `pages/local-inbox-and-store.md`
+- `pages/public-discovery.md`
+- `pages/shell-runtime.md`
+- `pages/account-runtime.md`
+- `pages/wiki-overlap-map.md`
+- `data/page-index.json`
+- `receipts/wiki-migration-receipt.json`
+
 ## Verification
 
-Installed verification files:
+Installed verification files in source repo:
 
 - `scripts/report_wiki_staging_install.py`
 - `scripts/report_wiki_target_blocker.py`
 - `tests/test_wiki_staging_install.py`
 - `tests/test_wiki_target_blocker.py`
-
-CI verifies staged source files and the target-repo blocker report.
 
 ## Linked Wikis
 
@@ -43,12 +59,8 @@ CI verifies staged source files and the target-repo blocker report.
 
 ## Remaining Open Check
 
-- `SW-001`: target repo exists
-
-Preferred target repo:
-
-- `StegVerse-Labs/stegtalk-wiki`
+None.
 
 ## Boundary
 
-StegTalk remains a non-production local prototype candidate. Wiki extraction must not imply production readiness.
+StegTalk remains a non-production local prototype candidate. Wiki extraction does not imply production readiness.
