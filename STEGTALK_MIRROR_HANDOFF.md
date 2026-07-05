@@ -20,10 +20,11 @@ The repo is a non-production local prototype with the following built lanes:
 - public discovery record/index/search/demo
 - shell plan/state/actions/demo/review
 - account model/session
+- Device Continuity Layer handoff boundary
 
 ## Current Priority
 
-StegTalk local candidate build and known propagation targets are complete. No additional StegTalk propagation target is currently known from this handoff.
+Device Continuity Layer handoff boundary is installed as a non-authorizing destination payload.
 
 ## Local Candidate Install Complete
 
@@ -32,6 +33,20 @@ Destination: `StegVerse-Labs/StegTalk`
 - `STEGTALK_RELEASE_HANDOFF.json`
 - `STEGTALK_CANDIDATE_STATUS.json`
 - `STEGTALK_LOCAL_CANDIDATE.json`
+
+## Device Continuity Install Complete
+
+Source: `StegVerse-Labs/device-continuity-layer`
+Destination: `StegVerse-Labs/StegTalk`
+Candidate tag: `v0.1.0-offline-baseline`
+Status: installed as non-authorizing handoff payload
+
+Installed files:
+
+- `docs/device-continuity-layer.md`
+- `contracts/device-continuity-handoff.contract.md`
+- `fixtures/device-continuity/stegtalk-device-continuity-handoff.json`
+- `fixtures/device-continuity/fixture-ble-button-stegtalk-001.receipt.json`
 
 ## Downstream Propagation Complete
 
@@ -65,8 +80,8 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Activation Boundary
 
-`production_ready` remains false. The repo is recorded only as a non-production local prototype candidate unless a later review explicitly changes that state.
+`production_ready` remains false. Device Continuity Layer records are handoff candidates only. StegTalk must issue its own destination acceptance receipt before enabling destination behavior.
 
 ## Next Integration Candidate
 
-No additional StegTalk propagation target is currently known from this handoff.
+Create StegTalk-side validation tests for the installed handoff payload and acceptance receipt response.
