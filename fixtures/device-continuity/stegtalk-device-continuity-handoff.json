@@ -1,0 +1,17 @@
+{
+  "payload_id": "device-continuity-stegtalk-handoff-v0.1.0",
+  "source_org": "StegVerse-Labs",
+  "source_repo": "device-continuity-layer",
+  "candidate_tag": "v0.1.0-offline-baseline",
+  "destination_repo": "StegVerse-Labs/StegTalk",
+  "status": "installed_non_authorizing_handoff",
+  "contract": "contracts/device-continuity-handoff.contract.md",
+  "sample_receipt": "fixtures/device-continuity/fixture-ble-button-stegtalk-001.receipt.json",
+  "allowed_destination_decisions": [
+    "accepted_observe_only",
+    "accepted_read_control",
+    "manual_review_required",
+    "denied"
+  ],
+  "non_authority_rule": "Source recommendations are handoff candidates only. Destination repo must issue its own acceptance receipt."
+}
