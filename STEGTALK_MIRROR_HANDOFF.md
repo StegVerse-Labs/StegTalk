@@ -22,10 +22,11 @@ The repo is a non-production local prototype with the following built lanes:
 - account model/session
 - Device Continuity Layer handoff boundary
 - Device Continuity Layer destination validation
+- Device Continuity Layer destination receipt
 
 ## Current Priority
 
-Device Continuity Layer handoff boundary and destination-side validation are installed.
+Device Continuity Layer handoff boundary, destination receipt, and validation are installed.
 
 ## Local Candidate Install Complete
 
@@ -48,8 +49,11 @@ Installed files:
 - `contracts/device-continuity-handoff.contract.md`
 - `fixtures/device-continuity/stegtalk-device-continuity-handoff.json`
 - `fixtures/device-continuity/fixture-ble-button-stegtalk-001.receipt.json`
+- `receipts/device-continuity/stegtalk-device-continuity-receipt.json`
 - `tools/validate_device_continuity_handoff.py`
+- `tools/validate_device_continuity_receipt.py`
 - `tests/test_device_continuity_handoff.py`
+- `tests/test_device_continuity_receipt.py`
 
 ## Downstream Propagation Complete
 
@@ -81,10 +85,6 @@ Destination: `StegVerse-002/stegguardian-wiki`
 
 Before continuing any StegTalk repo task, check this file first and treat it as the current handoff and task source of truth.
 
-## Activation Boundary
-
-`production_ready` remains false. Device Continuity Layer records are handoff candidates only. StegTalk must issue its own destination acceptance receipt before enabling destination behavior.
-
 ## Next Integration Candidate
 
-Run or inspect destination-side validation status, then add acceptance receipt generation if needed.
+Run or inspect destination-side validation status, then prepare ecosystem documentation propagation after release status is verified.
