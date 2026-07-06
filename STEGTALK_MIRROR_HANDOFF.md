@@ -23,10 +23,11 @@ The repo is a non-production local prototype with the following built lanes:
 - Device Continuity Layer handoff boundary
 - Device Continuity Layer destination validation
 - Device Continuity Layer destination receipt
+- Device Continuity Layer validation workflow
 
 ## Current Priority
 
-Device Continuity Layer handoff boundary, destination receipt, and validation are installed.
+Device Continuity Layer handoff boundary, destination receipt, validation, and check workflow are installed.
 
 ## Local Candidate Install Complete
 
@@ -54,6 +55,7 @@ Installed files:
 - `tools/validate_device_continuity_receipt.py`
 - `tests/test_device_continuity_handoff.py`
 - `tests/test_device_continuity_receipt.py`
+- `.github/workflows/device-continuity.yml`
 
 ## Downstream Propagation Complete
 
@@ -87,4 +89,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Run or inspect destination-side validation status, then prepare ecosystem documentation propagation after release status is verified.
+Inspect destination-side validation workflow status, then prepare ecosystem documentation propagation after release status is verified.
