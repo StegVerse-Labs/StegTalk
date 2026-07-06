@@ -21,10 +21,11 @@ The repo is a non-production local prototype with the following built lanes:
 - shell plan/state/actions/demo/review
 - account model/session
 - Device Continuity Layer handoff boundary
+- Device Continuity Layer destination validation
 
 ## Current Priority
 
-Device Continuity Layer handoff boundary is installed as a non-authorizing destination payload.
+Device Continuity Layer handoff boundary and destination-side validation are installed.
 
 ## Local Candidate Install Complete
 
@@ -47,6 +48,8 @@ Installed files:
 - `contracts/device-continuity-handoff.contract.md`
 - `fixtures/device-continuity/stegtalk-device-continuity-handoff.json`
 - `fixtures/device-continuity/fixture-ble-button-stegtalk-001.receipt.json`
+- `tools/validate_device_continuity_handoff.py`
+- `tests/test_device_continuity_handoff.py`
 
 ## Downstream Propagation Complete
 
@@ -84,4 +87,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Create StegTalk-side validation tests for the installed handoff payload and acceptance receipt response.
+Run or inspect destination-side validation status, then add acceptance receipt generation if needed.
