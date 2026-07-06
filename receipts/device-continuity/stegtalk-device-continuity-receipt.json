@@ -1,0 +1,10 @@
+{
+  "receipt_id": "stegtalk-device-continuity-receipt-v0.1.0",
+  "created_at": "2026-07-05T19:00:00Z",
+  "payload_id": "device-continuity-stegtalk-handoff-v0.1.0",
+  "source_repo": "device-continuity-layer",
+  "destination_repo": "StegVerse-Labs/StegTalk",
+  "decision": "accepted_observe_only",
+  "non_authorizing": true,
+  "reconstructable": true
+}
