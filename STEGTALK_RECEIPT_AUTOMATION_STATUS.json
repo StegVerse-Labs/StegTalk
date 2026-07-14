@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_receipt_automation_status",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "eliminate_manual_session_receipt_tasks",
+  "manual_tasks_before": [
+    "construct_persist_receipt",
+    "construct_restore_receipt",
+    "classify_rejection_or_integrity_failure",
+    "carry_forward_previous_chain_head",
+    "append_receipt_to_chain",
+    "verify_receipt_chain_replay"
+  ],
+  "manual_tasks_after": [],
+  "automated_entry_points": [
+    "persist_session_with_receipt",
+    "restore_session_with_receipt",
+    "verify_session_receipt_chain",
+    "summarize_session_receipts"
+  ],
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "new_workflows_added": false
+}
