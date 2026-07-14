@@ -24,11 +24,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - release-candidate verification
 - destination-handoff propagation posture
 - green validation repair
-- local mobile-shell state and application-facing actions
+- verified local mobile-shell state and application-facing actions
 
 ## Current Priority
 
-Complete the final queue-closure validation for `ST-025`, merge the mobile-shell state, and continue the newly declared `mobile_shell_persistent_session_boundary` integration goal. Preserve `production_ready: false` and queue-only downstream propagation.
+Merge the verified `ST-025` mobile-shell state and continue the declared `mobile_shell_persistent_session_boundary` integration goal. Preserve `production_ready: false` and queue-only downstream propagation.
 
 ## Local Candidate Verification Complete
 
@@ -57,13 +57,13 @@ Final repair evidence:
 Verification state: `VERIFIED_GREEN`
 Manual tasks required: none
 
-## ST-025 Mobile Shell State
+## ST-025 Mobile Shell State Complete
 
 Parent plan: `STEGTALK_MOBILE_SHELL_PLAN.json`
 Declared task: `build_mobile_shell_state`
 Queue task: `ST-025`
 State artifact: `STEGTALK_MOBILE_SHELL_STATE.json`
-Status: `VERIFIED_PENDING_FINAL_QUEUE_RUN`
+Status: `VERIFIED_COMPLETE`
 Production ready: `false`
 Local only: `true`
 Manual tasks required: none
@@ -92,15 +92,15 @@ Explicitly deferred:
 
 The mobile shell does not grant network, execution, external-account, or native-platform authority.
 
-Initial pull-request validation evidence:
+Final queue-closure validation evidence:
 
-- `StegTalk Managed Completion`, run `29305323643`: PASS
-- `device-continuity`, run `29305323654`: PASS
-- `Test Readiness`, run `29305323586`: PASS
+- `StegTalk Managed Completion`, run `29305441604`: PASS
+- `device-continuity`, run `29305441573`: PASS
+- `Test Readiness`, run `29305441586`: PASS
 
-## Managed Queue
+## Managed Queue Complete
 
-`STEGTALK_TASK_QUEUE.json` records all tasks `ST-001` through `ST-025` as complete. The completed local-prototype queue remains non-production.
+`STEGTALK_TASK_QUEUE.json` records all tasks `ST-001` through `ST-025` as complete. Open task count: `0`. The completed local-prototype queue remains non-production.
 
 Next integration goal: `mobile_shell_persistent_session_boundary`
 
@@ -131,4 +131,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-After the final ST-025 queue-closure run passes and the pull request merges, build the local persistent mobile-shell session boundary without crossing into native UI, external synchronization, production networking, or downstream repository authority.
+Build the local persistent mobile-shell session boundary without crossing into native UI, external synchronization, production networking, or downstream repository authority.
