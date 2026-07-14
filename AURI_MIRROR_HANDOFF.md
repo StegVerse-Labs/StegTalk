@@ -15,7 +15,7 @@ This document is the current handoff and task source of truth. Auri is not activ
 
 ## Operating rule
 
-Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, and machine-readable handoffs wherever possible. If no further progress can occur without a user-performed action, record the blocker and keep monitoring daily.
+Progression is automation-first. Repository-side manual tasks are eliminated through workflows, validators, receipts, canonical intake paths, and machine-readable handoffs. External authorization and infrastructure evidence are conditions, not repository tasks, and may not be presumed or fabricated.
 
 ## Task status
 
@@ -33,7 +33,7 @@ Progression is automation-first. Manual tasks must be eliminated through workflo
   - Tests: `tests/test_auri_containment.py`
   - Verifier: `scripts/verify_auri_containment.py`
   - Evidence: `evidence/auri-containment-verification.json`
-- AURI-007 end-to-end activation proof: BLOCKED AT AUTHORIZED LIVE DEPLOYMENT
+- AURI-007 end-to-end activation proof: WAITING ON EXTERNAL AUTHORIZATION EVIDENCE
   - Reference verifier: `scripts/verify_auri_end_to_end.py`
   - Service boundary: `src/stegtalk/auri/service.py`
   - HTTP adapter: `src/stegtalk/auri/http_service.py`
@@ -46,6 +46,8 @@ Progression is automation-first. Manual tasks must be eliminated through workflo
   - Package evidence: `evidence/auri-deployment-package.json`
   - Live probe: `scripts/probe_auri_live_service.py`
   - Gated live-proof workflow: `.github/workflows/auri-live-proof.yml`
+  - Automatic authorization intake: `.github/workflows/auri-authorization-intake.yml`
+  - Canonical intake path: `auri/authorization/`
   - Provider binding schema: `auri/schemas/provider-binding.schema.json`
   - Deployment authorization schema: `auri/schemas/deployment-authorization.schema.json`
   - Authorization verifier: `scripts/verify_auri_activation_inputs.py`
@@ -71,6 +73,8 @@ The package now exposes:
 - canonical provider-binding authorization;
 - canonical deployment-target authorization;
 - matching credential-reference validation;
+- automatic detection of canonical authorization records;
+- automatic live-proof dispatch after authorization verification;
 - gated cross-repository evidence checks;
 - deterministic activation receipt construction;
 - evidence-gated active-state finalization;
@@ -79,12 +83,19 @@ The package now exposes:
 
 Default container startup is fail-closed. `AURI_PROVIDER_MODE=reference_echo` exists only for automated packaging and interface smoke verification and may never be used as production activation evidence.
 
-The live-proof workflow now requires repository paths to canonical provider-binding and deployment-authorization documents. It verifies their hashes, rejects reference providers, requires HTTPS persistent deployment, preserves `execution_authority: false`, probes live health, builds the activation receipt, runs the guarded finalizer, and commits activation evidence only after every gate passes.
+The canonical authorization intake paths are:
+
+```text
+auri/authorization/provider-binding.json
+auri/authorization/deployment-authorization.json
+```
+
+When both records are committed, the intake workflow verifies them and dispatches the live-proof workflow automatically. No person must trigger the workflow, copy evidence into repository variables, or edit activation state manually.
 
 ## Current activation state
 
 ```text
-state: authorization_gates_installed_awaiting_external_evidence
+state: repository_automation_complete_awaiting_external_authorization_evidence
 active: false
 completed: AURI-001 through AURI-006
 current: AURI-007
@@ -93,7 +104,9 @@ oci_packaged: true
 live_proof_automation_installed: true
 authorization_document_schemas_installed: true
 authorization_input_verifier_installed: true
+authorization_intake_automation_installed: true
 evidence_gated_state_finalizer_installed: true
+manual_tasks_required: false
 runtime_deployed: false
 end_to_end_proof_passed: false
 ```
@@ -103,41 +116,36 @@ Canonical state: `auri/activation-state.json`.
 ## Current claim
 
 ```text
-AURI-007 — authorized live deployment evidence and final activation receipt
+AURI-007 — externally authorized live deployment evidence and final activation receipt
 ```
 
-## Known manual blocker
+## External condition
 
 ```text
-Code: deployment.target_or_credentials.required
+Code: deployment.authorization_evidence.pending
 ```
 
-All repository-side build, packaging, authorization validation, probing, evidence collection, activation-receipt construction, and guarded state-transition work is installed. Live activation still requires canonical externally authorized provider and deployment documents, a reachable persistent target, and a non-interactive credential path. None may be presumed, embedded, or fabricated.
+No repository-side manual action remains. Live activation waits for canonical externally authorized provider-binding and deployment-authorization records, a reachable persistent target, and a non-interactive credential path. None may be presumed, embedded, or fabricated.
 
-## Resume condition
+## Automatic continuation
 
-```text
-canonical provider-binding document
-+ canonical deployment-authorization document
-+ authorized live target
-+ non-interactive credential path
-```
+When canonical authorization records and authorized deployment evidence become available, the repository automatically:
 
-After the resume condition exists, the automated continuation is:
-
-1. verify provider and deployment authorization documents;
-2. deploy or confirm the OCI-packaged AURI-L1 service;
-3. run the live health probe;
-4. exercise advisory allow, deny, and defer without execution;
-5. exercise quarantine and revocation;
-6. preserve cross-repository receipts;
-7. build and validate the final activation receipt;
-8. run the guarded state finalizer;
-9. commit live evidence and set `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
+1. detects the canonical records;
+2. verifies provider and deployment authorization;
+3. dispatches live proof;
+4. deploys or confirms the OCI-packaged AURI-L1 service through the authorized path;
+5. probes live health;
+6. verifies advisory allow, deny, and defer without execution;
+7. verifies quarantine and revocation;
+8. preserves cross-repository receipts;
+9. builds and validates the final activation receipt;
+10. runs the guarded state finalizer;
+11. commits live evidence and sets `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
 
 ## Email monitoring
 
-Auri Repo Watch remains daily because the only remaining activation blocker requires authorized external deployment infrastructure, credentials, and provider binding. It should return to higher-frequency monitoring only when the blocker is removed.
+Auri Repo Watch remains daily because progression now depends only on external authorization or deployment evidence. It resumes active processing when that evidence appears and does not repeatedly report the unchanged condition.
 
 ## Next integration candidate after activation
 
@@ -147,4 +155,4 @@ AURI-L1-STEGTALK-INTEGRATION — bind the active Auri service to authenticated S
 
 ## Archive readiness
 
-All unique decisions, artifacts, progress, and the deployment blocker are durably represented here, in committed files, sub-handoffs, verifiers, state, and evidence. The complete thread is ready for archiving without any additional part of the thread needed to move forward.
+All repository-side tasks, automation, handoffs, validation rules, continuation paths, and the remaining external condition are durably represented in committed records. No future action requires access to this conversation. This session may be archived now.
