@@ -1,0 +1,52 @@
+name: Auri Authorization Intake
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'auri/authorization/provider-binding.json'
+      - 'auri/authorization/deployment-authorization.json'
+      - 'auri/activation-state.json'
+      - 'scripts/verify_auri_activation_inputs.py'
+      - '.github/workflows/auri-live-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: auri-authorization-intake
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Detect canonical authorization records
+        id: detect
+        run: |
+          provider='auri/authorization/provider-binding.json'
+          deployment='auri/authorization/deployment-authorization.json'
+          if [[ -f "$provider" && -f "$deployment" ]]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Canonical authorization records are not present; remaining fail-closed.'
+          fi
+      - name: Verify authorization records
+        if: steps.detect.outputs.ready == 'true'
+        run: |
+          python scripts/verify_auri_activation_inputs.py \
+            --provider-binding auri/authorization/provider-binding.json \
+            --deployment-authorization auri/authorization/deployment-authorization.json
+      - name: Dispatch live proof automatically
+        if: steps.detect.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run auri-live-proof.yml --ref "${GITHUB_REF_NAME}"
