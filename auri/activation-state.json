@@ -2,11 +2,11 @@
   "schema_version": "1.0.0",
   "entity_id": "stegverse:auri",
   "activation_level": "AURI-L1",
-  "state": "authorization_gates_installed_awaiting_external_evidence",
+  "state": "repository_automation_complete_awaiting_external_authorization_evidence",
   "active": false,
   "quarantined": false,
   "revoked": false,
-  "manual_tasks_required": true,
+  "manual_tasks_required": false,
   "progression_mode": "automation_first",
   "completed_tasks": ["AURI-001", "AURI-002", "AURI-003", "AURI-004", "AURI-005", "AURI-006"],
   "current_task": "AURI-007",
@@ -28,6 +28,8 @@
     "deployment_package_evidence": "evidence/auri-deployment-package.json",
     "live_probe": "scripts/probe_auri_live_service.py",
     "live_proof_workflow": ".github/workflows/auri-live-proof.yml",
+    "authorization_intake_workflow": ".github/workflows/auri-authorization-intake.yml",
+    "authorization_intake_contract": "auri/authorization/README.md",
     "provider_binding_schema": "auri/schemas/provider-binding.schema.json",
     "deployment_authorization_schema": "auri/schemas/deployment-authorization.schema.json",
     "activation_input_verifier": "scripts/verify_auri_activation_inputs.py",
@@ -49,6 +51,7 @@
     "live_proof_automation_installed": true,
     "authorization_document_schemas_installed": true,
     "authorization_input_verifier_installed": true,
+    "authorization_intake_automation_installed": true,
     "activation_receipt_path_installed": true,
     "evidence_gated_state_finalizer_installed": true,
     "runtime_deployed": false,
@@ -59,10 +62,10 @@
     "revocation_test_passed": true,
     "end_to_end_proof_passed": false
   },
-  "manual_blocker": {
-    "code": "deployment.target_or_credentials.required",
-    "detail": "All repository-side packaging, authorization validation, probing, evidence collection, activation-receipt construction, and guarded state transition work is installed. Live activation still requires externally authorized provider and deployment documents, a reachable persistent target, and non-interactive credentials.",
-    "resume_condition": "canonical provider-binding and deployment-authorization documents plus authorized live target and credential path become available"
+  "external_condition": {
+    "code": "deployment.authorization_evidence.pending",
+    "detail": "No repository-side manual action remains. Activation waits for canonical externally authorized provider-binding and deployment-authorization records, a reachable persistent target, and a non-interactive credential path. When the canonical records arrive, authorization intake, live proof, receipt construction, and state finalization run automatically.",
+    "resume_condition": "canonical authorization records and authorized live deployment evidence become available"
   },
   "transition_rule": "active may become true only when canonical authorization inputs, independent live proof, cross-repository evidence, and a valid activation receipt all pass the guarded finalizer",
   "last_updated": "2026-07-14"
