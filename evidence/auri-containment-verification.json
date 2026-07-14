@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "task": "AURI-006",
+  "result": "PASS",
+  "verified_at": "2026-07-14",
+  "provider_quarantine_verified": true,
+  "credential_revocation_verified": true,
+  "session_quarantine_verified": true,
+  "known_good_identity_required": true,
+  "rollback_required": true,
+  "failed_recovery_fail_closed": true,
+  "verified_recovery_restores_advisory_only": true,
+  "execution_remains_forbidden": true,
+  "manual_tasks_required": false,
+  "verifier": "scripts/verify_auri_containment.py"
+}
