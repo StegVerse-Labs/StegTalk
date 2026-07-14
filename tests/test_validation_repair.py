@@ -14,11 +14,16 @@ def test_validation_repair_is_fail_closed_and_automatic() -> None:
     assert repair["production_ready"] is False
     assert repair["manual_tasks_required"] == []
     assert repair["workflow_policy"]["new_workflows_added"] is False
-    assert repair["verification_state"] == "PENDING_PULL_REQUEST_WORKFLOW_EVIDENCE"
+    assert repair["verification_state"] == "PENDING_MANAGED_COMPLETION_RERUN"
 
-    failures = {entry["workflow"]: entry for entry in repair["observed_failures"]}
-    assert failures["StegTalk Managed Completion"]["run_id"] == 29304441633
-    assert failures["device-continuity"]["run_id"] == 29304441639
+    failures = repair["observed_failures"]
+    assert any(entry["run_id"] == 29304441633 for entry in failures)
+    assert any(entry["run_id"] == 29304441639 for entry in failures)
+    assert any(entry["run_id"] == 29304803059 for entry in failures)
+
+    passes = {entry["workflow"]: entry for entry in repair["observed_passes"]}
+    assert passes["device-continuity"]["result"] == "PASS"
+    assert passes["Test Readiness"]["result"] == "PASS"
 
 
 def test_project_version_is_pep440_compatible() -> None:
