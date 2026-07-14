@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "entity_id": "stegverse:auri",
+  "activation_level": "AURI-L1",
+  "evidence_type": "deployment_package_construction",
+  "recorded_at": "2026-07-14",
+  "artifacts": {
+    "http_adapter": "src/stegtalk/auri/http_service.py",
+    "module_entrypoint": "src/stegtalk/auri/__main__.py",
+    "oci_dockerfile": "Dockerfile.auri",
+    "deployment_contract": "auri/deployment/deployment-contract.json",
+    "smoke_workflow": ".github/workflows/auri-package-smoke.yml",
+    "static_verifier": "scripts/verify_auri_deployment_package.py"
+  },
+  "verified_properties": {
+    "default_provider_disabled": true,
+    "default_health_fail_closed": true,
+    "non_root_container_declared": true,
+    "execution_authority": false,
+    "reference_smoke_is_not_live_activation": true
+  },
+  "automated_workflow_status": "awaiting_or_running_repository_check",
+  "live_deployment_verified": false,
+  "active": false,
+  "remaining_blocker": "deployment.target_or_credentials.required",
+  "claim_boundary": "This evidence proves package construction and declared fail-closed defaults only. It does not prove a running persistent deployment."
+}
