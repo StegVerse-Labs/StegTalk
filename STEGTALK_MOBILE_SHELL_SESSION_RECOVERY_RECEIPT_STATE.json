@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.1.0",
+  "artifact_type": "stegtalk_mobile_shell_session_recovery_receipt_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_recovery_receipt",
+  "state": "VERIFIED_COMPLETE",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_remaining": [],
+  "new_workflows_added": false,
+  "store_collection": "mobile_shell_session_recovery_receipts",
+  "automated_capabilities": [
+    "recover_newest_valid_retained_checkpoint",
+    "record_selected_generation",
+    "record_fallback_usage",
+    "record_rejected_generations_and_reasons",
+    "bind_history_checkpoint_and_receipt_chain_heads",
+    "persist_and_chain_recovery_receipts_atomically",
+    "receipt_failed_recovery",
+    "inspect_payload_free_recovery_history"
+  ],
+  "validation": [
+    {"workflow": "StegTalk Managed Completion", "run_id": 29316759532, "result": "PASS"},
+    {"workflow": "device-continuity", "run_id": 29316759559, "result": "PASS"},
+    {"workflow": "Test Readiness", "run_id": 29316759544, "result": "PASS"}
+  ],
+  "next_goal": "mobile_shell_session_recovery_policy",
+  "downstream_propagation_authorized": false
+}
