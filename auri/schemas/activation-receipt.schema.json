@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/auri/activation-receipt.schema.json",
+  "title": "AURI-L1 Activation Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_type",
+    "entity_id",
+    "activation_level",
+    "deployment_target_ref",
+    "service_health_ref",
+    "provider_binding_ref",
+    "stegcore_decision_evidence_ref",
+    "continuity_receipt_chain_ref",
+    "containment_test_ref",
+    "revocation_test_ref",
+    "execution_authority",
+    "active",
+    "issued_at",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "receipt_type": {"const": "auri_activation"},
+    "entity_id": {"const": "stegverse:auri"},
+    "activation_level": {"const": "AURI-L1"},
+    "deployment_target_ref": {"type": "string", "minLength": 1},
+    "service_health_ref": {"type": "string", "minLength": 1},
+    "provider_binding_ref": {"type": "string", "minLength": 1},
+    "stegcore_decision_evidence_ref": {"type": "string", "minLength": 1},
+    "continuity_receipt_chain_ref": {"type": "string", "minLength": 1},
+    "containment_test_ref": {"type": "string", "minLength": 1},
+    "revocation_test_ref": {"type": "string", "minLength": 1},
+    "execution_authority": {"const": false},
+    "active": {"const": true},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
