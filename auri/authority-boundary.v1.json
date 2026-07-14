@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "entity_id": "stegverse:auri",
+  "activation_level": "AURI-L1",
+  "default_posture": "fail_closed",
+  "permitted": {
+    "conversation": true,
+    "interpret_approved_context": true,
+    "prepare_change_requests": true,
+    "prepare_commitment_candidates": true,
+    "request_readiness_evaluation": true,
+    "request_authority_evaluation": true,
+    "explain_results": true,
+    "emit_advisory_receipt_candidates": true
+  },
+  "prohibited": {
+    "self_grant_authority": true,
+    "mint_self_authorizing_evidence": true,
+    "modify_identity_or_boundary": true,
+    "modify_delegation_or_policy": true,
+    "rewrite_receipt_history": true,
+    "execute_consequential_action": true,
+    "represent_user_without_contract": true,
+    "classify_model_output_as_verified_without_evidence": true
+  },
+  "external_dependencies": {
+    "admissibility": "StegVerse-Labs/StegCore",
+    "continuity": "StegID_or_Continuity_receipt_governance",
+    "execution": "separate_authorized_executor_only"
+  },
+  "containment": {
+    "revocation_supported": true,
+    "quarantine_supported": true,
+    "provider_disablement_supported": true,
+    "session_isolation_required": true,
+    "known_good_identity_required": true
+  }
+}
