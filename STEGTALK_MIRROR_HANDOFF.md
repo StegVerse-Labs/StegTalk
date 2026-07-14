@@ -6,7 +6,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repo is a non-production local prototype with the following built lanes:
+The repo is a verified non-production local prototype candidate with the following built lanes:
 
 - entity runtime
 - message envelope
@@ -24,18 +24,26 @@ The repo is a non-production local prototype with the following built lanes:
 - Device Continuity Layer destination validation
 - Device Continuity Layer destination receipt
 - Device Continuity Layer validation workflow
+- release-candidate verification artifact and test
 
 ## Current Priority
 
-Device Continuity Layer handoff boundary, destination receipt, validation, and check workflow are installed.
+Local release-candidate verification is complete. Propagate the verified candidate status to ecosystem documentation targets without claiming production readiness.
 
-## Local Candidate Install Complete
+## Local Candidate Verification Complete
 
 Destination: `StegVerse-Labs/StegTalk`
 
 - `STEGTALK_RELEASE_HANDOFF.json`
 - `STEGTALK_CANDIDATE_STATUS.json`
 - `STEGTALK_LOCAL_CANDIDATE.json`
+- `STEGTALK_RELEASE_VERIFICATION.json`
+- `scripts/verify_release_candidate.py`
+- `tests/test_release_verification.py`
+
+Candidate marker: `v0.1.0-local-prototype-candidate`
+Status: `verified_non_production_local_prototype`
+Production ready: `false`
 
 ## Device Continuity Install Complete
 
@@ -57,7 +65,11 @@ Installed files:
 - `tests/test_device_continuity_receipt.py`
 - `.github/workflows/device-continuity.yml`
 
-## Downstream Propagation Complete
+## Destination Validation Observation
+
+The destination validation workflow is installed and checks the handoff payload, destination receipt, and both Device Continuity tests. No workflow run was observable for the current head during verification, so the release artifact records `destination_validation_workflow_observed_run: false` rather than inferring success.
+
+## Downstream Propagation Targets
 
 Destination: `StegVerse-Labs/Site`
 
@@ -89,4 +101,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Inspect destination-side validation workflow status, then prepare ecosystem documentation propagation after release status is verified.
+Propagate `verified_non_production_local_prototype` and the candidate marker to Site, Publisher, admissibility-wiki, and stegguardian-wiki; preserve `production_ready: false` in every destination artifact.
