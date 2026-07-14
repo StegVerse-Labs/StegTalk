@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from stegtalk.discovery_index import build_discovery_index
 from stegtalk.entity_runtime import build_discovery_record, create_entity_card
 from stegtalk.mobile_shell import (
@@ -9,6 +12,8 @@ from stegtalk.mobile_shell import (
     show_local_inbox,
     summarize_mobile_shell,
 )
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _fixture_shell():
@@ -70,3 +75,18 @@ def test_mobile_shell_runs_local_public_discovery_search():
     assert result["result_count"] == 1
     assert result["results"][0]["entity_id"] == "auri"
     assert updated["shell_state"]["active_view"] == "discovery"
+
+
+def test_mobile_shell_state_artifact_is_fail_closed_and_automatic():
+    state = json.loads((ROOT / "STEGTALK_MOBILE_SHELL_STATE.json").read_text(encoding="utf-8"))
+    assert state["source_task"] == "ST-025"
+    assert state["production_ready"] is False
+    assert state["local_only"] is True
+    assert state["manual_tasks_remaining"] == []
+    assert set(state["implemented_capabilities"]) == {
+        "load_local_identity",
+        "show_local_contacts",
+        "create_local_message",
+        "show_local_inbox",
+        "run_public_discovery_search",
+    }
