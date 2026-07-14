@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "service_id": "stegverse:auri:service:l1",
+  "entity_id": "stegverse:auri",
+  "activation_level": "AURI-L1",
+  "entrypoint": "stegtalk.auri.service:AuriService",
+  "identity_ref": "auri/identity.v1.json",
+  "activation_state_ref": "auri/activation-state.json",
+  "health_contract": {
+    "method": "health",
+    "hash_addressed": true,
+    "ready_value": "ready",
+    "fail_closed_value": "fail_closed"
+  },
+  "request_contract": {
+    "method": "submit",
+    "authenticated_session_required": true,
+    "external_admissibility_required": true,
+    "execution_authority": false
+  },
+  "provider_binding": "runtime_configuration_only",
+  "hosting_binding": "none",
+  "deployment_status": "packaged_not_live",
+  "manual_tasks_required": false
+}
