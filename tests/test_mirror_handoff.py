@@ -9,6 +9,7 @@ def test_mirror_handoff_exists_and_preserves_activation_boundary():
     assert "StegVerse-Labs/StegTalk" in handoff
     assert "Production ready: `false`" in handoff
     assert "QUEUE_ONLY_NO_DOWNSTREAM_MUTATION" in handoff
-    assert "VERIFIED_GREEN" in handoff
     assert "ST-025" in handoff
-    assert "build_mobile_shell_state" in handoff
+    assert "mobile_shell_persistent_session_boundary" in handoff
+    assert "mobile_shell_session_receipt_chain" in handoff
+    assert "network, execution, external-account, or native-platform authority" in handoff
