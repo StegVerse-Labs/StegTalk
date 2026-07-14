@@ -5,108 +5,74 @@
 ```text
 Organization: StegVerse-Labs
 Primary repository: StegTalk
-Supporting repositories: StegCore, StegAgents, Continuity / StegID
-Goal: activate Auri as a governed, receipt-bearing advisory entity
+Supporting repositories: StegCore, Continuity / StegID, StegAgents
+Goal: activate Auri as a governed, receipt-bearing AURI-L1 advisory entity
 ```
 
 ## Source of truth
 
-This document is the current handoff and task source of truth for Auri activation work. Auri is not active merely because a model uses the name or persona. Activation requires persistent identity, enforceable authority boundaries, runtime evidence, external admissibility, revocation, and reconstructable receipts.
+This document is the current handoff and task source of truth. Auri is not active merely because a model uses its name. Activation requires persistent identity, enforceable authority boundaries, runtime evidence, external admissibility, revocation, reconstructable receipts, and verified deployment.
 
 ## Operating rule
 
-Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, or machine-readable handoffs wherever possible. If no further progress can occur without a user-performed manual action, record the blocker here and reduce monitoring to daily until the condition changes.
+Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, and machine-readable handoffs wherever possible. If no further progress can occur without a user-performed action, record the blocker and reduce monitoring to daily.
 
-## Activation level
+## Task status
+
+- AURI-001 canonical identity package: COMPLETE
+- AURI-002 commitment candidate schema: COMPLETE
+- AURI-003 provider-neutral advisory runtime: COMPLETE
+- AURI-004 StegCore gateway: COMPLETE
+  - Handoff: `StegVerse-Labs/StegCore/AURI_GATEWAY_MIRROR_HANDOFF.md`
+  - Evidence: `StegVerse-Labs/StegCore/evidence/auri-gateway-verification.json`
+- AURI-005 Continuity receipts: COMPLETE
+  - Handoff: `StegVerse-Labs/Continuity/AURI_RECEIPTS_MIRROR_HANDOFF.md`
+  - Evidence: `StegVerse-Labs/Continuity/evidence/auri-receipts-verification.json`
+- AURI-006 containment and recovery: COMPLETE
+  - Runtime: `src/stegtalk/auri/containment.py`
+  - Tests: `tests/test_auri_containment.py`
+  - Verifier: `scripts/verify_auri_containment.py`
+  - Evidence: `evidence/auri-containment-verification.json`
+- AURI-007 end-to-end activation proof: IN PROGRESS
+  - Reference verifier: `scripts/verify_auri_end_to_end.py`
+  - Current result boundary: reference runtime can prove identity, advisory generation, missing-authority denial, external allow-without-execution representation, receipt references, revocation, and post-revocation fail-closed behavior.
+  - Deployment is not yet verified; Auri remains inactive.
+
+## Current activation state
 
 ```text
-AURI-L1 — governed advisory entity
+state: activation_proof_in_progress
+active: false
+completed: AURI-001 through AURI-006
+current: AURI-007
+runtime_deployed: false
+end_to_end_proof_passed: false
 ```
 
-AURI-L1 may converse with authenticated users, prepare structured candidates, request external evaluation, explain results, and emit advisory receipts. It may not self-grant authority, mint self-authorizing evidence, alter its own identity or history, execute consequence, or promote unverified model output to verified fact.
+Canonical state: `auri/activation-state.json`.
 
-## Active task chain
-
-### AURI-001 — Canonical identity package
-
-Status: COMPLETE
-
-Artifacts: `auri/identity.v1.json`, `auri/authority-boundary.v1.json`, `auri/activation-state.json`, and `scripts/verify_auri_activation.py`.
-
-### AURI-002 — Commitment candidate schema
-
-Status: COMPLETE
-
-Artifacts: schema, valid and denied examples, and `scripts/verify_auri_commitment_candidates.py`.
-
-### AURI-003 — Runtime adapter
-
-Status: COMPLETE
-
-Artifacts: provider-neutral runtime, tests, standalone verifier, canonical JSON hashing, provider-failure classification, quarantine signaling, and immutable no-execution posture.
-
-### AURI-004 — StegCore gateway
-
-Status: COMPLETE
-
-Destination: `StegVerse-Labs/StegCore`
-
-Authoritative sub-handoff: `AURI_GATEWAY_MIRROR_HANDOFF.md`
-
-Evidence: `evidence/auri-gateway-verification.json`
-
-Result: deterministic allow, deny, and defer handling; verified-continuity requirement; consequential policy/delegation requirement; commit-time equality; hash-addressed decision receipts; no execution.
-
-### AURI-005 — Continuity receipts
-
-Status: COMPLETE
-
-Destination: `StegVerse-Labs/Continuity`
-
-Authoritative sub-handoff: `AURI_RECEIPTS_MIRROR_HANDOFF.md`
-
-Evidence: `evidence/auri-receipts-verification.json`
-
-Result: canonical four-receipt chain for interaction provenance, advisory output, external authority-decision reference with execution non-occurrence, and fail-closed revocation.
-
-### AURI-006 — Containment and recovery
-
-Status: IN PROGRESS
-
-Required: provider disablement, credential revocation, session quarantine, known-good identity state, rollback verification, and fail-closed behavior.
-
-### AURI-007 — End-to-end activation proof
-
-Status: QUEUED
-
-Proof sequence: authenticate Auri identity; create a valid advisory candidate; deny missing authority; allow an authorized reversible candidate without execution; produce reconstructable receipts; revoke Auri; verify later requests fail closed.
-
-## Email notification monitoring
-
-Auri Repo Watch monitors relevant Gmail notifications hourly while automated progression is possible. It changes to daily after verified completion or when the only remaining blocker requires manual user action.
-
-## Non-overlap statement
-
-Parallel sessions must claim a specific AURI task identifier before mutation and must not modify the same file concurrently.
-
-Current claim:
+## Current claim
 
 ```text
-AURI-006 — containment and recovery
+AURI-007 — end-to-end activation proof and deployment boundary
 ```
 
 ## Known manual blockers
 
 ```text
-None.
+None currently. Deployment credentials or an external hosting target must not be presumed; first build an automated deployment-neutral verification workflow.
 ```
 
 ## Next integration candidate
 
 ```text
-AURI-007 — end-to-end activation proof
+AURI-L1-DEPLOYMENT — automated deployment-neutral runtime packaging, health evidence, and activation receipt
 ```
+
+## Email monitoring
+
+Auri Repo Watch remains hourly while automated progress is possible. It changes to daily after verified completion or when only a manual user action remains.
 
 ## Archive readiness
 
-All decisions through AURI-005 are durably represented in handoffs, committed files, verifiers, and evidence. Remaining incompleteness alone is not a reason to retain the originating conversation.
+All decisions through AURI-006 and the AURI-007 reference-proof boundary are durably represented here, in committed files, sub-handoffs, verifiers, and evidence. The thread is not required for continuation.
