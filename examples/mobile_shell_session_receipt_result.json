@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "receipt_count": 2,
+  "events": ["persist", "restore"],
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_required": []
+}
