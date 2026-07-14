@@ -1,20 +1,20 @@
 {
-  "schema_version": "2.2.0",
+  "schema_version": "2.3.0",
   "artifact_type": "stegtalk_next_integration",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
-  "completed_goal": "mobile_shell_session_recovery_receipt",
-  "next_goal": "mobile_shell_session_recovery_policy",
-  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "completed_goal": "mobile_shell_session_recovery_policy",
+  "next_goal": "mobile_shell_session_recovery_policy_adapter",
+  "state": "DECLARED",
   "production_ready": false,
   "manual_tasks_remaining": [],
-  "implemented_files": [
+  "completed_files": [
     "src/stegtalk/mobile_shell_session_recovery_policy.py",
     "tests/test_mobile_shell_session_recovery_policy.py",
     "scripts/verify_mobile_shell_session_recovery_policy.py",
     "STEGTALK_MOBILE_SHELL_SESSION_RECOVERY_POLICY_STATE.json"
   ],
-  "implemented_conditions": [
+  "completed_conditions": [
     "classify_recovery_reasons_deterministically",
     "enforce_maximum_admissible_fallback_depth",
     "deny_when_all_retained_generations_fail",
@@ -23,7 +23,14 @@
     "persist_and_chain_policy_decisions_atomically",
     "require_no_manual_recovery_review_or_escalation_selection"
   ],
+  "planned_conditions": [
+    "define_governed_recovery_policy_provider_protocol",
+    "build_payload_free_provider_request",
+    "validate_response_request_policy_history_and_validity_binding",
+    "fail_closed_on_provider_exception_malformed_stale_or_drifted_response",
+    "allow_local_policy_fallback_only_when_explicitly_configured",
+    "require_no_manual_policy_translation_provider_selection_or_response_validation"
+  ],
   "external_dependencies": [],
-  "downstream_propagation_authorized": false,
-  "candidate_next_goal": "mobile_shell_session_recovery_policy_adapter"
+  "downstream_propagation_authorized": false
 }
