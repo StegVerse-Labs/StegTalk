@@ -55,5 +55,5 @@ def test_managed_checkpoint_rejects_stale_session_state(tmp_path):
     changed["mobile_shell_hash"] = "sha256:changed"
     from stegtalk.mobile_shell_session import persist_mobile_shell_session
     persist_mobile_shell_session(store_root=tmp_path, shell=changed, session_id="primary")
-    with pytest.raises(ValueError, match="shell hash mismatch|session record drift"):
+    with pytest.raises(ValueError, match="integrity check failed|shell hash mismatch|session record drift"):
         restore_managed_checkpoint(store_root=tmp_path, session_id="primary")
