@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_branch_abandonment",
+  "branch": "build-session-recovery-receipt",
+  "reason": "branch contains pre-squash recovery-receipt history",
+  "replacement_branch": "recovery-policy-clean",
+  "merge_authorized": false
+}
