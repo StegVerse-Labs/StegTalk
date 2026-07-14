@@ -1,10 +1,10 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "artifact_type": "stegtalk_mobile_shell_state",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MOBILE_SHELL_PLAN.json",
   "source_task": "ST-025",
-  "state": "IMPLEMENTED_PENDING_PULL_REQUEST_VALIDATION",
+  "state": "VERIFIED_PENDING_FINAL_QUEUE_RUN",
   "production_ready": false,
   "local_only": true,
   "manual_tasks_remaining": [],
@@ -33,9 +33,14 @@
     "external_account_authority": false,
     "native_platform_authority": false
   },
-  "completion_condition": {
-    "managed_completion_workflow": "PASS",
-    "device_continuity_workflow": "PASS",
-    "test_readiness_workflow": "PASS"
+  "observed_validation": [
+    {"workflow": "StegTalk Managed Completion", "run_id": 29305323643, "result": "PASS"},
+    {"workflow": "device-continuity", "run_id": 29305323654, "result": "PASS"},
+    {"workflow": "Test Readiness", "run_id": 29305323586, "result": "PASS"}
+  ],
+  "queue_state": {
+    "ST-025": "complete",
+    "open_task_count": 0,
+    "next_integration_goal": "mobile_shell_persistent_session_boundary"
   }
 }
