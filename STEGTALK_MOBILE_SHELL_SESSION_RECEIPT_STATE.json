@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_session_receipt_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source": "STEGTALK_MIRROR_HANDOFF.md",
+  "goal": "mobile_shell_session_receipt_chain",
+  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_remaining": [],
+  "new_workflows_added": false,
+  "implemented_files": [
+    "src/stegtalk/mobile_shell_session_receipts.py",
+    "tests/test_mobile_shell_session_receipts.py",
+    "STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_STATE.json"
+  ],
+  "automated_capabilities": [
+    "create_persist_receipt",
+    "create_restore_receipt",
+    "create_rejection_receipt",
+    "create_integrity_failure_receipt",
+    "append_and_verify_receipt_chain",
+    "preserve_previous_chain_head",
+    "summarize_payload_free_receipt_history"
+  ],
+  "failure_posture": {
+    "authority_escalation": "REJECT_AND_RECEIPT",
+    "integrity_failure": "REJECT_AND_RECEIPT",
+    "missing_session": "REJECT_AND_RECEIPT",
+    "chain_discontinuity": "FAIL_CLOSED"
+  },
+  "downstream_propagation_authorized": false,
+  "candidate_next_goal": "mobile_shell_session_receipt_persistence"
+}
