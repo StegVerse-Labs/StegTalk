@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_session_receipt_persistence_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_receipt_persistence",
+  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_remaining": [],
+  "new_workflows_added": false,
+  "implemented_files": [
+    "src/stegtalk/mobile_shell_session_receipt_store.py",
+    "tests/test_mobile_shell_session_receipt_store.py",
+    "scripts/verify_mobile_shell_session_receipt_store.py",
+    "STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_PERSISTENCE_STATE.json"
+  ],
+  "automated_capabilities": [
+    "persist_verified_receipt_chain",
+    "append_receipt_with_atomic_replace",
+    "optimistic_chain_head_match",
+    "restore_and_replay_persisted_chain",
+    "inspect_payload_free_chain_summary",
+    "reject_wrapper_or_chain_tampering",
+    "reject_path_escape_session_ids"
+  ],
+  "store_collection": "mobile_shell_session_receipt_chains",
+  "downstream_propagation_authorized": false,
+  "candidate_next_goal": "mobile_shell_session_managed_checkpoint"
+}
