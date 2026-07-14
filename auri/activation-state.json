@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "entity_id": "stegverse:auri",
   "activation_level": "AURI-L1",
-  "state": "oci_packaged_awaiting_live_deployment_evidence",
+  "state": "live_proof_automation_installed_awaiting_authorized_target",
   "active": false,
   "quarantined": false,
   "revoked": false,
@@ -26,6 +26,10 @@
     "deployment_package_verifier": "scripts/verify_auri_deployment_package.py",
     "deployment_package_workflow": ".github/workflows/auri-package-smoke.yml",
     "deployment_package_evidence": "evidence/auri-deployment-package.json",
+    "live_probe": "scripts/probe_auri_live_service.py",
+    "live_proof_workflow": ".github/workflows/auri-live-proof.yml",
+    "activation_receipt_schema": "auri/schemas/activation-receipt.schema.json",
+    "activation_receipt_builder": "scripts/build_auri_activation_receipt.py",
     "stegcore_gateway": "StegVerse-Labs/StegCore/evidence/auri-gateway-verification.json",
     "continuity_receipts": "StegVerse-Labs/Continuity/evidence/auri-receipts-verification.json",
     "containment": "evidence/auri-containment-verification.json",
@@ -37,6 +41,8 @@
     "service_packaged": true,
     "oci_packaged": true,
     "credential_free_smoke_workflow_installed": true,
+    "live_proof_automation_installed": true,
+    "activation_receipt_path_installed": true,
     "runtime_deployed": false,
     "provider_adapter_verified": true,
     "stegcore_gateway_verified": true,
@@ -47,9 +53,9 @@
   },
   "manual_blocker": {
     "code": "deployment.target_or_credentials.required",
-    "detail": "All credential-free packaging is now installed, including a fail-closed OCI image and automated smoke workflow. A live persistent runtime still cannot be truthfully deployed or independently health-checked without an authorized hosting target and non-interactive credentials.",
-    "resume_condition": "authorized deployment target and non-interactive credential path become available"
+    "detail": "Packaging, live probing, evidence collection, and activation-receipt construction are automated. A live persistent runtime still cannot be truthfully deployed without an authorized hosting target, non-interactive credentials, and a non-reference provider binding.",
+    "resume_condition": "authorized deployment target, non-interactive credential path, and provider binding references become available"
   },
-  "transition_rule": "active may become true only when every activation gate is true and independent live proof exists",
+  "transition_rule": "active may become true only when every activation gate is true and independent live proof plus an activation receipt exist",
   "last_updated": "2026-07-14"
 }
