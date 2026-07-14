@@ -11,7 +11,7 @@ Goal: activate Auri as a governed, receipt-bearing AURI-L1 advisory entity
 
 ## Source of truth
 
-This document is the current handoff and task source of truth. Auri is not active merely because a model uses its name. Activation requires persistent identity, enforceable authority boundaries, runtime evidence, external admissibility, revocation, reconstructable receipts, verified live deployment, and a final activation receipt.
+This document is the current handoff and task source of truth. Auri is not active merely because a model uses its name. Activation requires persistent identity, enforceable authority boundaries, runtime evidence, external admissibility, revocation, reconstructable receipts, verified live deployment, canonical authorization evidence, and a final activation receipt.
 
 ## Operating rule
 
@@ -46,8 +46,13 @@ Progression is automation-first. Manual tasks must be eliminated through workflo
   - Package evidence: `evidence/auri-deployment-package.json`
   - Live probe: `scripts/probe_auri_live_service.py`
   - Gated live-proof workflow: `.github/workflows/auri-live-proof.yml`
+  - Provider binding schema: `auri/schemas/provider-binding.schema.json`
+  - Deployment authorization schema: `auri/schemas/deployment-authorization.schema.json`
+  - Authorization verifier: `scripts/verify_auri_activation_inputs.py`
   - Activation receipt schema: `auri/schemas/activation-receipt.schema.json`
   - Activation receipt builder: `scripts/build_auri_activation_receipt.py`
+  - Evidence-gated state finalizer: `scripts/finalize_auri_activation_state.py`
+  - Gate-hardening evidence: `evidence/auri-activation-gate-hardening.json`
 
 ## Deployment and proof package
 
@@ -63,26 +68,32 @@ The package now exposes:
 - non-root OCI container packaging;
 - credential-free automated image build and smoke probes;
 - host-agnostic live health probing;
+- canonical provider-binding authorization;
+- canonical deployment-target authorization;
+- matching credential-reference validation;
 - gated cross-repository evidence checks;
 - deterministic activation receipt construction;
+- evidence-gated active-state finalization;
+- automated commit of activation evidence only after all gates pass;
 - explicit separation between reference smoke mode and live activation.
 
 Default container startup is fail-closed. `AURI_PROVIDER_MODE=reference_echo` exists only for automated packaging and interface smoke verification and may never be used as production activation evidence.
 
-The live-proof workflow runs only when `AURI_LIVE_BASE_URL` and required provider, StegCore, and Continuity evidence references exist as authorized repository variables. It does not contain or fabricate deployment credentials.
+The live-proof workflow now requires repository paths to canonical provider-binding and deployment-authorization documents. It verifies their hashes, rejects reference providers, requires HTTPS persistent deployment, preserves `execution_authority: false`, probes live health, builds the activation receipt, runs the guarded finalizer, and commits activation evidence only after every gate passes.
 
 ## Current activation state
 
 ```text
-state: live_proof_automation_installed_awaiting_authorized_target
+state: authorization_gates_installed_awaiting_external_evidence
 active: false
 completed: AURI-001 through AURI-006
 current: AURI-007
 service_packaged: true
 oci_packaged: true
-credential_free_smoke_workflow_installed: true
 live_proof_automation_installed: true
-activation_receipt_path_installed: true
+authorization_document_schemas_installed: true
+authorization_input_verifier_installed: true
+evidence_gated_state_finalizer_installed: true
 runtime_deployed: false
 end_to_end_proof_passed: false
 ```
@@ -101,23 +112,28 @@ AURI-007 — authorized live deployment evidence and final activation receipt
 Code: deployment.target_or_credentials.required
 ```
 
-All credential-free build, packaging, probing, evidence-contract, and activation-receipt work is installed. A live persistent runtime still cannot be truthfully deployed without an authorized hosting target, a non-interactive deployment credential path, and a non-reference provider binding. None may be presumed, embedded, or fabricated.
+All repository-side build, packaging, authorization validation, probing, evidence collection, activation-receipt construction, and guarded state-transition work is installed. Live activation still requires canonical externally authorized provider and deployment documents, a reachable persistent target, and a non-interactive credential path. None may be presumed, embedded, or fabricated.
 
 ## Resume condition
 
 ```text
-authorized deployment target + non-interactive credential path + non-reference provider binding references
+canonical provider-binding document
++ canonical deployment-authorization document
++ authorized live target
++ non-interactive credential path
 ```
 
 After the resume condition exists, the automated continuation is:
 
-1. deploy the OCI-packaged AURI-L1 service;
-2. run the live health probe;
-3. exercise advisory allow, deny, and defer without execution;
-4. exercise quarantine and revocation;
-5. preserve cross-repository receipts;
-6. build and validate the final activation receipt;
-7. set `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
+1. verify provider and deployment authorization documents;
+2. deploy or confirm the OCI-packaged AURI-L1 service;
+3. run the live health probe;
+4. exercise advisory allow, deny, and defer without execution;
+5. exercise quarantine and revocation;
+6. preserve cross-repository receipts;
+7. build and validate the final activation receipt;
+8. run the guarded state finalizer;
+9. commit live evidence and set `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
 
 ## Email monitoring
 
