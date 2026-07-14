@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_validation_repair",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source": "STEGTALK_MIRROR_HANDOFF.md",
+  "repair_branch": "repair-validation-install",
+  "production_ready": false,
+  "manual_tasks_required": [],
+  "observed_failures": [
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29304441633,
+      "failed_step": "Install test/runtime support",
+      "root_cause": "project version was not PEP 440 compliant",
+      "repair": "changed project version to 0.0.0+managed.completion"
+    },
+    {
+      "workflow": "device-continuity",
+      "run_id": 29304441639,
+      "failed_step": "Run Device Continuity tests",
+      "root_cause": "pytest was not installed by the workflow",
+      "repair": "added an explicit pytest installation step to the existing workflow"
+    }
+  ],
+  "workflow_policy": {
+    "new_workflows_added": false,
+    "existing_workflows_modified": [
+      ".github/workflows/device-continuity.yml"
+    ]
+  },
+  "verification_state": "PENDING_PULL_REQUEST_WORKFLOW_EVIDENCE",
+  "success_condition": {
+    "managed_completion": "PASS",
+    "device_continuity": "PASS",
+    "test_readiness": "PASS"
+  }
+}
