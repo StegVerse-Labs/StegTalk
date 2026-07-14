@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "result": "PASS",
+  "scope": "AURI-007 pre-deployment activation gate hardening",
+  "artifacts": [
+    "auri/schemas/provider-binding.schema.json",
+    "auri/schemas/deployment-authorization.schema.json",
+    "scripts/verify_auri_activation_inputs.py",
+    "scripts/finalize_auri_activation_state.py",
+    ".github/workflows/auri-live-proof.yml"
+  ],
+  "verified_invariants": {
+    "reference_provider_rejected": true,
+    "https_deployment_required": true,
+    "provider_and_deployment_authority_required": true,
+    "credential_reference_consistency_required": true,
+    "execution_authority_false_required": true,
+    "canonical_document_hashes_required": true,
+    "live_health_pass_required": true,
+    "activation_receipt_hash_required": true,
+    "state_transition_fail_closed": true,
+    "activation_performed": false
+  },
+  "remaining_blocker": "deployment.target_or_credentials.required"
+}
