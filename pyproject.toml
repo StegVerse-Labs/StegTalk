@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stegtalk"
-version = "0.0.0-managed-completion"
+version = "0.0.0+managed.completion"
 description = "StegTalk managed completion layer"
 requires-python = ">=3.11"
 
