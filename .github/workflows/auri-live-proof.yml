@@ -8,18 +8,28 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: auri-live-proof
+  cancel-in-progress: false
+
 jobs:
   live-proof:
-    if: ${{ vars.AURI_LIVE_BASE_URL != '' }}
+    if: ${{ vars.AURI_LIVE_BASE_URL != '' && vars.AURI_PROVIDER_BINDING_PATH != '' && vars.AURI_DEPLOYMENT_AUTHORIZATION_PATH != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Probe live service
+      - name: Verify authorized provider and deployment inputs
         run: |
           mkdir -p evidence
+          python scripts/verify_auri_activation_inputs.py \
+            --provider-binding "${{ vars.AURI_PROVIDER_BINDING_PATH }}" \
+            --deployment-authorization "${{ vars.AURI_DEPLOYMENT_AUTHORIZATION_PATH }}" \
+            --output evidence/auri-activation-inputs.json
+      - name: Probe live service
+        run: |
           python scripts/probe_auri_live_service.py "${{ vars.AURI_LIVE_BASE_URL }}" \
             --output evidence/auri-live-health.json
       - name: Verify required cross-repository evidence references
@@ -38,7 +48,7 @@ jobs:
           if missing:
               raise SystemExit("missing activation evidence variables: " + ", ".join(missing))
           PY
-      - name: Build activation receipt candidate
+      - name: Build activation receipt
         env:
           AURI_LIVE_BASE_URL: ${{ vars.AURI_LIVE_BASE_URL }}
           PROVIDER_BINDING_REF: ${{ vars.AURI_PROVIDER_BINDING_REF }}
@@ -54,10 +64,32 @@ jobs:
             --containment-test-ref evidence/auri-containment-verification.json \
             --revocation-test-ref evidence/auri-containment-verification.json \
             --output evidence/auri-activation-receipt.json
+      - name: Finalize candidate activation state
+        run: |
+          python scripts/finalize_auri_activation_state.py \
+            --state auri/activation-state.json \
+            --activation-inputs evidence/auri-activation-inputs.json \
+            --live-health evidence/auri-live-health.json \
+            --activation-receipt evidence/auri-activation-receipt.json \
+            --output evidence/auri-activation-state.final.json
       - name: Upload activation evidence
         uses: actions/upload-artifact@v4
         with:
           name: auri-live-proof
           path: |
+            evidence/auri-activation-inputs.json
             evidence/auri-live-health.json
             evidence/auri-activation-receipt.json
+            evidence/auri-activation-state.final.json
+      - name: Commit verified activation evidence and state
+        run: |
+          cp evidence/auri-activation-state.final.json auri/activation-state.json
+          git config user.name "stegverse-automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add auri/activation-state.json evidence/auri-activation-inputs.json evidence/auri-live-health.json evidence/auri-activation-receipt.json
+          if git diff --cached --quiet; then
+            echo "No activation state change to commit"
+          else
+            git commit -m "Activate AURI-L1 from verified live evidence"
+            git push
+          fi
