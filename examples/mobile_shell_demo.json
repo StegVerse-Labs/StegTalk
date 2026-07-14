@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "example_type": "stegtalk_mobile_shell_demo",
+  "mode": "local_prototype",
+  "production_ready": false,
+  "identity": {
+    "entity_id": "rigel",
+    "display_name": "Rigel"
+  },
+  "contacts": [
+    {
+      "entity_id": "auri",
+      "display_name": "Auri",
+      "capabilities": ["routing", "messaging"]
+    }
+  ],
+  "example_actions": [
+    {
+      "action": "load_local_identity",
+      "expected_result": "rigel"
+    },
+    {
+      "action": "show_local_contacts",
+      "expected_count": 1
+    },
+    {
+      "action": "create_local_message",
+      "receiver_hint": "Auri",
+      "expected_result": "routed"
+    },
+    {
+      "action": "show_local_inbox",
+      "expected_count": 1
+    },
+    {
+      "action": "run_public_discovery_search",
+      "query": "routing assistant",
+      "expected_count": 1
+    }
+  ],
+  "deferred": [
+    "native_ios_ui",
+    "native_android_ui",
+    "push_notifications",
+    "external_account_sync"
+  ],
+  "authority": {
+    "network_authority": false,
+    "execution_authority": false,
+    "external_account_authority": false,
+    "native_platform_authority": false
+  }
+}
