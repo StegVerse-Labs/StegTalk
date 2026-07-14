@@ -21,6 +21,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install test support
+        run: python -m pip install pytest
+
       - name: Validate handoff payload
         run: python tools/validate_device_continuity_handoff.py
 

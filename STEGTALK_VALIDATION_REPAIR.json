@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.2.0",
+  "artifact_type": "stegtalk_validation_repair",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source": "STEGTALK_MIRROR_HANDOFF.md",
+  "repair_branch": "repair-validation-install",
+  "production_ready": false,
+  "manual_tasks_required": [],
+  "observed_failures": [
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29304441633,
+      "failed_step": "Install test/runtime support",
+      "root_cause": "project version was not PEP 440 compliant",
+      "repair": "changed project version to 0.0.0+managed.completion"
+    },
+    {
+      "workflow": "device-continuity",
+      "run_id": 29304441639,
+      "failed_step": "Run Device Continuity tests",
+      "root_cause": "pytest was not installed by the workflow",
+      "repair": "added an explicit pytest installation step to the existing workflow"
+    },
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29304803059,
+      "failed_step": "Run managed completion tests",
+      "root_cause": "test expected ST-001 even though ST-025 is the next pending task",
+      "repair": "derive the next pending task from the queue source of truth"
+    },
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29304883307,
+      "failed_step": "Run runtime tests",
+      "root_cause": "stale handoff and candidate-state test assertions",
+      "repair": "align tests with current verified-candidate and queue-only handoff state"
+    },
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29305018795,
+      "failed_step": "Run core runtime tests",
+      "root_cause": "activation test still treated adapter_boundary as incomplete",
+      "repair": "assert adapter_boundary is complete and release_candidate_review remains"
+    }
+  ],
+  "final_observed_passes": [
+    {"workflow": "StegTalk Managed Completion", "run_id": 29305087620, "result": "PASS"},
+    {"workflow": "device-continuity", "run_id": 29305087641, "result": "PASS"},
+    {"workflow": "Test Readiness", "run_id": 29305087611, "result": "PASS"}
+  ],
+  "workflow_policy": {
+    "new_workflows_added": false,
+    "existing_workflows_modified": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/device-continuity.yml"
+    ]
+  },
+  "verification_state": "VERIFIED_GREEN",
+  "success_condition": {
+    "managed_completion": "PASS",
+    "device_continuity": "PASS",
+    "test_readiness": "PASS"
+  }
+}

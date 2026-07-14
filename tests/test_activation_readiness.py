@@ -7,4 +7,5 @@ def test_activation_readiness_reports_local_runtime_ready_not_production():
     assert result["local_runtime_ready"] is True
     assert result["production_ready"] is False
     assert result["missing_required_files"] == []
-    assert "adapter_boundary" in result["remaining_stages"]
+    assert "adapter_boundary" in result["completed_stages"]
+    assert result["remaining_stages"] == ["release_candidate_review"]

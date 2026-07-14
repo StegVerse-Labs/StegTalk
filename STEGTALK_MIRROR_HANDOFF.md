@@ -26,10 +26,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - Device Continuity Layer validation workflow
 - release-candidate verification artifact and test
 - destination-handoff propagation posture and test
+- green validation-repair artifact and tests
 
 ## Current Priority
 
-Local release-candidate verification is complete. Destination handoffs were reviewed and do not currently authorize downstream mutation. Preserve a queue-only posture until each destination's active gate completes.
+Merge the verified validation repair, then complete managed queue task `ST-025` by building the local mobile-shell state declared by `STEGTALK_MOBILE_SHELL_PLAN.json`. Preserve `production_ready: false` and queue-only downstream propagation.
 
 ## Local Candidate Verification Complete
 
@@ -45,6 +46,31 @@ Destination: `StegVerse-Labs/StegTalk`
 Candidate marker: `v0.1.0-local-prototype-candidate`
 Status: `verified_non_production_local_prototype`
 Production ready: `false`
+
+## Validation Repair Verified Green
+
+Artifact: `STEGTALK_VALIDATION_REPAIR.json`
+Tests: `tests/test_validation_repair.py`, `tests/test_managed_completion.py`, `tests/test_mirror_handoff.py`, `tests/test_candidate_status.py`, `tests/test_activation_readiness.py`
+Branch: `repair-validation-install`
+Manual tasks required: none
+New workflows added: false
+
+Installed repairs:
+
+- PEP 440-compliant project version: `0.0.0+managed.completion`
+- explicit `pytest` install in the existing Device Continuity workflow
+- queue-derived next-task test aligned to `ST-025`
+- current handoff and candidate-state assertions
+- completed `adapter_boundary` activation-state assertion
+- diagnostic test lanes in the existing managed-completion workflow
+
+Final observed pull-request evidence:
+
+- `StegTalk Managed Completion`, run `29305087620`: PASS
+- `device-continuity`, run `29305087641`: PASS
+- `Test Readiness`, run `29305087611`: PASS
+
+Verification state: `VERIFIED_GREEN`
 
 ## Device Continuity Install Complete
 
@@ -66,10 +92,6 @@ Installed files:
 - `tests/test_device_continuity_receipt.py`
 - `.github/workflows/device-continuity.yml`
 
-## Destination Validation Observation
-
-The destination validation workflow is installed and checks the handoff payload, destination receipt, and both Device Continuity tests. No workflow run was observable for the current head during verification, so the release artifact records `destination_validation_workflow_observed_run: false` rather than inferring success.
-
 ## Propagation Posture
 
 Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
@@ -85,10 +107,14 @@ Destination review results:
 
 No downstream repo was mutated because each destination handoff currently preserves another active gate or workstream.
 
+## Managed Queue
+
+The queue source of truth identifies `ST-025` (`State`) as the only pending task. Its parent plan is `STEGTALK_MOBILE_SHELL_PLAN.json`, whose declared next task is `build_mobile_shell_state`.
+
 ## Build Rule
 
 Before continuing any StegTalk repo task, check this file first and treat it as the current handoff and task source of truth.
 
 ## Next Integration Candidate
 
-Recheck destination handoffs after their active validation gates complete. Propagate `verified_non_production_local_prototype` only when the immediate destination handoff authorizes mutation, and preserve `production_ready: false` in every destination artifact.
+Merge the green repair PR. Then implement `src/stegtalk/mobile_shell.py`, `tests/test_mobile_shell.py`, `examples/mobile_shell_demo.json`, and a machine-readable mobile-shell state artifact; mark `ST-025` complete only after validation passes. Recheck downstream handoffs only after that internal queue task closes.
