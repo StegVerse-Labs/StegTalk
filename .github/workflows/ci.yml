@@ -29,7 +29,9 @@ jobs:
       - name: Run messaging runtime tests
         run: python -m pytest tests/test_message_envelope.py tests/test_contact_routing.py
       - name: Run local-state runtime tests
-        run: python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_mobile_shell.py tests/test_mobile_shell_session.py
+        run: python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_mobile_shell.py
+      - name: Run mobile shell session tests
+        run: python -m pytest -vv tests/test_mobile_shell_session.py
       - name: Run release-state tests
         run: python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_mirror_handoff.py tests/test_candidate_status.py tests/test_local_candidate.py
       - name: Run discovery and shell tests
