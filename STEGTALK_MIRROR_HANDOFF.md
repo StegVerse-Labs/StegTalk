@@ -26,10 +26,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - Device Continuity Layer validation workflow
 - release-candidate verification artifact and test
 - destination-handoff propagation posture and test
+- validation-install repair artifact and test
 
 ## Current Priority
 
-Local release-candidate verification is complete. Destination handoffs were reviewed and do not currently authorize downstream mutation. Preserve a queue-only posture until each destination's active gate completes.
+Repair and verify the two observed validation failures before any downstream propagation or release-status advancement. Preserve `production_ready: false` and the queue-only downstream posture until pull-request workflow evidence is green.
 
 ## Local Candidate Verification Complete
 
@@ -66,9 +67,29 @@ Installed files:
 - `tests/test_device_continuity_receipt.py`
 - `.github/workflows/device-continuity.yml`
 
-## Destination Validation Observation
+## Validation Repair
 
-The destination validation workflow is installed and checks the handoff payload, destination receipt, and both Device Continuity tests. No workflow run was observable for the current head during verification, so the release artifact records `destination_validation_workflow_observed_run: false` rather than inferring success.
+Artifact: `STEGTALK_VALIDATION_REPAIR.json`
+Test: `tests/test_validation_repair.py`
+Branch: `repair-validation-install`
+Manual tasks required: none
+New workflows added: false
+
+Observed failures:
+
+1. `StegTalk Managed Completion`, run `29304441633`, failed at `Install test/runtime support` because `0.0.0-managed-completion` was not a PEP 440-compliant project version.
+2. `device-continuity`, run `29304441639`, reached both validators successfully and failed at `Run Device Continuity tests` because the existing workflow did not install `pytest`.
+
+Installed repairs:
+
+- `pyproject.toml` now uses `0.0.0+managed.completion`.
+- The existing `.github/workflows/device-continuity.yml` installs `pytest` before running its two tests.
+
+Verification remains fail-closed at `PENDING_PULL_REQUEST_WORKFLOW_EVIDENCE` until the pull-request runs prove:
+
+- `StegTalk Managed Completion`: PASS
+- `device-continuity`: PASS
+- `Test Readiness`: PASS
 
 ## Propagation Posture
 
@@ -91,4 +112,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Recheck destination handoffs after their active validation gates complete. Propagate `verified_non_production_local_prototype` only when the immediate destination handoff authorizes mutation, and preserve `production_ready: false` in every destination artifact.
+Inspect the pull-request workflow evidence for the validation repair. Merge only after all three required checks pass. After merge, recheck destination handoffs and propagate `verified_non_production_local_prototype` only when the immediate destination handoff authorizes mutation, preserving `production_ready: false` in every destination artifact.
