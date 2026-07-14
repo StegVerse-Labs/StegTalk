@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_session_checkpoint_rotation_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_checkpoint_rotation",
+  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_remaining": [],
+  "new_workflows_added": false,
+  "automated_capabilities": [
+    "bounded_checkpoint_retention",
+    "automatic_generation_assignment",
+    "atomic_history_replacement",
+    "restore_newest_valid_checkpoint",
+    "fallback_to_latest_valid_prior_checkpoint",
+    "reject_history_and_entry_tampering",
+    "reject_cross_session_or_unsafe_identifiers"
+  ],
+  "default_retention": 3,
+  "candidate_next_goal": "mobile_shell_session_recovery_receipt",
+  "downstream_propagation_authorized": false
+}
