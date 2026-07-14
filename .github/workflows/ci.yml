@@ -24,8 +24,12 @@ jobs:
         run: python scripts/queue_status.py
       - name: Run managed completion tests
         run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
-      - name: Run core runtime tests
-        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py tests/test_message_envelope.py tests/test_contact_routing.py tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py
+      - name: Run entity runtime tests
+        run: python -m pytest tests/test_entity_runtime.py tests/test_entity_interactions.py tests/test_entity_runtime_demo.py
+      - name: Run messaging runtime tests
+        run: python -m pytest tests/test_message_envelope.py tests/test_contact_routing.py
+      - name: Run local-state runtime tests
+        run: python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py
       - name: Run release-state tests
         run: python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_mirror_handoff.py tests/test_candidate_status.py tests/test_local_candidate.py
       - name: Run discovery and shell tests
