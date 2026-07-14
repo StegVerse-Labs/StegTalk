@@ -20,77 +20,95 @@ The repo is a verified non-production local prototype candidate with the followi
 - public discovery record/index/search/demo
 - shell plan/state/actions/demo/review
 - account model/session
-- Device Continuity Layer handoff boundary
-- Device Continuity Layer destination validation
-- Device Continuity Layer destination receipt
-- Device Continuity Layer validation workflow
-- release-candidate verification artifact and test
-- destination-handoff propagation posture and test
-- green validation-repair artifact and tests
+- Device Continuity Layer handoff boundary, destination validation, receipt, and workflow
+- release-candidate verification
+- destination-handoff propagation posture
+- green validation repair
+- verified local mobile-shell state and application-facing actions
 
 ## Current Priority
 
-Merge the verified validation repair, then complete managed queue task `ST-025` by building the local mobile-shell state declared by `STEGTALK_MOBILE_SHELL_PLAN.json`. Preserve `production_ready: false` and queue-only downstream propagation.
+Merge the verified `ST-025` mobile-shell state and continue the declared `mobile_shell_persistent_session_boundary` integration goal. Preserve `production_ready: false` and queue-only downstream propagation.
 
 ## Local Candidate Verification Complete
-
-Destination: `StegVerse-Labs/StegTalk`
-
-- `STEGTALK_RELEASE_HANDOFF.json`
-- `STEGTALK_CANDIDATE_STATUS.json`
-- `STEGTALK_LOCAL_CANDIDATE.json`
-- `STEGTALK_RELEASE_VERIFICATION.json`
-- `scripts/verify_release_candidate.py`
-- `tests/test_release_verification.py`
 
 Candidate marker: `v0.1.0-local-prototype-candidate`
 Status: `verified_non_production_local_prototype`
 Production ready: `false`
 
+Core evidence:
+
+- `STEGTALK_RELEASE_HANDOFF.json`
+- `STEGTALK_CANDIDATE_STATUS.json`
+- `STEGTALK_LOCAL_CANDIDATE.json`
+- `STEGTALK_RELEASE_VERIFICATION.json`
+- `STEGTALK_VALIDATION_REPAIR.json`
+
 ## Validation Repair Verified Green
 
-Artifact: `STEGTALK_VALIDATION_REPAIR.json`
-Tests: `tests/test_validation_repair.py`, `tests/test_managed_completion.py`, `tests/test_mirror_handoff.py`, `tests/test_candidate_status.py`, `tests/test_activation_readiness.py`
-Branch: `repair-validation-install`
-Manual tasks required: none
-New workflows added: false
+No new workflows were added. Existing workflows were repaired and diagnostic lanes were added to the existing managed-completion workflow.
 
-Installed repairs:
+Final repair evidence:
 
-- PEP 440-compliant project version: `0.0.0+managed.completion`
-- explicit `pytest` install in the existing Device Continuity workflow
-- queue-derived next-task test aligned to `ST-025`
-- current handoff and candidate-state assertions
-- completed `adapter_boundary` activation-state assertion
-- diagnostic test lanes in the existing managed-completion workflow
-
-Final observed pull-request evidence:
-
-- `StegTalk Managed Completion`, run `29305087620`: PASS
-- `device-continuity`, run `29305087641`: PASS
-- `Test Readiness`, run `29305087611`: PASS
+- `StegTalk Managed Completion`, run `29305177210`: PASS
+- `device-continuity`, run `29305177383`: PASS
+- `Test Readiness`, run `29305177220`: PASS
 
 Verification state: `VERIFIED_GREEN`
+Manual tasks required: none
 
-## Device Continuity Install Complete
+## ST-025 Mobile Shell State Complete
 
-Source: `StegVerse-Labs/device-continuity-layer`
-Destination: `StegVerse-Labs/StegTalk`
-Candidate tag: `v0.1.0-offline-baseline`
-Status: installed as non-authorizing handoff payload
+Parent plan: `STEGTALK_MOBILE_SHELL_PLAN.json`
+Declared task: `build_mobile_shell_state`
+Queue task: `ST-025`
+State artifact: `STEGTALK_MOBILE_SHELL_STATE.json`
+Status: `VERIFIED_COMPLETE`
+Production ready: `false`
+Local only: `true`
+Manual tasks required: none
 
 Installed files:
 
-- `docs/device-continuity-layer.md`
-- `contracts/device-continuity-handoff.contract.md`
-- `fixtures/device-continuity/stegtalk-device-continuity-handoff.json`
-- `fixtures/device-continuity/fixture-ble-button-stegtalk-001.receipt.json`
-- `receipts/device-continuity/stegtalk-device-continuity-receipt.json`
-- `tools/validate_device_continuity_handoff.py`
-- `tools/validate_device_continuity_receipt.py`
-- `tests/test_device_continuity_handoff.py`
-- `tests/test_device_continuity_receipt.py`
-- `.github/workflows/device-continuity.yml`
+- `src/stegtalk/mobile_shell.py`
+- `tests/test_mobile_shell.py`
+- `examples/mobile_shell_demo.json`
+- `STEGTALK_MOBILE_SHELL_STATE.json`
+
+Implemented application-facing capabilities:
+
+- load local identity
+- show local contacts
+- create and route a local message
+- show the local inbox projection
+- run local public-discovery search
+
+Explicitly deferred:
+
+- native iOS UI
+- native Android UI
+- push notifications
+- external account synchronization
+
+The mobile shell does not grant network, execution, external-account, or native-platform authority.
+
+Final queue-closure validation evidence:
+
+- `StegTalk Managed Completion`, run `29305441604`: PASS
+- `device-continuity`, run `29305441573`: PASS
+- `Test Readiness`, run `29305441586`: PASS
+
+## Managed Queue Complete
+
+`STEGTALK_TASK_QUEUE.json` records all tasks `ST-001` through `ST-025` as complete. Open task count: `0`. The completed local-prototype queue remains non-production.
+
+Next integration goal: `mobile_shell_persistent_session_boundary`
+
+The next goal has begun through `STEGTALK_NEXT_INTEGRATION.json`. Planned files:
+
+- `src/stegtalk/mobile_shell_session.py`
+- `tests/test_mobile_shell_session.py`
+- `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
 
 ## Propagation Posture
 
@@ -98,18 +116,14 @@ Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
 Authority posture: `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`
 Manual tasks required: none
 
-Destination review results:
+Last destination review results:
 
 - `StegVerse-Labs/Site`: `DEFER_ACTIVE_GOAL`
 - `GCAT-BCAT-Engine/Publisher`: `QUEUE_AFTER_CURRENT_PRIORITY`
 - `StegVerse-Labs/admissibility-wiki`: `QUEUE_PENDING_CANONICAL_VALIDATION`
 - `StegVerse-002/stegguardian-wiki`: `DEFER_ACTIVE_VALIDATION`
 
-No downstream repo was mutated because each destination handoff currently preserves another active gate or workstream.
-
-## Managed Queue
-
-The queue source of truth identifies `ST-025` (`State`) as the only pending task. Its parent plan is `STEGTALK_MOBILE_SHELL_PLAN.json`, whose declared next task is `build_mobile_shell_state`.
+No downstream mutation is authorized by those handoffs.
 
 ## Build Rule
 
@@ -117,4 +131,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Merge the green repair PR. Then implement `src/stegtalk/mobile_shell.py`, `tests/test_mobile_shell.py`, `examples/mobile_shell_demo.json`, and a machine-readable mobile-shell state artifact; mark `ST-025` complete only after validation passes. Recheck downstream handoffs only after that internal queue task closes.
+Build the local persistent mobile-shell session boundary without crossing into native UI, external synchronization, production networking, or downstream repository authority.
