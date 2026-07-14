@@ -25,10 +25,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - Device Continuity Layer destination receipt
 - Device Continuity Layer validation workflow
 - release-candidate verification artifact and test
+- destination-handoff propagation posture and test
 
 ## Current Priority
 
-Local release-candidate verification is complete. Propagate the verified candidate status to ecosystem documentation targets without claiming production readiness.
+Local release-candidate verification is complete. Destination handoffs were reviewed and do not currently authorize downstream mutation. Preserve a queue-only posture until each destination's active gate completes.
 
 ## Local Candidate Verification Complete
 
@@ -69,31 +70,20 @@ Installed files:
 
 The destination validation workflow is installed and checks the handoff payload, destination receipt, and both Device Continuity tests. No workflow run was observable for the current head during verification, so the release artifact records `destination_validation_workflow_observed_run: false` rather than inferring success.
 
-## Downstream Propagation Targets
+## Propagation Posture
 
-Destination: `StegVerse-Labs/Site`
+Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
+Authority posture: `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`
+Manual tasks required: none
 
-- `SITE_MIRROR_HANDOFF.md`
-- `data/stegtalk-local-candidate.json`
-- `data/stegtalk-local-candidate-receipt.json`
+Destination review results:
 
-Destination: `GCAT-BCAT-Engine/Publisher`
+- `StegVerse-Labs/Site`: `DEFER_ACTIVE_GOAL`
+- `GCAT-BCAT-Engine/Publisher`: `QUEUE_AFTER_CURRENT_PRIORITY`
+- `StegVerse-Labs/admissibility-wiki`: `QUEUE_PENDING_CANONICAL_VALIDATION`
+- `StegVerse-002/stegguardian-wiki`: `DEFER_ACTIVE_VALIDATION`
 
-- `PUBLISHER_MIRROR_HANDOFF.md`
-- `data/stegtalk-local-candidate.json`
-- `data/stegtalk-local-candidate-publisher-receipt.json`
-
-Destination: `StegVerse-Labs/admissibility-wiki`
-
-- `ADMISSIBILITY_MIRROR_HANDOFF.md`
-- `pages/stegtalk-admissibility-boundary.md`
-- `receipts/stegtalk-admissibility-boundary-receipt.json`
-
-Destination: `StegVerse-002/stegguardian-wiki`
-
-- `STEGGUARDIAN_WIKI_MIRROR_HANDOFF.md`
-- `pages/stegtalk-guardian-account-boundary.md`
-- `receipts/stegtalk-boundary-receipt.json`
+No downstream repo was mutated because each destination handoff currently preserves another active gate or workstream.
 
 ## Build Rule
 
@@ -101,4 +91,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Propagate `verified_non_production_local_prototype` and the candidate marker to Site, Publisher, admissibility-wiki, and stegguardian-wiki; preserve `production_ready: false` in every destination artifact.
+Recheck destination handoffs after their active validation gates complete. Propagate `verified_non_production_local_prototype` only when the immediate destination handoff authorizes mutation, and preserve `production_ready: false` in every destination artifact.
