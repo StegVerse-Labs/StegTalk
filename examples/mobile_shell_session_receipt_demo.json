@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "example_type": "stegtalk_mobile_shell_session_receipt_chain",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "sequence": [
+    {
+      "event": "persist",
+      "result": "success",
+      "previous_chain_head": null
+    },
+    {
+      "event": "restore",
+      "result": "success",
+      "previous_chain_head": "<persist.receipt_chain_head>"
+    },
+    {
+      "event": "integrity_failure",
+      "result": "rejected",
+      "previous_chain_head": "<restore.receipt_chain_head>"
+    }
+  ],
+  "automation": {
+    "persist_wrapper": "persist_session_with_receipt",
+    "restore_wrapper": "restore_session_with_receipt",
+    "manual_receipt_construction_required": false,
+    "manual_chain_append_required": false,
+    "manual_replay_verification_required": false
+  }
+}
