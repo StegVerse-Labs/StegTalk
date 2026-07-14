@@ -59,6 +59,8 @@ Automated behavior:
 
 The wrappers `persist_session_with_receipt` and `restore_session_with_receipt` eliminate manual receipt construction, failure classification, chain append, and replay verification.
 
+The receipt chain grants no network, execution, external-account, or native-platform authority.
+
 ## Propagation Posture
 
 Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
