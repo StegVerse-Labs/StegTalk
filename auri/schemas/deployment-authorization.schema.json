@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/auri/deployment-authorization.v1.json",
+  "title": "AURI-L1 Deployment Authorization",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "authorization_id",
+    "auri_entity_id",
+    "target_id",
+    "base_url",
+    "credential_ref",
+    "authorized_by",
+    "authorized_scope",
+    "persistent_runtime",
+    "reference_environment",
+    "execution_authority",
+    "authorization_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "authorization_id": {"type": "string", "minLength": 1},
+    "auri_entity_id": {"const": "stegverse:auri"},
+    "target_id": {"type": "string", "minLength": 1},
+    "base_url": {"type": "string", "pattern": "^https://"},
+    "credential_ref": {"type": "string", "minLength": 1},
+    "authorized_by": {"type": "string", "minLength": 1},
+    "authorized_scope": {"const": "AURI-L1-advisory-only"},
+    "persistent_runtime": {"const": true},
+    "reference_environment": {"const": false},
+    "execution_authority": {"const": false},
+    "revocable": {"const": true},
+    "authorization_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": true
+}
