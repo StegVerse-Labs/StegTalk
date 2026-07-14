@@ -15,6 +15,7 @@ COLLECTIONS = {
     "mobile_shell_sessions": "mobile_shell_sessions",
     "mobile_shell_session_receipt_chains": "mobile_shell_session_receipt_chains",
     "mobile_shell_session_checkpoints": "mobile_shell_session_checkpoints",
+    "mobile_shell_session_checkpoint_history": "mobile_shell_session_checkpoint_history",
 }
 
 
@@ -24,7 +25,7 @@ def initialize_store(root: str | Path) -> JsonObject:
     for directory in COLLECTIONS.values():
         (root_path / directory).mkdir(exist_ok=True)
     manifest = {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "store_type": "stegtalk_local_store",
         "created_at": utc_now(),
         "collections": COLLECTIONS,
@@ -40,12 +41,7 @@ def write_record(root: str | Path, collection: str, record_id: str, record: Json
     if not record_id:
         raise ValueError("record_id is required")
     root_path = Path(root)
-    record_payload = {
-        "record_id": record_id,
-        "collection": collection,
-        "record": record,
-        "written_at": utc_now(),
-    }
+    record_payload = {"record_id": record_id, "collection": collection, "record": record, "written_at": utc_now()}
     record_payload["record_hash"] = stable_hash(record_payload)
     path = root_path / COLLECTIONS[collection] / f"{record_id}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -72,17 +68,14 @@ def list_records(root: str | Path, collection: str) -> list[JsonObject]:
 def build_store_snapshot(root: str | Path) -> JsonObject:
     root_path = Path(root)
     snapshot: dict[str, Any] = {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "snapshot_type": "stegtalk_local_store_snapshot",
         "created_at": utc_now(),
         "collections": {},
     }
     for collection in COLLECTIONS:
         records = list_records(root_path, collection)
-        snapshot["collections"][collection] = {
-            "count": len(records),
-            "record_hashes": [record["record_hash"] for record in records],
-        }
+        snapshot["collections"][collection] = {"count": len(records), "record_hashes": [record["record_hash"] for record in records]}
     snapshot["snapshot_hash"] = stable_hash(snapshot)
     return snapshot
 
