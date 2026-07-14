@@ -32,10 +32,10 @@ jobs:
         run: python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_mobile_shell.py
       - name: Validate mobile session boundaries
         run: python -m pytest -vv tests/test_mobile_shell_session.py tests/test_mobile_shell_session_receipts.py tests/test_mobile_shell_session_receipt_store.py
-      - name: Validate managed checkpoint rotation and recovery receipts
-        run: python -m pytest -vv tests/test_mobile_shell_session_checkpoint.py tests/test_mobile_shell_session_checkpoint_rotation.py tests/test_mobile_shell_session_recovery_receipt.py
+      - name: Validate managed checkpoint recovery and policy
+        run: python -m pytest -vv tests/test_mobile_shell_session_checkpoint.py tests/test_mobile_shell_session_checkpoint_rotation.py tests/test_mobile_shell_session_recovery_receipt.py tests/test_mobile_shell_session_recovery_policy.py
       - name: Run unattended session verifiers
-        run: python scripts/verify_mobile_shell_session_receipts.py && python scripts/verify_mobile_shell_session_receipt_store.py && python scripts/verify_mobile_shell_session_checkpoint.py && python scripts/verify_mobile_shell_session_recovery_receipt.py
+        run: python scripts/verify_mobile_shell_session_receipts.py && python scripts/verify_mobile_shell_session_receipt_store.py && python scripts/verify_mobile_shell_session_checkpoint.py && python scripts/verify_mobile_shell_session_recovery_receipt.py && python scripts/verify_mobile_shell_session_recovery_policy.py
       - name: Run release artifact tests
         run: python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_candidate_status.py tests/test_local_candidate.py
       - name: Run mirror handoff test
