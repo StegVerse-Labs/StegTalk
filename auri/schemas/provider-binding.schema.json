@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/auri/provider-binding.v1.json",
+  "title": "AURI-L1 Provider Binding",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "binding_id",
+    "auri_entity_id",
+    "activation_level",
+    "provider_id",
+    "provider_mode",
+    "credential_ref",
+    "authorized_by",
+    "scope",
+    "reference_only",
+    "execution_authority",
+    "binding_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "binding_id": {"type": "string", "minLength": 1},
+    "auri_entity_id": {"const": "stegverse:auri"},
+    "activation_level": {"const": "AURI-L1"},
+    "provider_id": {"type": "string", "minLength": 1},
+    "provider_mode": {"type": "string", "minLength": 1, "not": {"const": "reference_echo"}},
+    "credential_ref": {"type": "string", "minLength": 1},
+    "authorized_by": {"type": "string", "minLength": 1},
+    "scope": {"const": "advisory_only"},
+    "reference_only": {"const": false},
+    "execution_authority": {"const": false},
+    "revocable": {"const": true},
+    "binding_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": true
+}
