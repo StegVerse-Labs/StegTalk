@@ -15,14 +15,13 @@ This document is the current handoff and task source of truth for Auri activatio
 
 Auri is not active merely because a model uses the name or persona. Activation requires a persistent identity, enforceable authority boundary, runtime evidence, external admissibility for consequential actions, revocation, and reconstructable receipts.
 
+## Operating rule
+
+Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, or machine-readable handoffs wherever possible. If no further progress can occur without a user-performed manual action, record the blocker here and reduce monitoring to daily until the condition changes.
+
 ## Existing foundation
 
-StegTalk Entity Runtime v1 already establishes that:
-
-- Auri is an identity distinct from a provider, model, endpoint, device, repository, or storage location.
-- Auri may create, interpret, or route Change Requests.
-- Auri must not silently execute consequence.
-- Authority evaluation remains external to Auri.
+StegTalk Entity Runtime v1 establishes that Auri is distinct from any provider or model, may create or route Change Requests, must not silently execute consequence, and is not final authority.
 
 Canonical reference:
 
@@ -32,136 +31,96 @@ docs/STEGTALK_ENTITY_RUNTIME_V1.md
 
 ## Activation level
 
-Initial target:
-
 ```text
 AURI-L1 — governed advisory entity
 ```
 
-AURI-L1 may:
+AURI-L1 may converse with authenticated users, interpret approved context, prepare structured candidates, request external evaluation, explain results, and emit advisory receipt candidates.
 
-- converse with an authenticated user;
-- interpret approved context;
-- create structured change requests and commitment candidates;
-- request readiness and authority evaluation;
-- explain allow, deny, defer, blocked, and not-ready results;
-- emit signed or hash-addressed advisory receipts.
-
-AURI-L1 may not:
-
-- grant itself authority;
-- mint continuity evidence used to authorize itself;
-- alter its own identity declaration, policy, delegation, or receipt history;
-- execute consequential actions;
-- represent a user without an explicit relationship contract;
-- treat model output as verified fact without evidence classification.
+AURI-L1 may not self-grant authority, mint self-authorizing evidence, alter its identity or receipt history, execute consequential actions, represent a user without an explicit contract, or promote unverified model output to verified fact.
 
 ## Active task chain
 
 ### AURI-001 — Canonical identity package
 
-Status: IN PROGRESS
+Status: COMPLETE
 
-Deliverables:
+Artifacts:
 
 ```text
 auri/identity.v1.json
 auri/authority-boundary.v1.json
 auri/activation-state.json
+scripts/verify_auri_activation.py
 ```
 
-Completion criteria:
-
-- stable entity identifier;
-- provider-independent identity;
-- declared capabilities and prohibitions;
-- revocation and quarantine fields;
-- explicit AURI-L1 status.
-
-Verification:
-
-```text
-python scripts/verify_auri_activation.py
-```
+Result: stable provider-independent AURI-L1 identity, explicit prohibitions, revocation/quarantine posture, and fail-closed activation state are installed.
 
 ### AURI-002 — Commitment candidate schema
 
-Status: QUEUED
+Status: COMPLETE
 
-Deliverables:
+Artifacts:
 
 ```text
 auri/schemas/commitment-candidate.schema.json
 auri/examples/commitment-candidate.valid.json
 auri/examples/commitment-candidate.denied.json
+scripts/verify_auri_commitment_candidates.py
 ```
+
+Result: valid candidates advance only to external evaluation; missing policy, delegation, evidence, authority, or recoverability produces deterministic denial reasons. No execution occurs.
 
 ### AURI-003 — Runtime adapter
 
-Status: QUEUED
+Status: IN PROGRESS
 
-Deliverables:
+Installed:
 
 ```text
-src/stegtalk/auri/
+src/stegtalk/auri/__init__.py
+src/stegtalk/auri/runtime.py
+tests/test_auri_runtime.py
 ```
 
-Required modules:
+Implemented:
 
-- provider-neutral model adapter;
+- provider-neutral callable adapter;
+- authenticated session binding;
 - structured proposal output;
-- evidence classification;
-- session identity binding;
-- no-execution default.
+- model output classified as untrusted until evaluated;
+- advisory receipt candidate generation;
+- immutable no-execution AURI-L1 posture;
+- tests for authentication, provider output type, and no-execution behavior.
+
+Remaining completion criteria:
+
+- run repository CI/tests and retain passing evidence;
+- add deterministic canonical JSON hashing for receipts;
+- add provider failure classification and quarantine signal;
+- update activation state only after verification evidence exists.
 
 ### AURI-004 — StegCore gateway
 
 Status: QUEUED
 
-Destination:
+Destination: `StegVerse-Labs/StegCore`
 
-```text
-StegVerse-Labs/StegCore
-```
-
-Required modules:
-
-- Auri actor declaration intake;
-- readiness evaluation request;
-- authority evaluation request;
-- commit-time equality check;
-- allow / deny / defer receipt handling.
+Required: Auri actor intake, readiness and authority evaluation requests, commit-time equality check, and allow/deny/defer receipt handling.
 
 ### AURI-005 — Continuity receipts
 
 Status: QUEUED
 
-Destination:
+Destination: Continuity / StegID receipt-governance layer.
 
-```text
-Continuity / StegID receipt-governance layer
-```
-
-Required artifacts:
-
-- interaction provenance receipt;
-- advisory-output receipt;
-- authority-decision reference;
-- execution non-occurrence or execution reference;
-- revocation receipt.
+Required: interaction provenance, advisory-output receipt, authority-decision reference, execution non-occurrence or execution reference, and revocation receipt.
 
 ### AURI-006 — Containment and recovery
 
 Status: QUEUED
 
-Required controls:
-
-- provider disablement;
-- credential revocation;
-- session quarantine;
-- known-good identity state;
-- rollback and recovery verification;
-- fail-closed behavior.
+Required: provider disablement, credential revocation, session quarantine, known-good identity state, rollback verification, and fail-closed behavior.
 
 ### AURI-007 — End-to-end activation proof
 
@@ -170,7 +129,7 @@ Status: QUEUED
 Proof sequence:
 
 1. authenticate Auri identity;
-2. create a valid advisory change request;
+2. create a valid advisory candidate;
 3. deny a request missing authority;
 4. allow a properly authorized reversible candidate without executing it at AURI-L1;
 5. produce reconstructable receipts;
@@ -179,22 +138,7 @@ Proof sequence:
 
 ## Email notification monitoring
 
-Email notifications involving Auri activation repositories are monitored outside this repository through the user-authorized scheduler.
-
-Search scope should include notifications mentioning:
-
-```text
-Auri
-StegVerse-Labs/StegTalk
-StegVerse-Labs/StegCore
-StegVerse-Labs/StegAgents
-Continuity
-StegID
-AURI_MIRROR_HANDOFF
-AURI-001 through AURI-007
-```
-
-The monitor may triage and act on safe repository work supported by available authority. It must not silently approve financial, legal, identity, deployment, or other consequence-bearing actions.
+The user-authorized Auri Repo Watch monitors relevant Gmail notifications hourly while automated progression is possible. It changes to daily after verified completion or when the only remaining blocker requires manual user action.
 
 ## Non-overlap statement
 
@@ -203,15 +147,21 @@ Parallel sessions must claim a specific AURI task identifier before mutation and
 Current claim:
 
 ```text
-AURI-001 — canonical identity package
+AURI-003 — provider-neutral runtime adapter
+```
+
+## Known manual blockers
+
+```text
+None.
 ```
 
 ## Next integration candidate
 
 ```text
-AURI-002 — commitment candidate schema
+AURI-004 — StegCore gateway
 ```
 
 ## Archive readiness
 
-This conversation may be archived once all unique decisions are represented in this handoff, committed files, task records, receipts, or email-monitor automation. Remaining repository incompleteness alone is not a reason to retain the conversation.
+This conversation may be archived once all unique decisions are represented in this handoff, committed files, task records, receipts, or monitoring automation. Remaining repository incompleteness alone is not a reason to retain the conversation.
