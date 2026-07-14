@@ -12,6 +12,7 @@ COLLECTIONS = {
     "message_envelopes": "message_envelopes",
     "receipts": "receipts",
     "inboxes": "inboxes",
+    "mobile_shell_sessions": "mobile_shell_sessions",
 }
 
 
@@ -21,7 +22,7 @@ def initialize_store(root: str | Path) -> JsonObject:
     for directory in COLLECTIONS.values():
         (root_path / directory).mkdir(exist_ok=True)
     manifest = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "store_type": "stegtalk_local_store",
         "created_at": utc_now(),
         "collections": COLLECTIONS,
@@ -69,7 +70,7 @@ def list_records(root: str | Path, collection: str) -> list[JsonObject]:
 def build_store_snapshot(root: str | Path) -> JsonObject:
     root_path = Path(root)
     snapshot: dict[str, Any] = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "snapshot_type": "stegtalk_local_store_snapshot",
         "created_at": utc_now(),
         "collections": {},
