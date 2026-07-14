@@ -40,6 +40,8 @@ jobs:
         run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_detects_snapshot_tampering
       - name: Validate mobile session receipt chain
         run: python -m pytest -vv tests/test_mobile_shell_session_receipts.py
+      - name: Run unattended session receipt verifier
+        run: python scripts/verify_mobile_shell_session_receipts.py
       - name: Run release artifact tests
         run: python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_candidate_status.py tests/test_local_candidate.py
       - name: Run mirror handoff test
