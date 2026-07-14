@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "artifact_type": "stegtalk_validation_repair",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
@@ -25,29 +25,37 @@
       "workflow": "StegTalk Managed Completion",
       "run_id": 29304803059,
       "failed_step": "Run managed completion tests",
-      "root_cause": "test expected ST-001 even though the queue source of truth identifies ST-025 as the next pending task",
-      "repair": "derive the highest-priority pending task from the queue and assert ST-025"
-    }
-  ],
-  "observed_passes": [
-    {
-      "workflow": "device-continuity",
-      "run_id": 29304803099,
-      "result": "PASS"
+      "root_cause": "test expected ST-001 even though ST-025 is the next pending task",
+      "repair": "derive the next pending task from the queue source of truth"
     },
     {
-      "workflow": "Test Readiness",
-      "run_id": 29304803088,
-      "result": "PASS"
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29304883307,
+      "failed_step": "Run runtime tests",
+      "root_cause": "stale handoff and candidate-state test assertions",
+      "repair": "align tests with current verified-candidate and queue-only handoff state"
+    },
+    {
+      "workflow": "StegTalk Managed Completion",
+      "run_id": 29305018795,
+      "failed_step": "Run core runtime tests",
+      "root_cause": "activation test still treated adapter_boundary as incomplete",
+      "repair": "assert adapter_boundary is complete and release_candidate_review remains"
     }
+  ],
+  "final_observed_passes": [
+    {"workflow": "StegTalk Managed Completion", "run_id": 29305087620, "result": "PASS"},
+    {"workflow": "device-continuity", "run_id": 29305087641, "result": "PASS"},
+    {"workflow": "Test Readiness", "run_id": 29305087611, "result": "PASS"}
   ],
   "workflow_policy": {
     "new_workflows_added": false,
     "existing_workflows_modified": [
+      ".github/workflows/ci.yml",
       ".github/workflows/device-continuity.yml"
     ]
   },
-  "verification_state": "PENDING_MANAGED_COMPLETION_RERUN",
+  "verification_state": "VERIFIED_GREEN",
   "success_condition": {
     "managed_completion": "PASS",
     "device_continuity": "PASS",
