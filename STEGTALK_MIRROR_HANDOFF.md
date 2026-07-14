@@ -6,7 +6,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repo is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, and mobile-shell lanes.
+The repo is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, and persistent mobile-shell session lanes.
 
 Production ready: `false`
 Manual tasks required: none
@@ -14,27 +14,19 @@ New workflows added: none
 
 ## Current Priority
 
-Validate and close the `mobile_shell_persistent_session_boundary` integration while preserving local-only, fail-closed operation and queue-only downstream propagation.
+Build the declared `mobile_shell_session_receipt_chain` while preserving local-only, fail-closed operation and queue-only downstream propagation.
 
 ## Completed Local Prototype Queue
 
 `STEGTALK_TASK_QUEUE.json` records every task from `ST-001` through `ST-025` as complete. Open task count: `0`.
 
-The completed mobile-shell state provides:
+The completed mobile-shell state provides local identity loading, contacts, message routing, inbox projection, and public-discovery search. Its state artifact is `STEGTALK_MOBILE_SHELL_STATE.json`, with `VERIFIED_COMPLETE` status.
 
-- local identity loading
-- local contact projection
-- local message routing
-- local inbox projection
-- local public-discovery search
-
-Its state artifact is `STEGTALK_MOBILE_SHELL_STATE.json`, with `VERIFIED_COMPLETE` status.
-
-## Persistent Mobile-Shell Session Boundary
+## Persistent Mobile-Shell Session Boundary Complete
 
 Goal source: `STEGTALK_NEXT_INTEGRATION.json`
 State artifact: `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
-Current state: `IMPLEMENTED_PENDING_PULL_REQUEST_VALIDATION`
+Current state: `VERIFIED_COMPLETE`
 Production ready: `false`
 Local only: `true`
 
@@ -44,32 +36,42 @@ Implemented files:
 - `tests/test_mobile_shell_session.py`
 - `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
 
-The local store now includes the `mobile_shell_sessions` collection.
+The local store includes the `mobile_shell_sessions` collection.
 
-Implemented behavior:
+Verified behavior:
 
 - persist complete mobile-shell state through `local_store`
 - restore identity, contacts, inbox, and discovery projection
 - inspect persisted projection counts
 - verify snapshot and shell hashes before restoration
-- verify that the persisted contact index reconstructs from contact cards
+- verify persisted contact-index reconstruction
 - reject production-state or authority escalation
+- reject persisted-state tampering
 
 The session boundary does not grant network, execution, external-account, or native-platform authority.
 
-## Existing Green Evidence
+Final validation evidence:
 
-Validation repair:
+- Managed Completion run `29308217439`: PASS
+- Device Continuity run `29308217435`: PASS
+- Test Readiness run `29308217431`: PASS
 
-- Managed Completion run `29305177210`: PASS
-- Device Continuity run `29305177383`: PASS
-- Test Readiness run `29305177220`: PASS
+## Next Goal Declared
 
-Mobile-shell queue closure:
+Next goal: `mobile_shell_session_receipt_chain`
 
-- Managed Completion run `29305486726`: PASS
-- Device Continuity run `29305486725`: PASS
-- Test Readiness run `29305486724`: PASS
+Planned files:
+
+- `src/stegtalk/mobile_shell_session_receipts.py`
+- `tests/test_mobile_shell_session_receipts.py`
+- `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_STATE.json`
+
+Required behavior:
+
+- chain persist, restore, rejection, and integrity-failure receipts
+- preserve previous receipt-chain heads
+- verify receipt-chain replay
+- remain local-only and non-authorizing
 
 ## Propagation Posture
 
@@ -91,4 +93,4 @@ Before continuing any StegTalk task, check this file first and treat it as the c
 
 ## Next Integration Candidate
 
-After persistent-session validation passes, close this goal and begin `mobile_shell_session_receipt_chain`, adding receipt chaining for persist, restore, rejection, and integrity-failure events without expanding runtime authority.
+Implement local receipt chaining for persistent-session events without expanding runtime authority or adding workflows.
