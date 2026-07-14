@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_session_checkpoint_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_managed_checkpoint",
+  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "manual_tasks_remaining": [],
+  "new_workflows_added": false,
+  "implemented_files": [
+    "src/stegtalk/mobile_shell_session_checkpoint.py",
+    "tests/test_mobile_shell_session_checkpoint.py",
+    "scripts/verify_mobile_shell_session_checkpoint.py",
+    "STEGTALK_MOBILE_SHELL_SESSION_CHECKPOINT_STATE.json"
+  ],
+  "automated_capabilities": [
+    "persist_shell_session_and_receipt_chain",
+    "bind_same_session_references",
+    "restore_and_verify_checkpoint",
+    "reject_partial_checkpoint_state",
+    "reject_stale_session_state",
+    "reject_checkpoint_tampering",
+    "payload_free_checkpoint_inspection"
+  ],
+  "store_collection": "mobile_shell_session_checkpoints",
+  "candidate_next_goal": "mobile_shell_session_checkpoint_rotation",
+  "downstream_propagation_authorized": false
+}
