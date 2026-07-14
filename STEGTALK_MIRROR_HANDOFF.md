@@ -14,7 +14,7 @@ New workflows added: none
 
 ## Current Priority
 
-Merge the verified `mobile_shell_session_receipt_chain`, then build `mobile_shell_session_receipt_persistence` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
+Validate and merge `mobile_shell_session_receipt_persistence`, preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
 
 ## Completed Local Prototype Queue
 
@@ -36,41 +36,43 @@ Local only: `true`
 Authorizing: `false`
 Manual tasks required: none
 
-Implemented files:
-
-- `src/stegtalk/mobile_shell_session_receipts.py`
-- `tests/test_mobile_shell_session_receipts.py`
-- `scripts/verify_mobile_shell_session_receipts.py`
-- `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_STATE.json`
-
-Verified behavior:
-
-- generate persist and restore receipts automatically
-- convert authority rejection, missing-session rejection, and integrity failure into receipts
-- preserve and validate previous receipt-chain heads
-- replay receipt identity and chain-head continuity
-- produce payload-free, non-authorizing summaries
-- eliminate manual receipt construction, failure classification, chain append, and replay verification
-
 The receipt chain grants no network, execution, external-account, or native-platform authority.
 
 Final validation evidence:
 
-- Managed Completion run `29309511799`: PASS
-- Device Continuity run `29309511786`: PASS
-- Test Readiness run `29309511798`: PASS
+- Managed Completion run `29309573070`: PASS
+- Device Continuity run `29309573072`: PASS
+- Test Readiness run `29309573064`: PASS
 
-## Next Goal Declared
+## Mobile-Shell Session Receipt Persistence
 
-Next goal: `mobile_shell_session_receipt_persistence`
+Goal: `mobile_shell_session_receipt_persistence`
+State artifact: `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_PERSISTENCE_STATE.json`
+Current state: `IMPLEMENTED_PENDING_VALIDATION`
+Production ready: `false`
+Local only: `true`
+Authorizing: `false`
+Manual tasks required: none
 
-Required behavior:
+Implemented files:
 
-- store receipt chains through the local store
-- append receipts atomically
+- `src/stegtalk/mobile_shell_session_receipt_store.py`
+- `tests/test_mobile_shell_session_receipt_store.py`
+- `scripts/verify_mobile_shell_session_receipt_store.py`
+- `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_PERSISTENCE_STATE.json`
+
+Automated behavior:
+
+- persist verified receipt chains through the local store
+- append receipts using atomic temporary-file replacement
+- require optimistic persisted-chain-head matching
 - restore and replay persisted chains automatically
-- reject persisted-chain tampering
-- require no manual chain files, append steps, or replay steps
+- reject wrapper, receipt-chain, count, or chain-head tampering
+- reject unsafe session identifiers that could escape the collection
+- inspect payload-free persisted-chain summaries
+- require no manual chain files, append operations, or replay steps
+
+The local store now includes the `mobile_shell_session_receipt_chains` collection and remains non-production.
 
 ## Propagation Posture
 
@@ -92,4 +94,4 @@ Before continuing any StegTalk task, check this file first and treat it as the c
 
 ## Next Integration Candidate
 
-Implement local receipt-chain persistence with automatic append, restore, and replay without adding workflows or manual tasks.
+After green validation, close receipt persistence and begin `mobile_shell_session_managed_checkpoint`, combining shell state, session snapshot, and persisted receipt-chain heads into one automatic local checkpoint without adding workflows or manual tasks.
