@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "entity_id": "stegverse:auri",
+  "activation_level": "AURI-L1",
+  "state": "declared_not_active",
+  "active": false,
+  "quarantined": false,
+  "revoked": false,
+  "manual_tasks_required": false,
+  "progression_mode": "automation_first",
+  "completed_tasks": [
+    "AURI-001"
+  ],
+  "current_task": "AURI-002",
+  "next_task": "AURI-003",
+  "evidence": {
+    "identity": "auri/identity.v1.json",
+    "authority_boundary": "auri/authority-boundary.v1.json",
+    "handoff": "AURI_MIRROR_HANDOFF.md"
+  },
+  "activation_gates": {
+    "identity_verified": true,
+    "commitment_schema_verified": false,
+    "runtime_deployed": false,
+    "provider_adapter_verified": false,
+    "stegcore_gateway_verified": false,
+    "continuity_receipts_verified": false,
+    "containment_verified": false,
+    "revocation_test_passed": false,
+    "end_to_end_proof_passed": false
+  },
+  "transition_rule": "active may become true only when every activation gate is true and independent proof exists",
+  "last_updated": "2026-07-14"
+}
