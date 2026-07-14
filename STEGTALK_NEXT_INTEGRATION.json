@@ -1,27 +1,28 @@
 {
-  "schema_version": "1.9.0",
+  "schema_version": "2.0.0",
   "artifact_type": "stegtalk_next_integration",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
-  "completed_goal": "mobile_shell_session_managed_checkpoint",
-  "next_goal": "mobile_shell_session_checkpoint_rotation",
+  "completed_goal": "mobile_shell_session_checkpoint_rotation",
+  "next_goal": "mobile_shell_session_recovery_receipt",
   "state": "IMPLEMENTED_PENDING_VALIDATION",
   "production_ready": false,
   "manual_tasks_remaining": [],
   "implemented_files": [
-    "src/stegtalk/mobile_shell_session_checkpoint_rotation.py",
-    "tests/test_mobile_shell_session_checkpoint_rotation.py",
-    "STEGTALK_MOBILE_SHELL_SESSION_CHECKPOINT_ROTATION_STATE.json"
+    "src/stegtalk/mobile_shell_session_recovery_receipt.py",
+    "tests/test_mobile_shell_session_recovery_receipt.py",
+    "scripts/verify_mobile_shell_session_recovery_receipt.py",
+    "STEGTALK_MOBILE_SHELL_SESSION_RECOVERY_RECEIPT_STATE.json"
   ],
   "implemented_conditions": [
-    "retain_current_and_prior_verified_checkpoints",
-    "rotate_with_bounded_retention",
-    "restore_newest_valid_checkpoint_automatically",
-    "fallback_to_recent_valid_prior_checkpoint",
-    "reject_cross_session_history_or_out_of_boundary_rollback",
-    "require_no_manual_checkpoint_naming_cleanup_or_recovery_selection"
+    "record_selected_generation_and_fallback",
+    "record_rejected_generations_and_reasons",
+    "bind_history_checkpoint_and_receipt_chain_heads",
+    "persist_and_chain_payload_free_recovery_receipts",
+    "receipt_failed_recovery_attempts",
+    "eliminate_manual_recovery_documentation"
   ],
   "external_dependencies": [],
   "downstream_propagation_authorized": false,
-  "candidate_next_goal": "mobile_shell_session_recovery_receipt"
+  "candidate_next_goal": "mobile_shell_session_recovery_policy"
 }
