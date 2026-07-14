@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "retained_generations": [2, 3, 4],
+  "restored_generation": 4,
+  "fallback_used": false,
+  "manual_tasks_required": [],
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false
+}
