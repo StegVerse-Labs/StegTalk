@@ -26,11 +26,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - Device Continuity Layer validation workflow
 - release-candidate verification artifact and test
 - destination-handoff propagation posture and test
-- validation-install repair artifact and tests
+- green validation-repair artifact and tests
 
 ## Current Priority
 
-Complete pull-request validation repair and merge only after the managed-completion rerun passes. Preserve `production_ready: false` and the queue-only downstream posture.
+Merge the verified validation repair, then complete managed queue task `ST-025` by building the local mobile-shell state declared by `STEGTALK_MOBILE_SHELL_PLAN.json`. Preserve `production_ready: false` and queue-only downstream propagation.
 
 ## Local Candidate Verification Complete
 
@@ -47,32 +47,30 @@ Candidate marker: `v0.1.0-local-prototype-candidate`
 Status: `verified_non_production_local_prototype`
 Production ready: `false`
 
-## Validation Repair
+## Validation Repair Verified Green
 
 Artifact: `STEGTALK_VALIDATION_REPAIR.json`
-Tests: `tests/test_validation_repair.py`, `tests/test_managed_completion.py`
+Tests: `tests/test_validation_repair.py`, `tests/test_managed_completion.py`, `tests/test_mirror_handoff.py`, `tests/test_candidate_status.py`, `tests/test_activation_readiness.py`
 Branch: `repair-validation-install`
 Manual tasks required: none
 New workflows added: false
 
-Observed and repaired failures:
+Installed repairs:
 
-1. `StegTalk Managed Completion`, run `29304441633`, failed at editable installation because the project version was not PEP 440 compliant. `pyproject.toml` now uses `0.0.0+managed.completion`.
-2. `device-continuity`, run `29304441639`, failed because `pytest` was not installed. The existing workflow now installs `pytest`.
-3. `StegTalk Managed Completion`, run `29304803059`, passed installation and management-state commands, then failed because `tests/test_managed_completion.py` still expected `ST-001`. The test now derives the highest-priority pending task from the queue and confirms `ST-025`.
+- PEP 440-compliant project version: `0.0.0+managed.completion`
+- explicit `pytest` install in the existing Device Continuity workflow
+- queue-derived next-task test aligned to `ST-025`
+- current handoff and candidate-state assertions
+- completed `adapter_boundary` activation-state assertion
+- diagnostic test lanes in the existing managed-completion workflow
 
-Observed passes after the first repair:
+Final observed pull-request evidence:
 
-- `device-continuity`, run `29304803099`: PASS
-- `Test Readiness`, run `29304803088`: PASS
+- `StegTalk Managed Completion`, run `29305087620`: PASS
+- `device-continuity`, run `29305087641`: PASS
+- `Test Readiness`, run `29305087611`: PASS
 
-Verification state: `PENDING_MANAGED_COMPLETION_RERUN`
-
-Required merge evidence:
-
-- `StegTalk Managed Completion`: PASS
-- `device-continuity`: PASS
-- `Test Readiness`: PASS
+Verification state: `VERIFIED_GREEN`
 
 ## Device Continuity Install Complete
 
@@ -111,7 +109,7 @@ No downstream repo was mutated because each destination handoff currently preser
 
 ## Managed Queue
 
-The current queue source of truth identifies `ST-025` (`State`) as the only pending task. Its parent plan is `STEGTALK_MOBILE_SHELL_PLAN.json`, whose declared next task is `build_mobile_shell_state`.
+The queue source of truth identifies `ST-025` (`State`) as the only pending task. Its parent plan is `STEGTALK_MOBILE_SHELL_PLAN.json`, whose declared next task is `build_mobile_shell_state`.
 
 ## Build Rule
 
@@ -119,4 +117,4 @@ Before continuing any StegTalk repo task, check this file first and treat it as 
 
 ## Next Integration Candidate
 
-Inspect the updated pull-request workflow evidence. Merge only after all three required checks pass. Then complete `ST-025` by building the mobile-shell state from `STEGTALK_MOBILE_SHELL_PLAN.json`, and only afterward recheck downstream handoffs for authorized propagation.
+Merge the green repair PR. Then implement `src/stegtalk/mobile_shell.py`, `tests/test_mobile_shell.py`, `examples/mobile_shell_demo.json`, and a machine-readable mobile-shell state artifact; mark `ST-025` complete only after validation passes. Recheck downstream handoffs only after that internal queue task closes.
