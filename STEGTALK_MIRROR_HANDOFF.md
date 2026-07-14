@@ -6,7 +6,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent session, receipt-chain, receipt persistence, managed-checkpoint, checkpoint-rotation, and recovery-receipt lanes.
+The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent session, receipt-chain, receipt persistence, managed-checkpoint, checkpoint-rotation, recovery-receipt, and deterministic recovery-policy lanes.
 
 Production ready: `false`
 Manual tasks required: none
@@ -14,7 +14,7 @@ New workflows added: none
 
 ## Current Priority
 
-Merge verified `mobile_shell_session_recovery_receipt`, then build `mobile_shell_session_recovery_policy` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
+Merge verified `mobile_shell_session_recovery_policy`, then build `mobile_shell_session_recovery_policy_adapter` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
 
 ## Completed Local Prototype Queue
 
@@ -28,10 +28,11 @@ Merge verified `mobile_shell_session_recovery_receipt`, then build `mobile_shell
 - `mobile_shell_session_managed_checkpoint`: `VERIFIED_COMPLETE`
 - `mobile_shell_session_checkpoint_rotation`: `VERIFIED_COMPLETE`
 - `mobile_shell_session_recovery_receipt`: `VERIFIED_COMPLETE`
+- `mobile_shell_session_recovery_policy`: `VERIFIED_COMPLETE`
 
-## Session Recovery Receipt Complete
+## Session Recovery Policy Complete
 
-State artifact: `STEGTALK_MOBILE_SHELL_SESSION_RECOVERY_RECEIPT_STATE.json`
+State artifact: `STEGTALK_MOBILE_SHELL_SESSION_RECOVERY_POLICY_STATE.json`
 Production ready: `false`
 Local only: `true`
 Authorizing: `false`
@@ -39,35 +40,38 @@ Manual tasks required: none
 
 Verified behavior:
 
-- recover the newest valid retained checkpoint
-- record the selected generation and whether fallback occurred
-- record rejected generations and fail-closed reasons
-- bind retained-history, checkpoint, and receipt-chain heads
-- atomically persist and chain payload-free recovery receipts
-- receipt failed recovery attempts
-- inspect recovery history without shell or message payloads
-- require no manual receipt construction or recovery documentation
+- classify recovery failures deterministically
+- require an explicit policy version
+- enforce maximum admissible fallback depth
+- deny when every retained generation fails
+- bind decisions to retained checkpoint-history state
+- bind allowed decisions to recovery receipts and selected checkpoint/receipt-chain heads
+- atomically persist and chain payload-free policy decisions
+- eliminate manual recovery review, escalation selection, receipt construction, and decision recording
 
-Final validation evidence:
+Default policy: `stegtalk-recovery-policy-v1`
+Default maximum fallback depth: `1`
 
-- Managed Completion run `29316759532`: PASS
-- Device Continuity run `29316759559`: PASS
-- Test Readiness run `29316759544`: PASS
+Recovery-policy decisions grant no network, execution, external-account, or native-platform authority.
 
-The local store includes `mobile_shell_session_recovery_receipts`. Recovery receipts grant no network, execution, external-account, or native-platform authority.
+Validation evidence:
+
+- Managed Completion run `29330889507`: PASS
+- Device Continuity run `29330889393`: PASS
+- Test Readiness run `29330889397`: PASS
 
 ## Next Goal Declared
 
-Next goal: `mobile_shell_session_recovery_policy`
+Next goal: `mobile_shell_session_recovery_policy_adapter`
 
 Required behavior:
 
-- classify recovery reasons deterministically
-- enforce maximum admissible fallback depth
-- deny recovery when all retained generations fail
-- require explicit policy version and decision evidence
-- bind policy decision to recovery receipt and retained-history state
-- require no manual recovery review or escalation selection
+- define a governed recovery-policy provider protocol
+- translate the local recovery candidate into a payload-free provider request
+- validate provider responses against request, policy version, history hash, and validity window
+- fail closed for provider exceptions, malformed responses, stale responses, or reference drift
+- preserve deterministic local policy as an explicit fallback only when configured
+- require no manual policy translation, provider selection, or response validation
 
 ## Propagation Posture
 
@@ -87,4 +91,4 @@ Before continuing any StegTalk task, check this file first and treat it as the c
 
 ## Next Integration Candidate
 
-Implement deterministic local recovery policy enforcement and policy-bound recovery decisions without adding workflows or manual tasks.
+Implement the fail-closed governed recovery-policy provider adapter without adding workflows or manual tasks.
