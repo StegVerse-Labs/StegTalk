@@ -1,0 +1,26 @@
+{
+  "artifact_type": "stegtalk_release_verification",
+  "candidate_marker": "v0.1.0-local-prototype-candidate",
+  "candidate_status": "verified_non_production_local_prototype",
+  "destination_validation_workflow_installed": true,
+  "destination_validation_workflow_observed_run": false,
+  "device_continuity_handoff_valid": true,
+  "device_continuity_receipt_valid": true,
+  "next_task": "propagate_verified_candidate_status",
+  "production_ready": false,
+  "propagation_ready": true,
+  "propagation_targets": [
+    "StegVerse-Labs/Site",
+    "GCAT-BCAT-Engine/Publisher",
+    "StegVerse-Labs/admissibility-wiki",
+    "StegVerse-002/stegguardian-wiki"
+  ],
+  "ready_flags": {
+    "account_ready": true,
+    "local_candidate_ready": true,
+    "public_discovery_ready": true,
+    "shell_ready": true
+  },
+  "repo": "StegVerse-Labs/StegTalk",
+  "schema_version": "1.0.0"
+}
