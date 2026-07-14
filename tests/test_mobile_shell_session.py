@@ -69,8 +69,10 @@ def test_mobile_shell_session_detects_snapshot_tampering(tmp_path):
     shell = _shell()
     persist_mobile_shell_session(store_root=tmp_path, shell=shell, session_id="primary")
     path = tmp_path / "mobile_shell_sessions" / "primary.json"
-    payload = path.read_text(encoding="utf-8").replace("Persist this locally", "Tampered")
-    path.write_text(payload, encoding="utf-8")
+    original = path.read_text(encoding="utf-8")
+    tampered = original.replace('"mode": "local_prototype"', '"mode": "tampered"', 1)
+    assert tampered != original
+    path.write_text(tampered, encoding="utf-8")
 
     with pytest.raises(ValueError, match="snapshot integrity check failed"):
         restore_mobile_shell_session(store_root=tmp_path, session_id="primary")
