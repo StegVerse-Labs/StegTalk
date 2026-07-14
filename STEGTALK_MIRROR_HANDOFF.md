@@ -6,115 +6,75 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repo is a verified non-production local prototype candidate with the following built lanes:
+The repo is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, and mobile-shell lanes.
 
-- entity runtime
-- message envelope
-- contact routing
-- local inbox projection
-- local persistence
-- boundary module
-- activation readiness
-- local prototype review
-- release status
-- public discovery record/index/search/demo
-- shell plan/state/actions/demo/review
-- account model/session
-- Device Continuity Layer handoff boundary, destination validation, receipt, and workflow
-- release-candidate verification
-- destination-handoff propagation posture
-- green validation repair
-- verified local mobile-shell state and application-facing actions
+Production ready: `false`
+Manual tasks required: none
+New workflows added: none
 
 ## Current Priority
 
-Merge the verified `ST-025` mobile-shell state and continue the declared `mobile_shell_persistent_session_boundary` integration goal. Preserve `production_ready: false` and queue-only downstream propagation.
+Validate and close the `mobile_shell_persistent_session_boundary` integration while preserving local-only, fail-closed operation and queue-only downstream propagation.
 
-## Local Candidate Verification Complete
+## Completed Local Prototype Queue
 
-Candidate marker: `v0.1.0-local-prototype-candidate`
-Status: `verified_non_production_local_prototype`
-Production ready: `false`
+`STEGTALK_TASK_QUEUE.json` records every task from `ST-001` through `ST-025` as complete. Open task count: `0`.
 
-Core evidence:
+The completed mobile-shell state provides:
 
-- `STEGTALK_RELEASE_HANDOFF.json`
-- `STEGTALK_CANDIDATE_STATUS.json`
-- `STEGTALK_LOCAL_CANDIDATE.json`
-- `STEGTALK_RELEASE_VERIFICATION.json`
-- `STEGTALK_VALIDATION_REPAIR.json`
+- local identity loading
+- local contact projection
+- local message routing
+- local inbox projection
+- local public-discovery search
 
-## Validation Repair Verified Green
+Its state artifact is `STEGTALK_MOBILE_SHELL_STATE.json`, with `VERIFIED_COMPLETE` status.
 
-No new workflows were added. Existing workflows were repaired and diagnostic lanes were added to the existing managed-completion workflow.
+## Persistent Mobile-Shell Session Boundary
 
-Final repair evidence:
-
-- `StegTalk Managed Completion`, run `29305177210`: PASS
-- `device-continuity`, run `29305177383`: PASS
-- `Test Readiness`, run `29305177220`: PASS
-
-Verification state: `VERIFIED_GREEN`
-Manual tasks required: none
-
-## ST-025 Mobile Shell State Complete
-
-Parent plan: `STEGTALK_MOBILE_SHELL_PLAN.json`
-Declared task: `build_mobile_shell_state`
-Queue task: `ST-025`
-State artifact: `STEGTALK_MOBILE_SHELL_STATE.json`
-Status: `VERIFIED_COMPLETE`
+Goal source: `STEGTALK_NEXT_INTEGRATION.json`
+State artifact: `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
+Current state: `IMPLEMENTED_PENDING_PULL_REQUEST_VALIDATION`
 Production ready: `false`
 Local only: `true`
-Manual tasks required: none
 
-Installed files:
-
-- `src/stegtalk/mobile_shell.py`
-- `tests/test_mobile_shell.py`
-- `examples/mobile_shell_demo.json`
-- `STEGTALK_MOBILE_SHELL_STATE.json`
-
-Implemented application-facing capabilities:
-
-- load local identity
-- show local contacts
-- create and route a local message
-- show the local inbox projection
-- run local public-discovery search
-
-Explicitly deferred:
-
-- native iOS UI
-- native Android UI
-- push notifications
-- external account synchronization
-
-The mobile shell does not grant network, execution, external-account, or native-platform authority.
-
-Final queue-closure validation evidence:
-
-- `StegTalk Managed Completion`, run `29305441604`: PASS
-- `device-continuity`, run `29305441573`: PASS
-- `Test Readiness`, run `29305441586`: PASS
-
-## Managed Queue Complete
-
-`STEGTALK_TASK_QUEUE.json` records all tasks `ST-001` through `ST-025` as complete. Open task count: `0`. The completed local-prototype queue remains non-production.
-
-Next integration goal: `mobile_shell_persistent_session_boundary`
-
-The next goal has begun through `STEGTALK_NEXT_INTEGRATION.json`. Planned files:
+Implemented files:
 
 - `src/stegtalk/mobile_shell_session.py`
 - `tests/test_mobile_shell_session.py`
 - `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
 
+The local store now includes the `mobile_shell_sessions` collection.
+
+Implemented behavior:
+
+- persist complete mobile-shell state through `local_store`
+- restore identity, contacts, inbox, and discovery projection
+- inspect persisted projection counts
+- verify snapshot and shell hashes before restoration
+- verify that the persisted contact index reconstructs from contact cards
+- reject production-state or authority escalation
+
+The session boundary does not grant network, execution, external-account, or native-platform authority.
+
+## Existing Green Evidence
+
+Validation repair:
+
+- Managed Completion run `29305177210`: PASS
+- Device Continuity run `29305177383`: PASS
+- Test Readiness run `29305177220`: PASS
+
+Mobile-shell queue closure:
+
+- Managed Completion run `29305486726`: PASS
+- Device Continuity run `29305486725`: PASS
+- Test Readiness run `29305486724`: PASS
+
 ## Propagation Posture
 
 Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
 Authority posture: `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`
-Manual tasks required: none
 
 Last destination review results:
 
@@ -123,12 +83,12 @@ Last destination review results:
 - `StegVerse-Labs/admissibility-wiki`: `QUEUE_PENDING_CANONICAL_VALIDATION`
 - `StegVerse-002/stegguardian-wiki`: `DEFER_ACTIVE_VALIDATION`
 
-No downstream mutation is authorized by those handoffs.
+No downstream mutation is currently authorized.
 
 ## Build Rule
 
-Before continuing any StegTalk repo task, check this file first and treat it as the current handoff and task source of truth.
+Before continuing any StegTalk task, check this file first and treat it as the current source of truth.
 
 ## Next Integration Candidate
 
-Build the local persistent mobile-shell session boundary without crossing into native UI, external synchronization, production networking, or downstream repository authority.
+After persistent-session validation passes, close this goal and begin `mobile_shell_session_receipt_chain`, adding receipt chaining for persist, restore, rejection, and integrity-failure events without expanding runtime authority.
