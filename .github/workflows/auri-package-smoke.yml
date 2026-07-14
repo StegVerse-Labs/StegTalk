@@ -1,0 +1,90 @@
+name: Auri Package Smoke
+
+on:
+  push:
+    paths:
+      - 'src/stegtalk/auri/**'
+      - 'auri/**'
+      - 'Dockerfile.auri'
+      - 'scripts/verify_auri_deployment_package.py'
+      - '.github/workflows/auri-package-smoke.yml'
+  pull_request:
+    paths:
+      - 'src/stegtalk/auri/**'
+      - 'auri/**'
+      - 'Dockerfile.auri'
+      - 'scripts/verify_auri_deployment_package.py'
+      - '.github/workflows/auri-package-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify deployment package
+        run: python scripts/verify_auri_deployment_package.py
+      - name: Build fail-closed OCI image
+        run: docker build -f Dockerfile.auri -t auri-l1:smoke .
+      - name: Verify fail-closed default health
+        run: |
+          docker run -d --rm --name auri-disabled -p 18080:8080 auri-l1:smoke
+          python - <<'PY'
+          import json, time, urllib.error, urllib.request
+          for _ in range(30):
+              try:
+                  urllib.request.urlopen('http://127.0.0.1:18080/health')
+              except urllib.error.HTTPError as exc:
+                  body = json.loads(exc.read())
+                  assert exc.code == 503
+                  assert body['status'] == 'fail_closed'
+                  assert body['execution_authority'] is False
+                  break
+              except OSError:
+                  time.sleep(1)
+          else:
+              raise SystemExit('fail-closed health endpoint not observed')
+          PY
+          docker stop auri-disabled
+      - name: Verify reference smoke mode
+        run: |
+          docker run -d --rm --name auri-reference -e AURI_PROVIDER_MODE=reference_echo -e AURI_PROVIDER_ID=provider:ci-reference -p 18081:8080 auri-l1:smoke
+          python - <<'PY'
+          import json, time, urllib.request
+          for _ in range(30):
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:18081/health') as response:
+                      body = json.load(response)
+                  assert body['status'] == 'ready'
+                  assert body['execution_authority'] is False
+                  break
+              except OSError:
+                  time.sleep(1)
+          else:
+              raise SystemExit('reference health endpoint not observed')
+          payload = json.dumps({
+              'session': {
+                  'session_id': 'session:ci',
+                  'user_entity_id': 'stegverse:user:ci',
+                  'authenticated': True
+              },
+              'instruction': 'Prepare a reversible repository advisory',
+              'target': 'StegVerse-Labs/StegTalk',
+              'action': 'prepare_repository_change',
+              'evidence_refs': ['auri/identity.v1.json'],
+              'reversible': True,
+              'rollback_ref': 'git:revert'
+          }).encode()
+          request = urllib.request.Request('http://127.0.0.1:18081/advisory', data=payload, headers={'Content-Type': 'application/json'})
+          with urllib.request.urlopen(request) as response:
+              result = json.load(response)
+          assert result['execution_performed'] is False
+          assert result['candidate']['auri_posture']['execution_authority'] is False
+          PY
+          docker stop auri-reference
