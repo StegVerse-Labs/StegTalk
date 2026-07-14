@@ -39,7 +39,7 @@ jobs:
       - name: Validate mobile session tamper rejection
         run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_detects_snapshot_tampering
       - name: Validate mobile session receipt chain
-        run: python -m pytest -vv tests/test_mobile_shell_session_receipts.py tests/test_mobile_shell_session_receipt_state.py
+        run: python -m pytest -vv tests/test_mobile_shell_session_receipts.py tests/test_mobile_shell_session_receipt_state.py tests/test_receipt_automation_status.py
       - name: Run unattended session receipt verifier
         run: python scripts/verify_mobile_shell_session_receipts.py
       - name: Run release artifact tests
