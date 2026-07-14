@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_mobile_shell_session_state",
+  "repo": "StegVerse-Labs/StegTalk",
+  "source": "STEGTALK_NEXT_INTEGRATION.json",
+  "goal": "mobile_shell_persistent_session_boundary",
+  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "production_ready": false,
+  "local_only": true,
+  "manual_tasks_remaining": [],
+  "implemented_files": [
+    "src/stegtalk/mobile_shell_session.py",
+    "tests/test_mobile_shell_session.py",
+    "STEGTALK_MOBILE_SHELL_SESSION_STATE.json"
+  ],
+  "store_extension": {
+    "collection": "mobile_shell_sessions",
+    "manifest_schema_version": "1.1.0"
+  },
+  "capabilities": [
+    "persist_mobile_shell_state_through_local_store",
+    "restore_identity_contacts_inbox_and_discovery_projection",
+    "inspect_persisted_session_projection_counts",
+    "detect_snapshot_or_shell_hash_drift",
+    "reject_authority_escalation",
+    "verify_contact_index_reconstruction"
+  ],
+  "authority_boundary": {
+    "network_authority": false,
+    "execution_authority": false,
+    "external_account_authority": false,
+    "native_platform_authority": false
+  },
+  "external_dependencies": [],
+  "downstream_propagation_authorized": false
+}
