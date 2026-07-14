@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "artifact_type": "stegtalk_mobile_shell_session_checkpoint_state",
   "repo": "StegVerse-Labs/StegTalk",
   "goal": "mobile_shell_session_managed_checkpoint",
-  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "state": "VERIFIED_COMPLETE",
   "production_ready": false,
   "local_only": true,
   "authorizing": false,
@@ -24,7 +24,12 @@
     "reject_checkpoint_tampering",
     "payload_free_checkpoint_inspection"
   ],
+  "validation": [
+    {"workflow": "StegTalk Managed Completion", "run_id": 29314807976, "result": "PASS"},
+    {"workflow": "device-continuity", "run_id": 29314808021, "result": "PASS"},
+    {"workflow": "Test Readiness", "run_id": 29314808091, "result": "PASS"}
+  ],
   "store_collection": "mobile_shell_session_checkpoints",
-  "candidate_next_goal": "mobile_shell_session_checkpoint_rotation",
+  "next_goal": "mobile_shell_session_checkpoint_rotation",
   "downstream_propagation_authorized": false
 }
