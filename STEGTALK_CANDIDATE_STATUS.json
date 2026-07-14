@@ -1,11 +1,14 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "artifact_type": "stegtalk_candidate_status",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
-  "candidate_status": "non_production_local_prototype_candidate",
+  "candidate_status": "verified_non_production_local_prototype",
+  "candidate_marker": "v0.1.0-local-prototype-candidate",
   "production_ready": false,
   "release_status_command": "python scripts/report_release_status.py",
+  "release_verification_command": "python scripts/verify_release_candidate.py",
+  "release_verification_artifact": "STEGTALK_RELEASE_VERIFICATION.json",
   "required_ready_flags": [
     "local_candidate_ready",
     "public_discovery_ready",
@@ -22,16 +25,20 @@
     "activation_readiness",
     "public_discovery",
     "shell_lane",
-    "account_lane"
+    "account_lane",
+    "device_continuity_handoff",
+    "device_continuity_destination_validation",
+    "device_continuity_destination_receipt",
+    "release_candidate_verification"
   ],
-  "remaining_internal_tasks": [
-    "tag_or_release_candidate_marker",
-    "post_release_propagation_tasks"
+  "remaining_internal_tasks": [],
+  "remaining_ecosystem_tasks": [
+    "propagate_verified_candidate_status"
   ],
   "external_update_targets": [
     "StegVerse-Labs/Site",
     "GCAT-BCAT-Engine/Publisher",
-    "admissibility-wiki",
-    "stegguardian-wiki"
+    "StegVerse-Labs/admissibility-wiki",
+    "StegVerse-002/stegguardian-wiki"
   ]
 }
