@@ -26,11 +26,11 @@ The repo is a verified non-production local prototype candidate with the followi
 - Device Continuity Layer validation workflow
 - release-candidate verification artifact and test
 - destination-handoff propagation posture and test
-- validation-install repair artifact and test
+- validation-install repair artifact and tests
 
 ## Current Priority
 
-Repair and verify the two observed validation failures before any downstream propagation or release-status advancement. Preserve `production_ready: false` and the queue-only downstream posture until pull-request workflow evidence is green.
+Complete pull-request validation repair and merge only after the managed-completion rerun passes. Preserve `production_ready: false` and the queue-only downstream posture.
 
 ## Local Candidate Verification Complete
 
@@ -46,6 +46,33 @@ Destination: `StegVerse-Labs/StegTalk`
 Candidate marker: `v0.1.0-local-prototype-candidate`
 Status: `verified_non_production_local_prototype`
 Production ready: `false`
+
+## Validation Repair
+
+Artifact: `STEGTALK_VALIDATION_REPAIR.json`
+Tests: `tests/test_validation_repair.py`, `tests/test_managed_completion.py`
+Branch: `repair-validation-install`
+Manual tasks required: none
+New workflows added: false
+
+Observed and repaired failures:
+
+1. `StegTalk Managed Completion`, run `29304441633`, failed at editable installation because the project version was not PEP 440 compliant. `pyproject.toml` now uses `0.0.0+managed.completion`.
+2. `device-continuity`, run `29304441639`, failed because `pytest` was not installed. The existing workflow now installs `pytest`.
+3. `StegTalk Managed Completion`, run `29304803059`, passed installation and management-state commands, then failed because `tests/test_managed_completion.py` still expected `ST-001`. The test now derives the highest-priority pending task from the queue and confirms `ST-025`.
+
+Observed passes after the first repair:
+
+- `device-continuity`, run `29304803099`: PASS
+- `Test Readiness`, run `29304803088`: PASS
+
+Verification state: `PENDING_MANAGED_COMPLETION_RERUN`
+
+Required merge evidence:
+
+- `StegTalk Managed Completion`: PASS
+- `device-continuity`: PASS
+- `Test Readiness`: PASS
 
 ## Device Continuity Install Complete
 
@@ -67,30 +94,6 @@ Installed files:
 - `tests/test_device_continuity_receipt.py`
 - `.github/workflows/device-continuity.yml`
 
-## Validation Repair
-
-Artifact: `STEGTALK_VALIDATION_REPAIR.json`
-Test: `tests/test_validation_repair.py`
-Branch: `repair-validation-install`
-Manual tasks required: none
-New workflows added: false
-
-Observed failures:
-
-1. `StegTalk Managed Completion`, run `29304441633`, failed at `Install test/runtime support` because `0.0.0-managed-completion` was not a PEP 440-compliant project version.
-2. `device-continuity`, run `29304441639`, reached both validators successfully and failed at `Run Device Continuity tests` because the existing workflow did not install `pytest`.
-
-Installed repairs:
-
-- `pyproject.toml` now uses `0.0.0+managed.completion`.
-- The existing `.github/workflows/device-continuity.yml` installs `pytest` before running its two tests.
-
-Verification remains fail-closed at `PENDING_PULL_REQUEST_WORKFLOW_EVIDENCE` until the pull-request runs prove:
-
-- `StegTalk Managed Completion`: PASS
-- `device-continuity`: PASS
-- `Test Readiness`: PASS
-
 ## Propagation Posture
 
 Artifact: `STEGTALK_PROPAGATION_POSTURE.json`
@@ -106,10 +109,14 @@ Destination review results:
 
 No downstream repo was mutated because each destination handoff currently preserves another active gate or workstream.
 
+## Managed Queue
+
+The current queue source of truth identifies `ST-025` (`State`) as the only pending task. Its parent plan is `STEGTALK_MOBILE_SHELL_PLAN.json`, whose declared next task is `build_mobile_shell_state`.
+
 ## Build Rule
 
 Before continuing any StegTalk repo task, check this file first and treat it as the current handoff and task source of truth.
 
 ## Next Integration Candidate
 
-Inspect the pull-request workflow evidence for the validation repair. Merge only after all three required checks pass. After merge, recheck destination handoffs and propagate `verified_non_production_local_prototype` only when the immediate destination handoff authorizes mutation, preserving `production_ready: false` in every destination artifact.
+Inspect the updated pull-request workflow evidence. Merge only after all three required checks pass. Then complete `ST-025` by building the mobile-shell state from `STEGTALK_MOBILE_SHELL_PLAN.json`, and only afterward recheck downstream handoffs for authorized propagation.
