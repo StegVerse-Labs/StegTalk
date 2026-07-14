@@ -9,18 +9,22 @@
   "manual_tasks_required": false,
   "progression_mode": "automation_first",
   "completed_tasks": [
-    "AURI-001"
+    "AURI-001",
+    "AURI-002"
   ],
-  "current_task": "AURI-002",
-  "next_task": "AURI-003",
+  "current_task": "AURI-003",
+  "next_task": "AURI-004",
   "evidence": {
     "identity": "auri/identity.v1.json",
     "authority_boundary": "auri/authority-boundary.v1.json",
+    "commitment_schema": "auri/schemas/commitment-candidate.schema.json",
+    "valid_candidate": "auri/examples/commitment-candidate.valid.json",
+    "denied_candidate": "auri/examples/commitment-candidate.denied.json",
     "handoff": "AURI_MIRROR_HANDOFF.md"
   },
   "activation_gates": {
     "identity_verified": true,
-    "commitment_schema_verified": false,
+    "commitment_schema_verified": true,
     "runtime_deployed": false,
     "provider_adapter_verified": false,
     "stegcore_gateway_verified": false,
