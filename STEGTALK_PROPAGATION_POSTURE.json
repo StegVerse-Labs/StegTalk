@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_propagation_posture",
+  "source_repo": "StegVerse-Labs/StegTalk",
+  "source_status": "verified_non_production_local_prototype",
+  "candidate_marker": "v0.1.0-local-prototype-candidate",
+  "production_ready": false,
+  "authority_posture": "QUEUE_ONLY_NO_DOWNSTREAM_MUTATION",
+  "manual_tasks_required": [],
+  "destinations": [
+    {
+      "repo": "StegVerse-Labs/Site",
+      "handoff_reviewed": true,
+      "result": "DEFER_ACTIVE_GOAL",
+      "reason": "Site is dedicated to the governed live authority service boundary and records no green-run confirmation."
+    },
+    {
+      "repo": "GCAT-BCAT-Engine/Publisher",
+      "handoff_reviewed": true,
+      "result": "QUEUE_AFTER_CURRENT_PRIORITY",
+      "reason": "Publisher has active SPE wiki propagation and an unresolved activation workflow failure."
+    },
+    {
+      "repo": "StegVerse-Labs/admissibility-wiki",
+      "handoff_reviewed": true,
+      "result": "QUEUE_PENDING_CANONICAL_VALIDATION",
+      "reason": "The wiki requires canonical workflow and public endpoint verification before downstream mutation."
+    },
+    {
+      "repo": "StegVerse-002/stegguardian-wiki",
+      "handoff_reviewed": true,
+      "result": "DEFER_ACTIVE_VALIDATION",
+      "reason": "The wiki is completing repaired ST-017 sandbox and live public-record verification and prohibits parallel workstream mutation."
+    }
+  ],
+  "next_task": "recheck_destination_handoffs_after_their_active_gates_complete"
+}
