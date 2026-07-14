@@ -24,6 +24,7 @@ The completed mobile-shell state provides local identity loading, contacts, mess
 
 ## Persistent Mobile-Shell Session Boundary Complete
 
+Completed goal: `mobile_shell_persistent_session_boundary`
 Goal source: `STEGTALK_NEXT_INTEGRATION.json`
 State artifact: `STEGTALK_MOBILE_SHELL_SESSION_STATE.json`
 Current state: `VERIFIED_COMPLETE`
