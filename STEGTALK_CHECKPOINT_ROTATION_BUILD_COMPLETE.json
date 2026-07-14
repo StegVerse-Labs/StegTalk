@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_checkpoint_rotation_build_complete",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_checkpoint_rotation",
+  "build_state": "COMPLETE_PENDING_CI",
+  "production_ready": false,
+  "manual_tasks_required": [],
+  "new_workflows_added": false,
+  "merge_condition": "managed_completion_device_continuity_and_test_readiness_pass"
+}
