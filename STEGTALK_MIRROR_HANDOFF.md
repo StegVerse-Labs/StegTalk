@@ -6,7 +6,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent mobile-shell session, and mobile-shell session receipt-chain lanes.
+The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent mobile-shell session, mobile-shell session receipt-chain, and persistent receipt-chain lanes.
 
 Production ready: `false`
 Manual tasks required: none
@@ -14,7 +14,7 @@ New workflows added: none
 
 ## Current Priority
 
-Validate and merge `mobile_shell_session_receipt_persistence`, preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
+Merge verified `mobile_shell_session_receipt_persistence`, then build `mobile_shell_session_managed_checkpoint` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
 
 ## Completed Local Prototype Queue
 
@@ -31,24 +31,12 @@ Current state: `VERIFIED_COMPLETE`
 Completed goal: `mobile_shell_session_receipt_chain`
 State artifact: `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_STATE.json`
 Current state: `VERIFIED_COMPLETE`
-Production ready: `false`
-Local only: `true`
-Authorizing: `false`
-Manual tasks required: none
 
-The receipt chain grants no network, execution, external-account, or native-platform authority.
+## Mobile-Shell Session Receipt Persistence Complete
 
-Final validation evidence:
-
-- Managed Completion run `29309573070`: PASS
-- Device Continuity run `29309573072`: PASS
-- Test Readiness run `29309573064`: PASS
-
-## Mobile-Shell Session Receipt Persistence
-
-Goal: `mobile_shell_session_receipt_persistence`
+Completed goal: `mobile_shell_session_receipt_persistence`
 State artifact: `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_PERSISTENCE_STATE.json`
-Current state: `IMPLEMENTED_PENDING_VALIDATION`
+Current state: `VERIFIED_COMPLETE`
 Production ready: `false`
 Local only: `true`
 Authorizing: `false`
@@ -61,7 +49,7 @@ Implemented files:
 - `scripts/verify_mobile_shell_session_receipt_store.py`
 - `STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_PERSISTENCE_STATE.json`
 
-Automated behavior:
+Verified behavior:
 
 - persist verified receipt chains through the local store
 - append receipts using atomic temporary-file replacement
@@ -72,7 +60,25 @@ Automated behavior:
 - inspect payload-free persisted-chain summaries
 - require no manual chain files, append operations, or replay steps
 
-The local store now includes the `mobile_shell_session_receipt_chains` collection and remains non-production.
+The local store includes the `mobile_shell_session_receipt_chains` collection. Receipt persistence grants no network, execution, external-account, or native-platform authority.
+
+Final validation evidence:
+
+- Managed Completion run `29313730744`: PASS
+- Device Continuity run `29313730721`: PASS
+- Test Readiness run `29313730755`: PASS
+
+## Next Goal Declared
+
+Next goal: `mobile_shell_session_managed_checkpoint`
+
+Required behavior:
+
+- checkpoint shell state, persisted session snapshot, and receipt-chain head together
+- bind all checkpoint references to the same session
+- restore and verify the checkpoint automatically
+- reject partial, stale, tampered, or cross-session checkpoint state
+- require no manual checkpoint coordination
 
 ## Propagation Posture
 
@@ -94,4 +100,4 @@ Before continuing any StegTalk task, check this file first and treat it as the c
 
 ## Next Integration Candidate
 
-After green validation, close receipt persistence and begin `mobile_shell_session_managed_checkpoint`, combining shell state, session snapshot, and persisted receipt-chain heads into one automatic local checkpoint without adding workflows or manual tasks.
+Implement one-call managed local checkpoints that bind shell state, persistent session state, and persisted receipt-chain heads without adding workflows or manual tasks.
