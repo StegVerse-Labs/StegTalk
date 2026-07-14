@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "entity_id": "stegverse:auri",
+  "activation_level": "AURI-L1",
+  "container": {
+    "dockerfile": "Dockerfile.auri",
+    "entrypoint": ["python", "-m", "stegtalk.auri"],
+    "port_environment_variable": "PORT",
+    "default_port": 8080,
+    "runs_as_non_root": true
+  },
+  "endpoints": {
+    "health": {
+      "method": "GET",
+      "path": "/health",
+      "ready_status": 200,
+      "fail_closed_status": 503
+    },
+    "advisory": {
+      "method": "POST",
+      "path": "/advisory",
+      "execution_performed_must_equal": false
+    }
+  },
+  "default_posture": {
+    "provider_mode": "disabled",
+    "ready": false,
+    "fail_closed": true,
+    "execution_authority": false
+  },
+  "reference_smoke_mode": {
+    "provider_mode": "reference_echo",
+    "production_activation_evidence": false,
+    "purpose": "credential-free packaging and interface verification only"
+  },
+  "live_activation_requires": [
+    "authorized_hosting_target",
+    "non_interactive_deployment_credential_path",
+    "non_reference_provider_binding",
+    "persistent_live_health_observation",
+    "external_stegcore_decision_evidence",
+    "continuity_receipt_chain",
+    "quarantine_and_revocation_probe",
+    "final_activation_receipt"
+  ],
+  "prohibitions": [
+    "embed_deployment_credentials",
+    "claim_reference_smoke_as_live_deployment",
+    "grant_execution_authority",
+    "mark_active_without_independent_evidence"
+  ]
+}
