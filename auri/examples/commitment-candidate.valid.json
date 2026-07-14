@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "auri-demo-valid-001",
+  "actor": {
+    "entity_id": "stegverse:user:rigel",
+    "authenticated": true
+  },
+  "action": "prepare_repository_change",
+  "target": "StegVerse-Labs/StegTalk",
+  "scope": "advisory_only",
+  "policy_ref": "policy:auri-l1:v1",
+  "delegation_ref": "delegation:prepare-only:v1",
+  "evidence_refs": [
+    "auri/identity.v1.json",
+    "auri/authority-boundary.v1.json"
+  ],
+  "execution_context": {
+    "environment": "test",
+    "consequential": false
+  },
+  "validity_window": {
+    "not_before": "2026-07-14T00:00:00Z",
+    "expires_at": "2027-07-14T00:00:00Z"
+  },
+  "recoverability": {
+    "reversible": true,
+    "rollback_ref": "git:revert"
+  },
+  "requested_authority_class": "advisory",
+  "auri_posture": {
+    "execution_authority": false,
+    "final_consequence_authority": false,
+    "requires_external_admissibility": true
+  }
+}
