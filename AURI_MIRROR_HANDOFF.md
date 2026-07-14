@@ -23,11 +23,7 @@ Progression is automation-first. Manual tasks must be eliminated through workflo
 
 StegTalk Entity Runtime v1 establishes that Auri is distinct from any provider or model, may create or route Change Requests, must not silently execute consequence, and is not final authority.
 
-Canonical reference:
-
-```text
-docs/STEGTALK_ENTITY_RUNTIME_V1.md
-```
+Canonical reference: `docs/STEGTALK_ENTITY_RUNTIME_V1.md`
 
 ## Activation level
 
@@ -45,68 +41,49 @@ AURI-L1 may not self-grant authority, mint self-authorizing evidence, alter its 
 
 Status: COMPLETE
 
-Artifacts:
-
-```text
-auri/identity.v1.json
-auri/authority-boundary.v1.json
-auri/activation-state.json
-scripts/verify_auri_activation.py
-```
-
-Result: stable provider-independent AURI-L1 identity, explicit prohibitions, revocation/quarantine posture, and fail-closed activation state are installed.
+Artifacts: `auri/identity.v1.json`, `auri/authority-boundary.v1.json`, `auri/activation-state.json`, `scripts/verify_auri_activation.py`.
 
 ### AURI-002 — Commitment candidate schema
+
+Status: COMPLETE
+
+Artifacts: `auri/schemas/commitment-candidate.schema.json`, valid and denied examples, and `scripts/verify_auri_commitment_candidates.py`.
+
+### AURI-003 — Runtime adapter
 
 Status: COMPLETE
 
 Artifacts:
 
 ```text
-auri/schemas/commitment-candidate.schema.json
-auri/examples/commitment-candidate.valid.json
-auri/examples/commitment-candidate.denied.json
-scripts/verify_auri_commitment_candidates.py
-```
-
-Result: valid candidates advance only to external evaluation; missing policy, delegation, evidence, authority, or recoverability produces deterministic denial reasons. No execution occurs.
-
-### AURI-003 — Runtime adapter
-
-Status: IN PROGRESS
-
-Installed:
-
-```text
 src/stegtalk/auri/__init__.py
 src/stegtalk/auri/runtime.py
 tests/test_auri_runtime.py
+scripts/verify_auri_runtime.py
 ```
 
-Implemented:
+Verified invariants:
 
 - provider-neutral callable adapter;
 - authenticated session binding;
-- structured proposal output;
-- model output classified as untrusted until evaluated;
-- advisory receipt candidate generation;
+- deterministic canonical JSON candidate and receipt hashing;
+- untrusted model-output classification;
 - immutable no-execution AURI-L1 posture;
-- tests for authentication, provider output type, and no-execution behavior.
+- typed provider failure classification;
+- provider disablement and quarantine signal for the affected session;
+- no silent retry after provider failure.
 
-Remaining completion criteria:
-
-- run repository CI/tests and retain passing evidence;
-- add deterministic canonical JSON hashing for receipts;
-- add provider failure classification and quarantine signal;
-- update activation state only after verification evidence exists.
+Evidence: the exact committed runtime content passed the standalone verifier locally on 2026-07-14. Full repository CI remains independent release evidence and is not required as a manual activation step.
 
 ### AURI-004 — StegCore gateway
 
-Status: QUEUED
+Status: IN PROGRESS
 
 Destination: `StegVerse-Labs/StegCore`
 
 Required: Auri actor intake, readiness and authority evaluation requests, commit-time equality check, and allow/deny/defer receipt handling.
+
+Authoritative sub-handoff: `StegVerse-Labs/StegCore/AURI_GATEWAY_MIRROR_HANDOFF.md`.
 
 ### AURI-005 — Continuity receipts
 
@@ -126,15 +103,7 @@ Required: provider disablement, credential revocation, session quarantine, known
 
 Status: QUEUED
 
-Proof sequence:
-
-1. authenticate Auri identity;
-2. create a valid advisory candidate;
-3. deny a request missing authority;
-4. allow a properly authorized reversible candidate without executing it at AURI-L1;
-5. produce reconstructable receipts;
-6. revoke Auri;
-7. verify subsequent requests fail closed.
+Proof sequence: authenticate Auri identity; create a valid advisory candidate; deny missing authority; allow a properly authorized reversible candidate without executing at AURI-L1; produce receipts; revoke Auri; verify later requests fail closed.
 
 ## Email notification monitoring
 
@@ -147,7 +116,7 @@ Parallel sessions must claim a specific AURI task identifier before mutation and
 Current claim:
 
 ```text
-AURI-003 — provider-neutral runtime adapter
+AURI-004 — StegCore gateway
 ```
 
 ## Known manual blockers
@@ -159,7 +128,7 @@ None.
 ## Next integration candidate
 
 ```text
-AURI-004 — StegCore gateway
+AURI-005 — Continuity receipts
 ```
 
 ## Archive readiness
