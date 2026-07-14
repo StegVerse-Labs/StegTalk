@@ -30,30 +30,12 @@ jobs:
         run: python -m pytest tests/test_message_envelope.py tests/test_contact_routing.py
       - name: Run local-state runtime tests
         run: python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_mobile_shell.py
-      - name: Validate mobile session round trip
-        run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_round_trip
-      - name: Validate mobile session inspection
-        run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_inspection_reports_projection_counts
-      - name: Validate mobile session authority rejection
-        run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_rejects_authority_escalation
-      - name: Validate mobile session tamper rejection
-        run: python -m pytest -vv tests/test_mobile_shell_session.py::test_mobile_shell_session_detects_snapshot_tampering
-      - name: Validate mobile session receipt chain
-        run: python -m pytest -vv tests/test_mobile_shell_session_receipts.py
-      - name: Validate persistent session receipt chain
-        run: python -m pytest -vv tests/test_mobile_shell_session_receipt_store.py
-      - name: Validate managed session checkpoint
-        run: python -m pytest -vv tests/test_mobile_shell_session_checkpoint.py
-      - name: Validate managed checkpoint rotation
-        run: python -m pytest -vv tests/test_mobile_shell_session_checkpoint_rotation.py
-      - name: Run unattended session receipt verifier
-        run: python scripts/verify_mobile_shell_session_receipts.py
-      - name: Run unattended receipt persistence verifier
-        run: python scripts/verify_mobile_shell_session_receipt_store.py
-      - name: Run unattended managed checkpoint verifier
-        run: python scripts/verify_mobile_shell_session_checkpoint.py
-      - name: Run unattended checkpoint rotation verifier
-        run: python scripts/verify_mobile_shell_session_checkpoint_rotation.py
+      - name: Validate mobile session boundaries
+        run: python -m pytest -vv tests/test_mobile_shell_session.py tests/test_mobile_shell_session_receipts.py tests/test_mobile_shell_session_receipt_store.py
+      - name: Validate managed checkpoint and rotation
+        run: python -m pytest -vv tests/test_mobile_shell_session_checkpoint.py tests/test_mobile_shell_session_checkpoint_rotation.py tests/test_checkpoint_rotation_state.py tests/test_checkpoint_rotation_automation_status.py
+      - name: Run unattended session verifiers
+        run: python scripts/verify_mobile_shell_session_receipts.py && python scripts/verify_mobile_shell_session_receipt_store.py && python scripts/verify_mobile_shell_session_checkpoint.py && python scripts/verify_mobile_shell_session_checkpoint_rotation.py
       - name: Run release artifact tests
         run: python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_candidate_status.py tests/test_local_candidate.py
       - name: Run mirror handoff test
