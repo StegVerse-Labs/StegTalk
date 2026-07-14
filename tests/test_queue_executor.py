@@ -11,7 +11,8 @@ def test_queue_summary_reports_completed_local_queue():
     assert summary["task_count"] == 25
     assert summary["production_ready"] is False
     assert summary["next_task"] is None
-    assert summary["complete_task_count"] == 25
+    assert summary["complete_count"] == 25
+    assert summary["pending_count"] == 0
 
 
 def test_mark_task_updates_status_without_mutating_original():
