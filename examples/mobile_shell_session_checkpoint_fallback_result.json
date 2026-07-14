@@ -1,0 +1,12 @@
+{
+  "verified": true,
+  "selected_generation": 1,
+  "fallback_used": true,
+  "rejected_generations": [
+    {"generation": 2, "reason": "checkpoint entry shell integrity check failed"}
+  ],
+  "manual_tasks_required": [],
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false
+}
