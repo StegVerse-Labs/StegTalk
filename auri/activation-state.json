@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "entity_id": "stegverse:auri",
   "activation_level": "AURI-L1",
-  "state": "live_proof_automation_installed_awaiting_authorized_target",
+  "state": "authorization_gates_installed_awaiting_external_evidence",
   "active": false,
   "quarantined": false,
   "revoked": false,
@@ -28,8 +28,13 @@
     "deployment_package_evidence": "evidence/auri-deployment-package.json",
     "live_probe": "scripts/probe_auri_live_service.py",
     "live_proof_workflow": ".github/workflows/auri-live-proof.yml",
+    "provider_binding_schema": "auri/schemas/provider-binding.schema.json",
+    "deployment_authorization_schema": "auri/schemas/deployment-authorization.schema.json",
+    "activation_input_verifier": "scripts/verify_auri_activation_inputs.py",
     "activation_receipt_schema": "auri/schemas/activation-receipt.schema.json",
     "activation_receipt_builder": "scripts/build_auri_activation_receipt.py",
+    "activation_state_finalizer": "scripts/finalize_auri_activation_state.py",
+    "activation_gate_hardening": "evidence/auri-activation-gate-hardening.json",
     "stegcore_gateway": "StegVerse-Labs/StegCore/evidence/auri-gateway-verification.json",
     "continuity_receipts": "StegVerse-Labs/Continuity/evidence/auri-receipts-verification.json",
     "containment": "evidence/auri-containment-verification.json",
@@ -42,7 +47,10 @@
     "oci_packaged": true,
     "credential_free_smoke_workflow_installed": true,
     "live_proof_automation_installed": true,
+    "authorization_document_schemas_installed": true,
+    "authorization_input_verifier_installed": true,
     "activation_receipt_path_installed": true,
+    "evidence_gated_state_finalizer_installed": true,
     "runtime_deployed": false,
     "provider_adapter_verified": true,
     "stegcore_gateway_verified": true,
@@ -53,9 +61,9 @@
   },
   "manual_blocker": {
     "code": "deployment.target_or_credentials.required",
-    "detail": "Packaging, live probing, evidence collection, and activation-receipt construction are automated. A live persistent runtime still cannot be truthfully deployed without an authorized hosting target, non-interactive credentials, and a non-reference provider binding.",
-    "resume_condition": "authorized deployment target, non-interactive credential path, and provider binding references become available"
+    "detail": "All repository-side packaging, authorization validation, probing, evidence collection, activation-receipt construction, and guarded state transition work is installed. Live activation still requires externally authorized provider and deployment documents, a reachable persistent target, and non-interactive credentials.",
+    "resume_condition": "canonical provider-binding and deployment-authorization documents plus authorized live target and credential path become available"
   },
-  "transition_rule": "active may become true only when every activation gate is true and independent live proof plus an activation receipt exist",
+  "transition_rule": "active may become true only when canonical authorization inputs, independent live proof, cross-repository evidence, and a valid activation receipt all pass the guarded finalizer",
   "last_updated": "2026-07-14"
 }
