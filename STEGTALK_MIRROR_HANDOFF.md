@@ -6,7 +6,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 
 ## Current Build State
 
-The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, local persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent mobile-shell session, receipt-chain, persistent receipt-chain, and managed checkpoint lanes.
+The repository is a verified non-production local prototype candidate with completed entity, messaging, routing, inbox, persistence, boundary, activation, discovery, shell, account/session, Device Continuity, release-candidate, validation-repair, mobile-shell, persistent session, receipt-chain, receipt persistence, and managed-checkpoint lanes.
 
 Production ready: `false`
 Manual tasks required: none
@@ -14,11 +14,11 @@ New workflows added: none
 
 ## Current Priority
 
-Merge verified `mobile_shell_session_managed_checkpoint`, then build `mobile_shell_session_checkpoint_rotation` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
+Validate and merge `mobile_shell_session_checkpoint_rotation` while preserving local-only, non-authorizing, fail-closed operation and `QUEUE_ONLY_NO_DOWNSTREAM_MUTATION`.
 
 ## Completed Local Prototype Queue
 
-`STEGTALK_TASK_QUEUE.json` records `ST-001` through `ST-025` as complete. Open task count: `0`.
+`STEGTALK_TASK_QUEUE.json` records `ST-001` through `ST-025` complete. Open task count: `0`.
 
 ## Completed Session Lanes
 
@@ -27,43 +27,34 @@ Merge verified `mobile_shell_session_managed_checkpoint`, then build `mobile_she
 - `mobile_shell_session_receipt_persistence`: `VERIFIED_COMPLETE`
 - `mobile_shell_session_managed_checkpoint`: `VERIFIED_COMPLETE`
 
-## Managed Mobile-Shell Session Checkpoint Complete
+## Checkpoint Rotation
 
-State artifact: `STEGTALK_MOBILE_SHELL_SESSION_CHECKPOINT_STATE.json`
+Goal: `mobile_shell_session_checkpoint_rotation`
+State artifact: `STEGTALK_MOBILE_SHELL_SESSION_CHECKPOINT_ROTATION_STATE.json`
+Current state: `IMPLEMENTED_PENDING_VALIDATION`
 Production ready: `false`
 Local only: `true`
 Authorizing: `false`
 Manual tasks required: none
 
-Verified behavior:
+Implemented files:
 
-- persist shell state, session snapshot, and receipt chain in one call
-- bind shell hash, session record hash, snapshot hash, receipt record hash, receipt count, and chain head to one session
-- restore and verify all checkpoint references automatically
-- reject missing, stale, tampered, or cross-session state
-- provide payload-free checkpoint inspection
-- require no manual checkpoint files or coordination
+- `src/stegtalk/mobile_shell_session_checkpoint_rotation.py`
+- `tests/test_mobile_shell_session_checkpoint_rotation.py`
+- `STEGTALK_MOBILE_SHELL_SESSION_CHECKPOINT_ROTATION_STATE.json`
 
-Final validation evidence:
+Automated behavior:
 
-- Managed Completion run `29314807976`: PASS
-- Device Continuity run `29314808021`: PASS
-- Test Readiness run `29314808091`: PASS
+- assign checkpoint generations automatically
+- retain a bounded history, defaulting to three generations
+- atomically replace checkpoint-history records
+- restore the newest valid retained checkpoint automatically
+- fall back to the newest valid retained prior generation
+- reject history, entry, shell, receipt, session, or authority drift
+- reject unsafe session identifiers
+- require no manual naming, cleanup, or recovery selection
 
-The local store includes `mobile_shell_session_checkpoints`. Checkpoints grant no network, execution, external-account, or native-platform authority.
-
-## Next Goal Declared
-
-Next goal: `mobile_shell_session_checkpoint_rotation`
-
-Required behavior:
-
-- retain current and prior verified checkpoints automatically
-- rotate checkpoints with bounded retention
-- restore the newest valid checkpoint automatically
-- fall back to the most recent valid prior checkpoint when the current checkpoint is corrupt
-- reject cross-session history or rollback past the retained boundary
-- require no manual checkpoint naming, cleanup, or recovery selection
+The local store includes `mobile_shell_session_checkpoint_history`. Rotation grants no network, execution, external-account, or native-platform authority.
 
 ## Propagation Posture
 
@@ -83,4 +74,4 @@ Before continuing any StegTalk task, check this file first and treat it as the c
 
 ## Next Integration Candidate
 
-Implement automatic bounded checkpoint rotation and verified fallback recovery without adding workflows or manual tasks.
+After green validation, close checkpoint rotation and begin `mobile_shell_session_recovery_receipt`, automatically recording fallback selection and rejected generations without adding workflows or manual tasks.
