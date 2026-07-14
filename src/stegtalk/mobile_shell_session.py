@@ -60,7 +60,9 @@ def restore_mobile_shell_session(
 
     _assert_local_authority_boundary(shell)
     contacts = list(shell.get("shell_state", {}).get("contacts", []))
-    shell["contact_index"] = build_contact_index(contacts)
+    rebuilt_index = build_contact_index(contacts)
+    if shell.get("contact_index") != rebuilt_index:
+        raise ValueError("mobile shell contact index reconstruction mismatch")
     return shell
 
 
@@ -87,14 +89,12 @@ def inspect_mobile_shell_session(
 
 
 def _build_snapshot(*, shell: JsonObject, session_id: str) -> JsonObject:
-    payload = deepcopy(shell)
-    payload["contact_index"] = {}
     snapshot = {
         "schema_version": "1.0.0",
         "snapshot_type": "stegtalk_mobile_shell_session_snapshot",
         "session_id": session_id,
         "user_entity": shell["user_entity"],
-        "shell": payload,
+        "shell": deepcopy(shell),
         "production_ready": False,
         "local_only": True,
         "created_at": utc_now(),
@@ -109,10 +109,13 @@ def _assert_local_authority_boundary(shell: JsonObject) -> None:
     if shell.get("mode") != "local_prototype":
         raise ValueError("mobile shell session must remain local_prototype")
     authority = shell.get("authority", {})
-    if any(authority.get(key) is not False for key in (
-        "network_authority",
-        "execution_authority",
-        "external_account_authority",
-        "native_platform_authority",
-    )):
+    if any(
+        authority.get(key) is not False
+        for key in (
+            "network_authority",
+            "execution_authority",
+            "external_account_authority",
+            "native_platform_authority",
+        )
+    ):
         raise ValueError("mobile shell session authority boundary violated")
