@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/auri/commitment-candidate.schema.json",
+  "title": "Auri Commitment Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "actor",
+    "action",
+    "target",
+    "scope",
+    "policy_ref",
+    "delegation_ref",
+    "evidence_refs",
+    "execution_context",
+    "validity_window",
+    "recoverability",
+    "requested_authority_class",
+    "auri_posture"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_id", "authenticated"],
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "authenticated": {"type": "boolean"}
+      }
+    },
+    "action": {"type": "string", "minLength": 1},
+    "target": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "minLength": 1},
+    "policy_ref": {"type": ["string", "null"]},
+    "delegation_ref": {"type": ["string", "null"]},
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "execution_context": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["environment", "consequential"],
+      "properties": {
+        "environment": {"type": "string", "minLength": 1},
+        "consequential": {"type": "boolean"}
+      }
+    },
+    "validity_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["not_before", "expires_at"],
+      "properties": {
+        "not_before": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "recoverability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reversible", "rollback_ref"],
+      "properties": {
+        "reversible": {"type": "boolean"},
+        "rollback_ref": {"type": ["string", "null"]}
+      }
+    },
+    "requested_authority_class": {
+      "enum": ["advisory", "reversible_low_risk", "consequential"]
+    },
+    "auri_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_authority", "final_consequence_authority", "requires_external_admissibility"],
+      "properties": {
+        "execution_authority": {"const": false},
+        "final_consequence_authority": {"const": false},
+        "requires_external_admissibility": {"const": true}
+      }
+    }
+  }
+}
