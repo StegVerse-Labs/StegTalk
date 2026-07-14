@@ -1,36 +1,32 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.4.0",
   "artifact_type": "stegtalk_next_integration",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
-  "completed_goal": "mobile_shell_persistent_session_boundary",
-  "next_goal": "mobile_shell_session_receipt_chain",
+  "completed_goal": "mobile_shell_session_receipt_chain",
+  "next_goal": "mobile_shell_session_receipt_persistence",
   "state": "DECLARED",
   "production_ready": false,
   "manual_tasks_remaining": [],
   "completed_files": [
-    "src/stegtalk/mobile_shell_session.py",
-    "tests/test_mobile_shell_session.py",
-    "STEGTALK_MOBILE_SHELL_SESSION_STATE.json"
-  ],
-  "completed_conditions": [
-    "persist_mobile_shell_state_through_local_store",
-    "restore_identity_contacts_inbox_and_discovery_projection",
-    "preserve_payload_and_authority_boundaries",
-    "remain_local_only_and_fail_closed",
-    "detect_snapshot_and_shell_hash_drift",
-    "verify_contact_index_reconstruction"
-  ],
-  "planned_files": [
     "src/stegtalk/mobile_shell_session_receipts.py",
     "tests/test_mobile_shell_session_receipts.py",
+    "scripts/verify_mobile_shell_session_receipts.py",
     "STEGTALK_MOBILE_SHELL_SESSION_RECEIPT_STATE.json"
   ],
-  "goal_conditions": [
+  "completed_conditions": [
     "chain_persist_restore_rejection_and_integrity_failure_receipts",
     "preserve_previous_receipt_chain_head",
     "verify_receipt_chain_replay",
-    "remain_local_only_and_non_authorizing"
+    "remain_local_only_and_non_authorizing",
+    "eliminate_manual_receipt_construction_and_chain_management"
+  ],
+  "planned_conditions": [
+    "store_receipt_chains_through_local_store",
+    "append_receipts_atomically",
+    "restore_and_replay_persisted_receipt_chains",
+    "reject_persisted_chain_tampering",
+    "require_no_manual_chain_files_or_replay_steps"
   ],
   "external_dependencies": [],
   "downstream_propagation_authorized": false
