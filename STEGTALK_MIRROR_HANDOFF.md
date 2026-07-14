@@ -52,6 +52,8 @@ Verified behavior:
 Default policy: `stegtalk-recovery-policy-v1`
 Default maximum fallback depth: `1`
 
+Recovery-policy decisions grant no network, execution, external-account, or native-platform authority.
+
 Validation evidence:
 
 - Managed Completion run `29330889507`: PASS
