@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_session_receipt_build_complete",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "mobile_shell_session_receipt_chain",
+  "build_state": "COMPLETE_PENDING_CI",
+  "production_ready": false,
+  "manual_tasks_required": [],
+  "new_workflows_added": false,
+  "ci_required": [
+    "StegTalk Managed Completion",
+    "device-continuity",
+    "Test Readiness"
+  ],
+  "merge_condition": "all_required_ci_pass"
+}
