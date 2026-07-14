@@ -2,21 +2,24 @@
   "schema_version": "1.0.0",
   "entity_id": "stegverse:auri",
   "activation_level": "AURI-L1",
-  "state": "activation_proof_in_progress",
+  "state": "packaged_awaiting_live_deployment_evidence",
   "active": false,
   "quarantined": false,
   "revoked": false,
-  "manual_tasks_required": false,
+  "manual_tasks_required": true,
   "progression_mode": "automation_first",
   "completed_tasks": ["AURI-001", "AURI-002", "AURI-003", "AURI-004", "AURI-005", "AURI-006"],
   "current_task": "AURI-007",
-  "next_task": "AURI-L1-DEPLOYMENT",
+  "next_task": "AURI-L1-LIVE-DEPLOYMENT-EVIDENCE",
   "evidence": {
     "identity": "auri/identity.v1.json",
     "authority_boundary": "auri/authority-boundary.v1.json",
     "commitment_schema": "auri/schemas/commitment-candidate.schema.json",
     "runtime": "src/stegtalk/auri/runtime.py",
     "runtime_verifier": "scripts/verify_auri_runtime.py",
+    "service_boundary": "src/stegtalk/auri/service.py",
+    "service_manifest": "auri/deployment/service-manifest.json",
+    "service_verifier": "scripts/verify_auri_service_boundary.py",
     "stegcore_gateway": "StegVerse-Labs/StegCore/evidence/auri-gateway-verification.json",
     "continuity_receipts": "StegVerse-Labs/Continuity/evidence/auri-receipts-verification.json",
     "containment": "evidence/auri-containment-verification.json",
@@ -25,6 +28,7 @@
   "activation_gates": {
     "identity_verified": true,
     "commitment_schema_verified": true,
+    "service_packaged": true,
     "runtime_deployed": false,
     "provider_adapter_verified": true,
     "stegcore_gateway_verified": true,
@@ -33,6 +37,11 @@
     "revocation_test_passed": true,
     "end_to_end_proof_passed": false
   },
-  "transition_rule": "active may become true only when every activation gate is true and independent proof exists",
+  "manual_blocker": {
+    "code": "deployment.target_or_credentials.required",
+    "detail": "A live persistent runtime cannot be truthfully deployed or health-checked without an authorized hosting target and its deployment credentials. No target or credential is presumed.",
+    "resume_condition": "authorized deployment target and non-interactive credential path become available"
+  },
+  "transition_rule": "active may become true only when every activation gate is true and independent live proof exists",
   "last_updated": "2026-07-14"
 }
