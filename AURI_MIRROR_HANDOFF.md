@@ -15,7 +15,7 @@ This document is the current handoff and task source of truth. Auri is not activ
 
 ## Operating rule
 
-Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, and machine-readable handoffs wherever possible. If no further progress can occur without a user-performed action, record the blocker and reduce monitoring to daily.
+Progression is automation-first. Manual tasks must be eliminated through workflows, validators, receipts, and machine-readable handoffs wherever possible. If no further progress can occur without a user-performed action, record the blocker and keep monitoring daily.
 
 ## Task status
 
@@ -36,31 +36,42 @@ Progression is automation-first. Manual tasks must be eliminated through workflo
 - AURI-007 end-to-end activation proof: BLOCKED AT LIVE DEPLOYMENT EVIDENCE
   - Reference verifier: `scripts/verify_auri_end_to_end.py`
   - Service boundary: `src/stegtalk/auri/service.py`
-  - Service tests: `tests/test_auri_service.py`
+  - HTTP adapter: `src/stegtalk/auri/http_service.py`
+  - Module entrypoint: `src/stegtalk/auri/__main__.py`
+  - OCI package: `Dockerfile.auri`
   - Service manifest: `auri/deployment/service-manifest.json`
-  - Service verifier: `scripts/verify_auri_service_boundary.py`
-  - Result boundary: the runtime is packaged behind a provider-neutral, hosting-neutral, hash-addressed health and advisory interface; no live persistent deployment is claimed.
+  - Deployment contract: `auri/deployment/deployment-contract.json`
+  - Package verifier: `scripts/verify_auri_deployment_package.py`
+  - Credential-free smoke workflow: `.github/workflows/auri-package-smoke.yml`
+  - Package evidence: `evidence/auri-deployment-package.json`
 
 ## Deployment-neutral package
 
-The package exposes:
+The package now exposes:
 
 - hash-addressed health state;
 - authenticated advisory request intake;
 - immutable AURI-L1 no-execution posture;
 - provider-neutral runtime binding;
-- hosting-neutral manifest;
-- quarantine-driven fail-closed health;
-- no silent conversion of package readiness into live activation.
+- hosting-neutral manifest and deployment contract;
+- fail-closed default provider mode;
+- standard-library HTTP health and advisory endpoints;
+- non-root OCI container packaging;
+- credential-free automated image build and smoke probes;
+- explicit separation between reference smoke mode and live activation.
+
+Default container startup is fail-closed. `AURI_PROVIDER_MODE=reference_echo` exists only for automated packaging and interface smoke verification and may never be used as production activation evidence.
 
 ## Current activation state
 
 ```text
-state: packaged_awaiting_live_deployment_evidence
+state: oci_packaged_awaiting_live_deployment_evidence
 active: false
 completed: AURI-001 through AURI-006
 current: AURI-007
 service_packaged: true
+oci_packaged: true
+credential_free_smoke_workflow_installed: true
 runtime_deployed: false
 end_to_end_proof_passed: false
 ```
@@ -79,9 +90,7 @@ AURI-007 — live deployment evidence and final activation receipt
 Code: deployment.target_or_credentials.required
 ```
 
-A live persistent runtime cannot be truthfully deployed or independently health-checked without an authorized hosting target and a non-interactive deployment credential path. Neither may be presumed, embedded, or fabricated. Automated work resumes when those become available.
-
-This blocker does not require redesign or code scaffolding. The deployment-neutral service boundary, manifest, tests, and verifier are installed.
+All credential-free build, packaging, verification-contract, and smoke-workflow work is installed. A live persistent runtime still cannot be truthfully deployed or independently health-checked without an authorized hosting target and a non-interactive deployment credential path. Neither may be presumed, embedded, or fabricated.
 
 ## Resume condition
 
@@ -91,17 +100,18 @@ authorized deployment target + non-interactive credential path
 
 After the resume condition exists, the automated continuation is:
 
-1. deploy the packaged AURI-L1 service;
-2. capture live health evidence;
-3. exercise advisory allow/deny/defer without execution;
-4. exercise quarantine and revocation;
-5. preserve cross-repository receipts;
-6. issue the final activation receipt;
-7. set `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
+1. bind a non-reference provider adapter;
+2. deploy the OCI-packaged AURI-L1 service;
+3. capture persistent live health evidence;
+4. exercise advisory allow, deny, and defer without execution;
+5. exercise quarantine and revocation;
+6. preserve cross-repository receipts;
+7. issue the final activation receipt;
+8. set `runtime_deployed`, `end_to_end_proof_passed`, and `active` true only when independently supported.
 
 ## Email monitoring
 
-Auri Repo Watch must now run daily because the only remaining activation blocker requires an authorized external deployment target or credential path. It should return to higher-frequency monitoring only when the blocker is removed.
+Auri Repo Watch remains daily because the only remaining activation blocker requires authorized external deployment infrastructure or credentials. It should return to higher-frequency monitoring only when the blocker is removed.
 
 ## Next integration candidate after activation
 
