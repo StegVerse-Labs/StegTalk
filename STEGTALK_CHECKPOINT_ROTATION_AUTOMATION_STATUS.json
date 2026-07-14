@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "stegtalk_checkpoint_rotation_automation_status",
+  "repo": "StegVerse-Labs/StegTalk",
+  "goal": "eliminate_manual_checkpoint_rotation_tasks",
+  "manual_tasks_before": [
+    "name_checkpoint_generations",
+    "prune_old_checkpoints",
+    "select_recovery_checkpoint",
+    "verify_checkpoint_history",
+    "record_fallback_failures"
+  ],
+  "manual_tasks_after": [],
+  "automated_entry_points": [
+    "rotate_managed_checkpoint",
+    "restore_latest_valid_checkpoint",
+    "inspect_checkpoint_history"
+  ],
+  "production_ready": false,
+  "local_only": true,
+  "authorizing": false,
+  "new_workflows_added": false
+}
