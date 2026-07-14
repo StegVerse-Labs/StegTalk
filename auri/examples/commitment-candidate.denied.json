@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "auri-demo-denied-001",
+  "actor": {
+    "entity_id": "stegverse:auri",
+    "authenticated": true
+  },
+  "action": "deploy_to_production",
+  "target": "StegVerse-Labs/StegTalk",
+  "scope": "production",
+  "policy_ref": null,
+  "delegation_ref": null,
+  "evidence_refs": [],
+  "execution_context": {
+    "environment": "production",
+    "consequential": true
+  },
+  "validity_window": {
+    "not_before": "2026-07-14T00:00:00Z",
+    "expires_at": "2027-07-14T00:00:00Z"
+  },
+  "recoverability": {
+    "reversible": false,
+    "rollback_ref": null
+  },
+  "requested_authority_class": "consequential",
+  "auri_posture": {
+    "execution_authority": false,
+    "final_consequence_authority": false,
+    "requires_external_admissibility": true
+  },
+  "expected_evaluation": {
+    "result": "deny",
+    "reason_codes": [
+      "missing_policy",
+      "missing_delegation",
+      "missing_evidence",
+      "auri_l1_no_execution_authority",
+      "nonrecoverable_consequential_request"
+    ]
+  }
+}
