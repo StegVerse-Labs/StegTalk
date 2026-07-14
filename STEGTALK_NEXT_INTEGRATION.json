@@ -1,20 +1,20 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "artifact_type": "stegtalk_next_integration",
   "repo": "StegVerse-Labs/StegTalk",
   "source": "STEGTALK_MIRROR_HANDOFF.md",
-  "completed_goal": "mobile_shell_session_checkpoint_rotation",
-  "next_goal": "mobile_shell_session_recovery_receipt",
-  "state": "IMPLEMENTED_PENDING_VALIDATION",
+  "completed_goal": "mobile_shell_session_recovery_receipt",
+  "next_goal": "mobile_shell_session_recovery_policy",
+  "state": "DECLARED",
   "production_ready": false,
   "manual_tasks_remaining": [],
-  "implemented_files": [
+  "completed_files": [
     "src/stegtalk/mobile_shell_session_recovery_receipt.py",
     "tests/test_mobile_shell_session_recovery_receipt.py",
     "scripts/verify_mobile_shell_session_recovery_receipt.py",
     "STEGTALK_MOBILE_SHELL_SESSION_RECOVERY_RECEIPT_STATE.json"
   ],
-  "implemented_conditions": [
+  "completed_conditions": [
     "record_selected_generation_and_fallback",
     "record_rejected_generations_and_reasons",
     "bind_history_checkpoint_and_receipt_chain_heads",
@@ -22,7 +22,14 @@
     "receipt_failed_recovery_attempts",
     "eliminate_manual_recovery_documentation"
   ],
+  "planned_conditions": [
+    "classify_recovery_reasons_deterministically",
+    "enforce_maximum_admissible_fallback_depth",
+    "deny_when_all_retained_generations_fail",
+    "bind_policy_version_and_decision_evidence",
+    "bind_policy_decision_to_recovery_receipt_and_history",
+    "require_no_manual_recovery_review_or_escalation_selection"
+  ],
   "external_dependencies": [],
-  "downstream_propagation_authorized": false,
-  "candidate_next_goal": "mobile_shell_session_recovery_policy"
+  "downstream_propagation_authorized": false
 }
