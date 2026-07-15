@@ -1,9 +1,19 @@
-"""Transport selection primitives for StegTalk.
+"""Transport selection and relay-governance primitives for StegTalk.
 
-This package evaluates already-declared message constraints against observed bearer
-conditions. It does not create network, execution, identity, or emergency authority.
+This package evaluates declared message constraints against observed bearer state.
+It does not create network, execution, identity, responder, or emergency authority.
 """
 
+from .density import (
+    RelayCandidate,
+    RelayContext,
+    RelayDecision,
+    RelayPolicy,
+    classify_density,
+    govern_relay,
+    message_fingerprint,
+    relay_scan_interval_seconds,
+)
 from .selector import (
     BearerObservation,
     SelectionPolicy,
@@ -14,8 +24,16 @@ from .selector import (
 
 __all__ = [
     "BearerObservation",
+    "RelayCandidate",
+    "RelayContext",
+    "RelayDecision",
+    "RelayPolicy",
     "SelectionPolicy",
     "TransportDecision",
     "TransportRequest",
+    "classify_density",
+    "govern_relay",
+    "message_fingerprint",
+    "relay_scan_interval_seconds",
     "select_transport",
 ]
