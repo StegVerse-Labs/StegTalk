@@ -1,0 +1,31 @@
+name: native-swift-package
+
+on:
+  pull_request:
+    paths:
+      - "native/**"
+      - ".github/workflows/native-swift-package.yml"
+  push:
+    branches:
+      - agent/native-ios-transport-v0-1
+    paths:
+      - "native/**"
+      - ".github/workflows/native-swift-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record Swift environment
+        run: |
+          swift --version
+          xcodebuild -version
+          sw_vers
+      - name: Build native package
+        run: swift build --package-path native
+      - name: Test native package
+        run: swift test --package-path native
