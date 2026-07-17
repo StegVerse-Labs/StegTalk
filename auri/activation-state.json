@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "entity_id": "stegverse:auri",
   "activation_level": "AURI-L1",
-  "state": "repository_automation_complete_awaiting_external_authorization_evidence",
+  "state": "repository_and_adjacent_automation_complete_awaiting_external_authorization_evidence",
   "active": false,
   "quarantined": false,
   "revoked": false,
@@ -11,6 +11,24 @@
   "completed_tasks": ["AURI-001", "AURI-002", "AURI-003", "AURI-004", "AURI-005", "AURI-006"],
   "current_task": "AURI-007",
   "next_task": "AURI-L1-LIVE-DEPLOYMENT-EVIDENCE",
+  "adjacent_integrations": {
+    "stegtalk_session_binding": {
+      "status": "installed_dormant_until_activation",
+      "runtime": "src/stegtalk/auri/session_binding.py",
+      "schema": "auri/schemas/session-binding-receipt.schema.json",
+      "verifier": "scripts/verify_auri_stegtalk_session_binding.py",
+      "workflow": ".github/workflows/auri-stegtalk-integration.yml",
+      "manual_tasks_required": false,
+      "execution_authority": false
+    },
+    "stegagents_orchestration": {
+      "status": "installed_dormant_until_activation",
+      "handoff": "StegVerse-Labs/StegAgents/AURI_ORCHESTRATION_MIRROR_HANDOFF.md",
+      "evidence": "StegVerse-Labs/StegAgents/evidence/auri-orchestration-verification.json",
+      "manual_tasks_required": false,
+      "execution_authority": false
+    }
+  },
   "evidence": {
     "identity": "auri/identity.v1.json",
     "authority_boundary": "auri/authority-boundary.v1.json",
@@ -37,6 +55,9 @@
     "activation_receipt_builder": "scripts/build_auri_activation_receipt.py",
     "activation_state_finalizer": "scripts/finalize_auri_activation_state.py",
     "activation_gate_hardening": "evidence/auri-activation-gate-hardening.json",
+    "stegtalk_session_binding": "src/stegtalk/auri/session_binding.py",
+    "stegtalk_session_binding_verifier": "scripts/verify_auri_stegtalk_session_binding.py",
+    "stegagents_orchestration": "StegVerse-Labs/StegAgents/evidence/auri-orchestration-verification.json",
     "stegcore_gateway": "StegVerse-Labs/StegCore/evidence/auri-gateway-verification.json",
     "continuity_receipts": "StegVerse-Labs/Continuity/evidence/auri-receipts-verification.json",
     "containment": "evidence/auri-containment-verification.json",
@@ -54,6 +75,8 @@
     "authorization_intake_automation_installed": true,
     "activation_receipt_path_installed": true,
     "evidence_gated_state_finalizer_installed": true,
+    "stegtalk_session_binding_installed": true,
+    "stegagents_orchestration_installed": true,
     "runtime_deployed": false,
     "provider_adapter_verified": true,
     "stegcore_gateway_verified": true,
@@ -64,9 +87,10 @@
   },
   "external_condition": {
     "code": "deployment.authorization_evidence.pending",
-    "detail": "No repository-side manual action remains. Activation waits for canonical externally authorized provider-binding and deployment-authorization records, a reachable persistent target, and a non-interactive credential path. When the canonical records arrive, authorization intake, live proof, receipt construction, and state finalization run automatically.",
+    "detail": "No repository-side or adjacent-integration manual action remains. Activation waits for canonical externally authorized provider-binding and deployment-authorization records, a reachable persistent target, and a non-interactive credential path. When the canonical records arrive, authorization intake, live proof, receipt construction, state finalization, StegTalk session binding, and StegAgents proposal orchestration proceed through installed evidence gates.",
     "resume_condition": "canonical authorization records and authorized live deployment evidence become available"
   },
+  "adjacent_goal_status": "no_further_repository_controlled_adjacent_goals_identified",
   "transition_rule": "active may become true only when canonical authorization inputs, independent live proof, cross-repository evidence, and a valid activation receipt all pass the guarded finalizer",
-  "last_updated": "2026-07-14"
+  "last_updated": "2026-07-17"
 }
