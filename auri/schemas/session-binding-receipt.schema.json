@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/auri/session-binding-receipt.schema.json",
+  "title": "AURI-L1 StegTalk Session Binding Receipt",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "receipt_type",
+    "auri_entity_id",
+    "activation_level",
+    "session_id",
+    "user_entity_id",
+    "authenticated",
+    "device_attested",
+    "bound",
+    "reason_code",
+    "execution_authority",
+    "execution_performed",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "receipt_type": {"const": "auri_stegtalk_session_binding"},
+    "auri_entity_id": {"const": "stegverse:auri"},
+    "activation_level": {"const": "AURI-L1"},
+    "session_id": {"type": "string", "minLength": 1},
+    "user_entity_id": {"type": "string", "minLength": 1},
+    "authenticated": {"type": "boolean"},
+    "device_attested": {"type": "boolean"},
+    "relationship_contract_ref": {"type": ["string", "null"]},
+    "activation_receipt_ref": {"type": ["string", "null"]},
+    "bound": {"type": "boolean"},
+    "reason_code": {"type": "string", "minLength": 1},
+    "execution_authority": {"const": false},
+    "execution_performed": {"const": false},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
