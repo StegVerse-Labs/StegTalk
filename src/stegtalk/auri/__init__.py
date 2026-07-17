@@ -9,6 +9,11 @@ from .runtime import (
     canonical_sha256,
 )
 from .service import AuriService, ServiceHealth
+from .session_binding import (
+    AuriStegTalkBinding,
+    SessionBindingResult,
+    StegTalkSessionContext,
+)
 
 __all__ = [
     "AuriProviderError",
@@ -17,6 +22,9 @@ __all__ = [
     "ProposalResult",
     "AuriService",
     "ServiceHealth",
+    "AuriStegTalkBinding",
+    "SessionBindingResult",
+    "StegTalkSessionContext",
     "canonical_json_bytes",
     "canonical_sha256",
 ]
