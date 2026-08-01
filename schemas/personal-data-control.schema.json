@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/stegtalk/personal-data-control.schema.json",
+  "title": "StegTalk Personal Data Control",
+  "type": "object",
+  "required": ["schema_version", "layer_id", "repository", "state", "external_tasks_required", "lifecycle_states", "data_scopes", "task"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "layer_id": {"const": "stegtalk-personal-data-control"},
+    "repository": {"const": "StegVerse-Labs/StegTalk"},
+    "state": {"enum": ["ACTIVATED_AND_CI_BOUND", "VALIDATION_FAILED"]},
+    "external_tasks_required": {"const": false},
+    "authority_granted": {"const": false},
+    "lifecycle_states": {"type": "array", "minItems": 13, "uniqueItems": true, "items": {"type": "string"}},
+    "data_scopes": {"type": "array", "minItems": 10, "uniqueItems": true, "items": {"type": "string"}},
+    "task": {
+      "type": "object",
+      "required": ["id", "repository", "implementation_locations", "verification_locations", "validator_command", "success_marker", "status"],
+      "properties": {
+        "id": {"const": "ST-026"},
+        "repository": {"const": "StegVerse-Labs/StegTalk"},
+        "implementation_locations": {"type": "array", "minItems": 3, "items": {"type": "string"}},
+        "verification_locations": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+        "validator_command": {"const": "python scripts/check_personal_data_control.py"},
+        "success_marker": {"const": "STEGTALK_PERSONAL_DATA_CONTROL=PASS"},
+        "status": {"const": "complete"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
