@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "layer_id": "stegtalk-personal-data-control",
+  "repository": "StegVerse-Labs/StegTalk",
+  "state": "ACTIVATED_AND_CI_BOUND",
+  "external_tasks_required": false,
+  "authority_granted": false,
+  "lifecycle_states": [
+    "NOT_REQUESTED",
+    "RECEIVED",
+    "IDENTITY_VERIFICATION_REQUIRED",
+    "VERIFIED",
+    "PROCESSING_RESTRICTED",
+    "INVENTORY_COMPLETE",
+    "DELETION_IN_PROGRESS",
+    "PROCESSOR_PROPAGATION_PENDING",
+    "COMPLETED",
+    "PARTIALLY_DENIED",
+    "DENIED",
+    "APPEAL_OPEN",
+    "CHANNEL_FAILED"
+  ],
+  "data_scopes": [
+    "account_profile",
+    "identity_and_device_bindings",
+    "session_state",
+    "contact_and_routing_metadata",
+    "local_inbox",
+    "local_store",
+    "message_receipts",
+    "recovery_checkpoints",
+    "recovery_policy_receipts",
+    "analytics_and_diagnostics",
+    "processor_copies"
+  ],
+  "completion_receipt_fields": [
+    "request_id",
+    "subject_binding",
+    "inventoried_scopes",
+    "deleted_scopes",
+    "retained_scopes_and_basis",
+    "processor_propagation_state",
+    "appeal_available",
+    "completed_at",
+    "receipt_hash"
+  ],
+  "task": {
+    "id": "ST-026",
+    "repository": "StegVerse-Labs/StegTalk",
+    "implementation_locations": [
+      "docs/PERSONAL_DATA_CONTROL_RUNTIME.md",
+      "schemas/personal-data-control.schema.json",
+      "runtime/personal-data-control.v1.json"
+    ],
+    "verification_locations": [
+      "scripts/check_personal_data_control.py",
+      "tests/test_personal_data_control.py",
+      ".github/workflows/ci.yml"
+    ],
+    "validator_command": "python scripts/check_personal_data_control.py",
+    "success_marker": "STEGTALK_PERSONAL_DATA_CONTROL=PASS",
+    "status": "complete"
+  },
+  "non_halting_policy": {
+    "external_response_is_evidence_not_dependency": true,
+    "missing_processor_confirmation_state": "PROCESSOR_PROPAGATION_PENDING",
+    "failed_contact_state": "CHANNEL_FAILED",
+    "repository_repair_continues": true
+  }
+}
