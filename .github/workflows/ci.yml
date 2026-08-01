@@ -22,6 +22,10 @@ jobs:
         run: python scripts/managed_next_task.py
       - name: Summarize queue execution state
         run: python scripts/queue_status.py
+      - name: Validate personal data control layer
+        run: python scripts/check_personal_data_control.py
+      - name: Run personal data control tests
+        run: python -m pytest tests/test_personal_data_control.py
       - name: Run managed completion tests
         run: python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py
       - name: Run entity runtime tests
