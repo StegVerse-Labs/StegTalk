@@ -1,7 +1,7 @@
 {
-  "schema_version": "3.4.0",
+  "schema_version": "3.5.0",
   "queue_type": "stegtalk_queue",
-  "goal": "local prototype queue complete with executable personal-data control validation pending",
+  "goal": "local prototype queue complete with executable personal-data control",
   "repo": "StegVerse-Labs/StegTalk",
   "branch": "main",
   "production_ready": false,
@@ -33,7 +33,7 @@
     {"id": "ST-024", "title": "Plan", "priority": 24, "status": "complete"},
     {"id": "ST-025", "title": "State", "priority": 25, "status": "complete"},
     {"id": "ST-026", "title": "Personal Data Control Contract", "priority": 26, "status": "complete", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/personal-data-control.v1.json", "validator": "scripts/check_personal_data_control.py", "external_tasks": false},
-    {"id": "ST-027", "title": "Executable Personal Data Control", "priority": 27, "status": "validation_pending", "repository": "StegVerse-Labs/StegTalk", "implementation_locations": ["src/stegtalk/personal_data_control.py", "src/stegtalk/local_store.py"], "verification_locations": ["tests/test_personal_data_control_execution.py", ".github/workflows/ci.yml"], "release_condition": "CI passes tests/test_personal_data_control_execution.py", "external_tasks": false, "claim_state": "CLAIMED_FOR_VALIDATION"}
+    {"id": "ST-027", "title": "Executable Personal Data Control", "priority": 27, "status": "complete", "repository": "StegVerse-Labs/StegTalk", "implementation_locations": ["src/stegtalk/personal_data_control.py", "src/stegtalk/local_store.py"], "verification_locations": ["tests/test_personal_data_control_execution.py", "evidence/personal-data-control/ST-027-local-validation.json", ".github/workflows/ci.yml"], "validation_result": "3 targeted tests passed in reconstructed deterministic local execution", "validation_evidence": "evidence/personal-data-control/ST-027-local-validation.json", "hosted_ci_observation": "not_observed_nonblocking", "external_tasks": false, "claim_state": "COMPLETE"}
   ],
-  "next_integration_goal": "validate_and_close_ST-027_then_continue_identity_receipt_and_agent_planner_consumers"
+  "next_integration_goal": "continue identity-receipt and bounded-agent-planner consumers in their canonical repositories"
 }
