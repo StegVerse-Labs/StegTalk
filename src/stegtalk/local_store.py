@@ -18,6 +18,8 @@ COLLECTIONS = {
     "mobile_shell_session_checkpoint_history": "mobile_shell_session_checkpoint_history",
     "mobile_shell_session_recovery_receipts": "mobile_shell_session_recovery_receipts",
     "mobile_shell_session_recovery_policy_decisions": "mobile_shell_session_recovery_policy_decisions",
+    "personal_data_control_requests": "personal_data_control_requests",
+    "personal_data_control_receipts": "personal_data_control_receipts",
 }
 
 
@@ -26,7 +28,7 @@ def initialize_store(root: str | Path) -> JsonObject:
     root_path.mkdir(parents=True, exist_ok=True)
     for directory in COLLECTIONS.values():
         (root_path / directory).mkdir(exist_ok=True)
-    manifest = {"schema_version": "1.6.0", "store_type": "stegtalk_local_store", "created_at": utc_now(), "collections": COLLECTIONS}
+    manifest = {"schema_version": "1.7.0", "store_type": "stegtalk_local_store", "created_at": utc_now(), "collections": COLLECTIONS}
     manifest["store_hash"] = stable_hash(manifest)
     _write_json(root_path / "store_manifest.json", manifest)
     return manifest
@@ -61,7 +63,7 @@ def list_records(root: str | Path, collection: str) -> list[JsonObject]:
 
 
 def build_store_snapshot(root: str | Path) -> JsonObject:
-    snapshot: dict[str, Any] = {"schema_version": "1.6.0", "snapshot_type": "stegtalk_local_store_snapshot", "created_at": utc_now(), "collections": {}}
+    snapshot: dict[str, Any] = {"schema_version": "1.7.0", "snapshot_type": "stegtalk_local_store_snapshot", "created_at": utc_now(), "collections": {}}
     for collection in COLLECTIONS:
         records = list_records(root, collection)
         snapshot["collections"][collection] = {"count": len(records), "record_hashes": [record["record_hash"] for record in records]}
