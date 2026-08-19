@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "contract_type": "stegtalk_sovereign_sms_transport",
+  "task_id": "ST-029",
+  "transport": "sms",
+  "implementation": "direct_cellular_modem",
+  "cloud_messaging_provider": null,
+  "provider_sdk": null,
+  "application_third_party_dependency": false,
+  "standards": [
+    "3GPP_TS_27.005",
+    "3GPP_TS_27.007"
+  ],
+  "hardware_boundary": {
+    "accepted_interfaces": ["USB_CDC_ACM", "UART", "LOCAL_SERIAL_EQUIVALENT"],
+    "requires_cellular_modem": true,
+    "requires_subscriber_identity": true,
+    "requires_mobile_network_access": true
+  },
+  "network_boundary": {
+    "mobile_carrier_required_for_public_sms": true,
+    "sms_aggregator_required": false,
+    "cloud_api_required": false,
+    "internet_required_for_sms_submission": false
+  },
+  "security_boundary": {
+    "classification": "external_plaintext_sms",
+    "inherits_stegtalk_secure_channel_guarantees": false,
+    "requires_explicit_plaintext_admission": true,
+    "carrier_network_untrusted_transport": true
+  },
+  "outbound": {
+    "mode": "3gpp_at_command",
+    "commands": ["AT", "ATE0", "AT+CMGF=1", "AT+CMGS"],
+    "provider_account_credentials": false
+  },
+  "inbound": {
+    "mode": "3gpp_unsolicited_notification",
+    "notification": "+CMT",
+    "configuration": "AT+CNMI=2,2,0,0,0"
+  },
+  "implementation_files": [
+    "src/stegtalk/sovereign_sms_modem.py",
+    "tests/test_sovereign_sms_modem.py"
+  ],
+  "activation": {
+    "source_implemented": true,
+    "targeted_validation": "pending",
+    "modem_bound": false,
+    "sim_or_esim_bound": false,
+    "network_registered": false,
+    "live_outbound_proof": false,
+    "live_inbound_proof": false,
+    "production_active": false
+  }
+}
