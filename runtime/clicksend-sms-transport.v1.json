@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "contract_type": "stegtalk_external_sms_transport",
+  "task_id": "ST-028",
+  "provider": "clicksend",
+  "transport": "sms",
+  "credential_authority": "TV/TVC_ONLY",
+  "credential_persistence_allowed": false,
+  "outbound": {
+    "endpoint": "https://rest.clicksend.com/v3/sms/send",
+    "method": "POST",
+    "authentication": "basic_runtime_injected_username_api_key",
+    "requires_explicit_plaintext_admission": true,
+    "correlation_field": "custom_string",
+    "correlation_default": "stegtalk_envelope_hash"
+  },
+  "inbound": {
+    "mode": "https_webhook",
+    "clicksend_rule_action": "URL",
+    "preferred_webhook_type": "json",
+    "required_checks": [
+      "https_boundary",
+      "webhook_token",
+      "user_id_when_configured",
+      "custom_string_when_correlated"
+    ],
+    "provider_fields": [
+      "from",
+      "to",
+      "body",
+      "message_id",
+      "original_message_id",
+      "custom_string",
+      "timestamp"
+    ]
+  },
+  "security_boundary": {
+    "classification": "external_plaintext_sms",
+    "inherits_stegtalk_secure_channel_guarantees": false,
+    "carrier_can_observe_message_body": true,
+    "stegverse_receipts_transition": true,
+    "stegverse_can_correlate_reply": true
+  },
+  "implementation": {
+    "module": "src/stegtalk/sms_transport.py",
+    "tests": "tests/test_sms_transport.py"
+  },
+  "activation": {
+    "source_implemented": true,
+    "targeted_validation": "pending",
+    "provider_account_bound": false,
+    "dedicated_number_bound": false,
+    "inbound_rule_created": false,
+    "webhook_deployed": false,
+    "live_outbound_proof": false,
+    "live_inbound_proof": false,
+    "production_active": false
+  }
+}
