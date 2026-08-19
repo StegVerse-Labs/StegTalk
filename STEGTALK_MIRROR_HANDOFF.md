@@ -8,96 +8,105 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Manual tasks required: none
-External tasks required: none
+Active task: ST-028
+Manual tasks required: provider account/number binding only when live activation is attempted
+External tasks required: ClickSend account + two-way-capable number + inbound URL rule for live proof
 ```
 
-## Current personal-data workstream
+## Active workstream — governed SMS bridge
 
-### Contract layer
+### ST-028 — Governed ClickSend SMS Transport
+
+```text
+Originating goal: allow bidirectional communication between ordinary phone SMS and StegVerse/StegTalk
+Provider: ClickSend
+Claim state: OPEN
+Source implementation: COMPLETE
+Targeted validation: PENDING
+Provider binding: NOT STARTED
+Live outbound proof: NOT STARTED
+Live inbound proof: NOT STARTED
+Production activation: NOT ACTIVE
+Credential authority: TV/TVC_ONLY
+```
+
+Installed files:
+
+```text
+src/stegtalk/sms_transport.py
+tests/test_sms_transport.py
+runtime/clicksend-sms-transport.v1.json
+STEGTALK_TASK_QUEUE.json
+```
+
+Implementation commits:
+
+```text
+28365ae1166b56a85c9942ce9458c4ce0972437e
+4022940586131cd343856818e4a12e3b94cb2078
+b32826c97e87afb9eae5de670e9834ed65532064
+47a7e287ff4c0c8f7efe33713468a4bad5d4b919
+```
+
+Implemented behavior:
+
+- ClickSend outbound adapter for `POST https://rest.clicksend.com/v3/sms/send`;
+- runtime-only ClickSend username/API-key injection; no credentials persisted in repository state;
+- explicit `TV/TVC_ONLY` credential authority contract;
+- fail-closed requirement for explicit admission of the external plaintext SMS boundary;
+- strict E.164 phone-number requirement rather than guessed country routing;
+- envelope-hash correlation through ClickSend `custom_string`;
+- bounded outbound provider receipt including provider message ID and queue result;
+- inbound ClickSend payload ingestion into a StegTalk `external_sms` envelope;
+- preservation of `message_id`, `original_message_id`, `custom_string`, carrier endpoints, and provider timestamp;
+- fail-closed inbound webhook-token verification with optional `user_id` and `custom_string` matching;
+- inbound transport receipt with a deterministic correlation hash;
+- explicit declaration that ordinary SMS does not inherit StegTalk secure-channel guarantees.
+
+## Required continuation
+
+Execute in this order and do not collapse any step into a later state:
+
+1. Observe hosted CI for the new tests or reproduce the exact files in a deterministic local test environment and run `PYTHONPATH=. pytest -q tests/test_sms_transport.py`.
+2. Repair any test failures and record validation evidence.
+3. Bind ClickSend credentials through TV/TVC only. Do not add GitHub, repository, workflow, or application secrets outside TV/TVC authority.
+4. Bind a ClickSend number capable of receiving replies in the intended country/route.
+5. Deploy the StegVerse inbound HTTPS endpoint that performs the webhook-token boundary check before calling `ingest_clicksend_sms`.
+6. Create the ClickSend inbound SMS automation with Action `URL`, preferably JSON webhook mode, targeting that endpoint.
+7. Send one StegVerse -> phone SMS and record provider message ID, StegTalk envelope hash, and transport receipt.
+8. Reply from the phone -> StegVerse and prove `original_message_id` / `custom_string` correlation into the expected StegTalk thread.
+9. Only after both live directions and receipts are proven may ST-028 be marked activated.
+
+## Security and authority boundary
+
+```text
+source implemented != validated
+validated != provider bound
+provider bound != deployed
+outbound queued != handset delivered
+inbound webhook received != authenticated identity
+SMS transport != StegTalk secure channel
+carrier plaintext exposure != encrypted StegTalk transport
+ClickSend API log != StegVerse continuity receipt
+TV/TVC credential authority != repository secret storage
+```
+
+The ClickSend carrier leg is ordinary SMS. StegVerse can govern admission to that leg, correlate it, retain receipts, and bind it to internal entities, but it must not represent the carrier segment as end-to-end encrypted or metadata-private.
+
+## Previous completed workstream — personal-data control
+
+ST-026 and ST-027 remain complete. The previously validated local personal-data lifecycle is unchanged:
 
 ```text
 Task: ST-026
 State: COMPLETE
 Task manifest: runtime/personal-data-control.v1.json
-Validator: scripts/check_personal_data_control.py
-Success marker: STEGTALK_PERSONAL_DATA_CONTROL=PASS
-```
 
-### Executable local lifecycle
-
-```text
 Task: ST-027
-Originating goal: bind the personal-data lifecycle to executable local account/session deletion and hash-bound receipts
-Claim state: COMPLETE
-Claim created: 2026-08-02T09:19:00Z
-Claim released: 2026-08-02T09:49:00Z
-Released by: deterministic targeted validation evidence
-Collision boundary released: src/stegtalk/personal_data_control.py, src/stegtalk/local_store.py, tests/test_personal_data_control_execution.py
-```
-
-Implemented files:
-
-```text
-src/stegtalk/personal_data_control.py
-src/stegtalk/local_store.py
-tests/test_personal_data_control_execution.py
-STEGTALK_TASK_QUEUE.json
-evidence/personal-data-control/ST-027-local-validation.json
-```
-
-Implementation and closure commits:
-
-```text
-51407917fa54a5eae894e33bfe7d185910d702f7
-9f32c9aca28423b4753c49b9cf1853ca9158695e
-8a9ea5a31d23e36dac563f03a3b44e754ac1b6c3
-99f9d3629fa1e61fbb037d9b94563d7403adeaca
-bc3934627d4863f744300979139af4b4e237fd8a
-ed6b874050ce4a01eacd48a56de6591efde82706
-```
-
-Implemented behavior:
-
-- authenticated personal-data request construction;
-- fail-closed identity verification requirement;
-- local processing restriction state;
-- deterministic account-linked inventory across local-store collections;
-- deletion of eligible local records;
-- explicit retention basis for continuity and request-audit records;
-- processor propagation represented as `PROCESSOR_PROPAGATION_PENDING`, not an external task;
-- hash-bound local completion receipt;
-- persisted request and completion-receipt records;
-- processor completion updates without granting external deletion authority.
-
-## Validation state
-
-```text
-Static file installation: COMPLETE
-Targeted deterministic execution: PASS
-Command: PYTHONPATH=. pytest -q tests/test_personal_data_control_execution.py
-Result: 3 passed in 0.06s
+State: COMPLETE
+Implementation: src/stegtalk/personal_data_control.py, src/stegtalk/local_store.py
+Validation: 3 targeted tests passed in reconstructed deterministic local execution
 Evidence: evidence/personal-data-control/ST-027-local-validation.json
-Hosted CI observation: NOT OBSERVED; non-blocking recurring repository validation remains owned by .github/workflows/ci.yml
-Task state: COMPLETE_LOCAL_VALIDATION
-```
-
-The validated files were reconstructed from their exact current GitHub contents in an isolated Python environment because direct repository cloning was unavailable. This validates targeted deterministic behavior, not hosted CI, deployment, external processor deletion, identity-provider integration, or legal compliance.
-
-## Cross-repository continuation
-
-```text
-Canonical ecosystem consolidation:
-StegVerse-Labs/StegCore/docs/PERSONAL_DATA_CONTROL_ECOSYSTEM_MIRROR_HANDOFF.md
-
-Policy source:
-StegVerse-Labs/admissibility-wiki/docs/PERSONAL_DATA_CONTROL_MIRROR_HANDOFF.md
-
-Identity-bound receipt continuation:
-StegVerse-Labs/StegID/STEGID_MIRROR_HANDOFF.md#SID-PDCL-002
-
-Bounded agent-planner continuation:
-StegVerse-Labs/StegAgents/runtime/personal-data-agent-task.v1.json#SA-PDCL-002
 ```
 
 ## Machine-owned continuation
@@ -108,30 +117,21 @@ Trigger: push, pull_request
 Input: current repository state
 Output: complete pytest result
 Failure behavior: exact pytest failure; repository-local repair
-Archive dependency: false
 ```
 
-No chat session, controller, processor, or unnamed external actor owns continuation.
-
-## Authority boundary
-
-```text
-local deletion != processor deletion
-identity flag != production identity verification
-completion receipt != legal adjudication
-local targeted PASS != hosted CI or production deployment
-processor pending != external task
-```
+Hosted CI may validate source behavior, but it does not own ClickSend credentials, provider binding, deployment authority, or activation.
 
 ## Archive posture
 
-The StegTalk segment is archive-safe. ST-027 is implemented, deterministically validated, recorded in the queue, and released from its session validation claim. Hosted CI remains a recurring machine-owned repository check and does not require the originating conversation.
+DO NOT archive this workstream as complete. ST-028 source exists, but validation, provider binding, deployment, bidirectional runtime proof, and activation remain open.
 
 ## Percentages
 
 ```text
-Developed files: 5/5
-Validation: 1/1 targeted validation complete
-Integration: 2/3 local request/store/receipt components integrated; production runtime not claimed or required for this prototype goal
-Goal activation: 100% for executable local personal-data lifecycle
+ST-028 source implementation: 100%
+ST-028 targeted validation: 0% observed
+ST-028 provider/deployment integration: 0%
+ST-028 bidirectional runtime proof: 0%
+ST-028 goal activation: 35%
+Developed files vs scaffolding/stubs: 4 developed / 0 placeholder stubs for the source slice; live-provider surfaces remain unactivated rather than stubbed
 ```
