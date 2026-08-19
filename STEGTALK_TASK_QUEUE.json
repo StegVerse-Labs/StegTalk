@@ -1,7 +1,7 @@
 {
-  "schema_version": "3.6.0",
+  "schema_version": "3.7.0",
   "queue_type": "stegtalk_queue",
-  "goal": "local prototype queue extended with governed external SMS transport",
+  "goal": "activate sovereign bidirectional SMS without cloud messaging providers",
   "repo": "StegVerse-Labs/StegTalk",
   "branch": "main",
   "production_ready": false,
@@ -32,9 +32,10 @@
     {"id": "ST-023", "title": "Refresh", "priority": 23, "status": "complete"},
     {"id": "ST-024", "title": "Plan", "priority": 24, "status": "complete"},
     {"id": "ST-025", "title": "State", "priority": 25, "status": "complete"},
-    {"id": "ST-026", "title": "Personal Data Control Contract", "priority": 26, "status": "complete", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/personal-data-control.v1.json", "validator": "scripts/check_personal_data_control.py", "external_tasks": false},
-    {"id": "ST-027", "title": "Executable Personal Data Control", "priority": 27, "status": "complete", "repository": "StegVerse-Labs/StegTalk", "implementation_locations": ["src/stegtalk/personal_data_control.py", "src/stegtalk/local_store.py"], "verification_locations": ["tests/test_personal_data_control_execution.py", "evidence/personal-data-control/ST-027-local-validation.json", ".github/workflows/ci.yml"], "validation_result": "3 targeted tests passed in reconstructed deterministic local execution", "validation_evidence": "evidence/personal-data-control/ST-027-local-validation.json", "hosted_ci_observation": "not_observed_nonblocking", "external_tasks": false, "claim_state": "COMPLETE"},
-    {"id": "ST-028", "title": "Governed ClickSend SMS Transport", "priority": 28, "status": "implemented_validation_pending", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/clicksend-sms-transport.v1.json", "implementation_locations": ["src/stegtalk/sms_transport.py"], "verification_locations": ["tests/test_sms_transport.py", ".github/workflows/ci.yml"], "credential_authority": "TV/TVC_ONLY", "external_plaintext_boundary": true, "live_provider_activation": false, "claim_state": "OPEN"}
+    {"id": "ST-026", "title": "Personal Data Control Contract", "priority": 26, "status": "complete"},
+    {"id": "ST-027", "title": "Executable Personal Data Control", "priority": 27, "status": "complete"},
+    {"id": "ST-028", "title": "Optional ClickSend SMS Interop Adapter", "priority": 28, "status": "optional_noncanonical", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/clicksend-sms-transport.v1.json", "implementation_locations": ["src/stegtalk/sms_transport.py"], "verification_locations": ["tests/test_sms_transport.py"], "credential_authority": "TV/TVC_ONLY", "live_provider_activation": false, "claim_state": "NON_PRIMARY"},
+    {"id": "ST-029", "title": "Sovereign Direct-Modem SMS Transport", "priority": 29, "status": "implemented_validation_pending", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/sovereign-sms-modem.v1.json", "implementation_locations": ["src/stegtalk/sovereign_sms_modem.py"], "verification_locations": ["tests/test_sovereign_sms_modem.py", ".github/workflows/ci.yml"], "application_third_party_dependency": false, "cloud_messaging_provider": null, "mobile_carrier_required_for_public_sms": true, "external_plaintext_boundary": true, "live_activation": false, "claim_state": "OPEN"}
   ],
-  "next_integration_goal": "validate ST-028, bind a TV/TVC-managed ClickSend account and number, deploy the inbound webhook, then prove bidirectional SMS without equating source completion with activation"
+  "next_integration_goal": "validate ST-029, bind directly attached cellular modem plus SIM/eSIM, prove network registration, then prove phone-to-StegVerse and StegVerse-to-phone SMS with no aggregator or cloud messaging service"
 }
