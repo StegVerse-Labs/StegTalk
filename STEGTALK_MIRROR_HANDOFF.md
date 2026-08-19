@@ -8,130 +8,165 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Active task: ST-028
-Manual tasks required: provider account/number binding only when live activation is attempted
-External tasks required: ClickSend account + two-way-capable number + inbound URL rule for live proof
+Active task: ST-029
+Primary SMS architecture: sovereign direct cellular modem
+Cloud messaging dependency: none
+SMS aggregator dependency: none
+Public mobile-network dependency: yes
 ```
 
-## Active workstream — governed SMS bridge
+## Active workstream — ST-029 Sovereign Direct-Modem SMS
 
-### ST-028 — Governed ClickSend SMS Transport
+Goal: bidirectional SMS between ordinary telephone messaging and StegVerse without ClickSend, Twilio, another aggregator, webhook SaaS, or provider SDK.
 
 ```text
-Originating goal: allow bidirectional communication between ordinary phone SMS and StegVerse/StegTalk
-Provider: ClickSend
-Claim state: OPEN
 Source implementation: COMPLETE
 Targeted validation: PENDING
-Provider binding: NOT STARTED
+Direct modem binding: NOT STARTED
+SIM/eSIM binding: NOT STARTED
+Carrier registration proof: NOT STARTED
 Live outbound proof: NOT STARTED
 Live inbound proof: NOT STARTED
 Production activation: NOT ACTIVE
-Credential authority: TV/TVC_ONLY
+Claim state: OPEN
 ```
 
-Installed files:
+Installed source:
 
 ```text
-src/stegtalk/sms_transport.py
-tests/test_sms_transport.py
-runtime/clicksend-sms-transport.v1.json
+src/stegtalk/sovereign_sms_modem.py
+tests/test_sovereign_sms_modem.py
+runtime/sovereign-sms-modem.v1.json
 STEGTALK_TASK_QUEUE.json
 ```
 
 Implementation commits:
 
 ```text
-28365ae1166b56a85c9942ce9458c4ce0972437e
-4022940586131cd343856818e4a12e3b94cb2078
-b32826c97e87afb9eae5de670e9834ed65532064
-47a7e287ff4c0c8f7efe33713468a4bad5d4b919
+18d7cfbaeca24a82fa20a14923113b7d328b9324
+9308c4df3fc955bdbe4de00005c1699a0213221b
+fe1e6954c604387fb1e6a964a5a3ff3f16a4dc54
+258fb130e6b9cfc56c8ea71546313c65398b769b
 ```
 
-Implemented behavior:
+## Architecture
 
-- ClickSend outbound adapter for `POST https://rest.clicksend.com/v3/sms/send`;
-- runtime-only ClickSend username/API-key injection; no credentials persisted in repository state;
-- explicit `TV/TVC_ONLY` credential authority contract;
-- fail-closed requirement for explicit admission of the external plaintext SMS boundary;
-- strict E.164 phone-number requirement rather than guessed country routing;
-- envelope-hash correlation through ClickSend `custom_string`;
-- bounded outbound provider receipt including provider message ID and queue result;
-- inbound ClickSend payload ingestion into a StegTalk `external_sms` envelope;
-- preservation of `message_id`, `original_message_id`, `custom_string`, carrier endpoints, and provider timestamp;
-- fail-closed inbound webhook-token verification with optional `user_id` and `custom_string` matching;
-- inbound transport receipt with a deterministic correlation hash;
-- explicit declaration that ordinary SMS does not inherit StegTalk secure-channel guarantees.
+```text
+StegTalk/Auri
+    |
+    v
+StegVerse admissibility + receipt boundary
+    |
+    v
+local ST-029 modem driver
+    |
+    v
+USB/UART cellular modem + SIM/eSIM
+    |
+    v
+mobile carrier radio/SMSC
+    |
+    v
+ordinary telephone SMS
+```
+
+Reverse direction:
+
+```text
+ordinary telephone SMS
+    |
+    v
+mobile carrier radio/SMSC
+    |
+    v
+StegVerse-owned modem + SIM/eSIM
+    |
+    v
+3GPP +CMT inbound notification
+    |
+    v
+ST-029 parser/receipt boundary
+    |
+    v
+StegTalk external_sms envelope/inbox
+```
+
+The carrier is an external transport network, not an application provider. StegVerse owns the application protocol, modem control, message normalization, admission, storage, correlation, and receipts.
+
+## Standards boundary
+
+ST-029 targets the standardized cellular terminal interface rather than a vendor cloud API:
+
+```text
+3GPP TS 27.005 — DTE/DCE interface for SMS/CBS
+3GPP TS 27.007 — AT command set for User Equipment
+```
+
+Current source implements the text-mode minimum path:
+
+```text
+AT
+ATE0
+AT+CMGF=1
+AT+CSCS="GSM"
+AT+CNMI=2,2,0,0,0
+AT+CMGS="+E164_NUMBER"
+<body><CTRL-Z>
+```
+
+Inbound source parses direct `+CMT` notifications into StegTalk `external_sms` envelopes and emits StegVerse transport receipts.
+
+## Authority and security boundary
+
+```text
+no cloud messaging provider != no carrier
+carrier network != trusted StegVerse runtime
+source implementation != validation
+modem detected != modem registered
+registered != SMS proven
+submitted != delivered
+SMS != StegTalk secure channel
+```
+
+Ordinary SMS remains a plaintext external transport. StegVerse must explicitly admit any downgrade from protected internal content to carrier SMS.
+
+## iPhone constraint
+
+The iPhone is not the preferred autonomous gateway. Apple's public MessageUI interface lets an app present a user-controlled SMS composer, after which Messages performs the send; it is not a general autonomous background SMS gateway. Therefore the sovereign gateway should be separate StegVerse-owned cellular hardware, while an iPhone can remain an ordinary SMS endpoint.
+
+## ST-028 ClickSend status
+
+ST-028 remains only as an optional interoperability adapter and is no longer the canonical activation path.
+
+```text
+ST-028 state: OPTIONAL_NONCANONICAL
+ClickSend activation required: false
+ClickSend credentials required for ST-029: false
+```
 
 ## Required continuation
 
-Execute in this order and do not collapse any step into a later state:
-
-1. Observe hosted CI for the new tests or reproduce the exact files in a deterministic local test environment and run `PYTHONPATH=. pytest -q tests/test_sms_transport.py`.
-2. Repair any test failures and record validation evidence.
-3. Bind ClickSend credentials through TV/TVC only. Do not add GitHub, repository, workflow, or application secrets outside TV/TVC authority.
-4. Bind a ClickSend number capable of receiving replies in the intended country/route.
-5. Deploy the StegVerse inbound HTTPS endpoint that performs the webhook-token boundary check before calling `ingest_clicksend_sms`.
-6. Create the ClickSend inbound SMS automation with Action `URL`, preferably JSON webhook mode, targeting that endpoint.
-7. Send one StegVerse -> phone SMS and record provider message ID, StegTalk envelope hash, and transport receipt.
-8. Reply from the phone -> StegVerse and prove `original_message_id` / `custom_string` correlation into the expected StegTalk thread.
-9. Only after both live directions and receipts are proven may ST-028 be marked activated.
-
-## Security and authority boundary
-
-```text
-source implemented != validated
-validated != provider bound
-provider bound != deployed
-outbound queued != handset delivered
-inbound webhook received != authenticated identity
-SMS transport != StegTalk secure channel
-carrier plaintext exposure != encrypted StegTalk transport
-ClickSend API log != StegVerse continuity receipt
-TV/TVC credential authority != repository secret storage
-```
-
-The ClickSend carrier leg is ordinary SMS. StegVerse can govern admission to that leg, correlate it, retain receipts, and bind it to internal entities, but it must not represent the carrier segment as end-to-end encrypted or metadata-private.
-
-## Previous completed workstream — personal-data control
-
-ST-026 and ST-027 remain complete. The previously validated local personal-data lifecycle is unchanged:
-
-```text
-Task: ST-026
-State: COMPLETE
-Task manifest: runtime/personal-data-control.v1.json
-
-Task: ST-027
-State: COMPLETE
-Implementation: src/stegtalk/personal_data_control.py, src/stegtalk/local_store.py
-Validation: 3 targeted tests passed in reconstructed deterministic local execution
-Evidence: evidence/personal-data-control/ST-027-local-validation.json
-```
-
-## Machine-owned continuation
-
-```text
-Owner: .github/workflows/ci.yml
-Trigger: push, pull_request
-Input: current repository state
-Output: complete pytest result
-Failure behavior: exact pytest failure; repository-local repair
-```
-
-Hosted CI may validate source behavior, but it does not own ClickSend credentials, provider binding, deployment authority, or activation.
+1. Run `PYTHONPATH=. pytest -q tests/test_sovereign_sms_modem.py` and record deterministic evidence.
+2. Add local modem discovery and capability interrogation (`ATI`, registration, SIM readiness, signal, SMS capability).
+3. Add a concrete local serial runtime binding without cloud dependencies.
+4. Bind StegVerse-owned cellular hardware and SIM/eSIM.
+5. Prove carrier registration.
+6. Send StegVerse -> ordinary phone and persist the modem + StegTalk receipts.
+7. Send ordinary phone -> StegVerse and prove direct `+CMT` ingestion.
+8. Add restart/recovery, duplicate suppression, multipart/PDU handling, and delivery-report ingestion.
+9. Only after live bidirectional proof mark ST-029 activated.
 
 ## Archive posture
 
-DO NOT archive this workstream as complete. ST-028 source exists, but validation, provider binding, deployment, bidirectional runtime proof, and activation remain open.
+DO NOT archive as complete. ST-029 source exists, but validation, hardware binding, radio registration, live bidirectional proof, and activation remain open.
 
 ## Percentages
 
 ```text
-ST-028 source implementation: 100%
-ST-028 targeted validation: 0% observed
-ST-028 provider/deployment integration: 0%
-ST-028 bidirectional runtime proof: 0%
-ST-028 goal activation: 35%
-Developed files vs scaffolding/stubs: 4 developed / 0 placeholder stubs for the source slice; live-provider surfaces remain unactivated rather than stubbed
+ST-029 source implementation: 100%
+ST-029 targeted validation: 0% observed
+ST-029 hardware/runtime integration: 0%
+ST-029 live bidirectional proof: 0%
+ST-029 goal activation: 35%
+Developed source files vs scaffolding/stubs: 4 developed / 0 placeholder source stubs; physical modem/runtime activation remains unbuilt
 ```
