@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "contract_type": "stegtalk_sovereign_sms_transport",
   "task_id": "ST-029",
   "transport": "sms",
@@ -24,15 +24,30 @@
     "internet_required_for_sms_submission": false
   },
   "security_boundary": {
-    "classification": "external_plaintext_sms",
+    "classification": "external_sms_transport",
     "inherits_stegtalk_secure_channel_guarantees": false,
-    "requires_explicit_plaintext_admission": true,
-    "carrier_network_untrusted_transport": true
+    "requires_explicit_plaintext_admission_for_current_text_mode": true,
+    "carrier_network_untrusted_transport": true,
+    "stale_registration_may_not_authorize_submission": true
+  },
+  "runtime_gate": {
+    "serial_discovery": true,
+    "serial_binding": "POSIX_115200_8N1",
+    "initialization_commands": ["AT", "ATE0", "AT+CMGF=1", "AT+CSCS=GSM", "AT+CNMI=2,2,0,0,0"],
+    "capability_commands": ["ATI", "AT+CPIN?", "AT+CREG?", "AT+CSQ", "AT+CMGF?"],
+    "requires_sim_ready": true,
+    "requires_registration": ["HOME", "ROAMING"],
+    "requires_sms_text_mode": true,
+    "refresh_registration_immediately_before_send": true,
+    "durable_readiness_receipt": true
   },
   "outbound": {
     "mode": "3gpp_at_command",
-    "commands": ["AT", "ATE0", "AT+CMGF=1", "AT+CMGS"],
-    "provider_account_credentials": false
+    "commands": ["AT+CMGF=1", "AT+CMGS"],
+    "provider_account_credentials": false,
+    "same_live_session_as_fresh_registration_gate": true,
+    "submission_receipt": true,
+    "delivery_proven_by_submission": false
   },
   "inbound": {
     "mode": "3gpp_unsolicited_notification",
@@ -41,14 +56,26 @@
   },
   "implementation_files": [
     "src/stegtalk/sovereign_sms_modem.py",
-    "tests/test_sovereign_sms_modem.py"
+    "src/stegtalk/modem_capabilities.py",
+    "src/stegtalk/serial_modem.py",
+    "src/stegtalk/sovereign_sms_runtime.py"
+  ],
+  "verification_files": [
+    "tests/test_sovereign_sms_modem.py",
+    "tests/test_modem_capabilities.py",
+    "tests/test_serial_modem.py",
+    "tests/test_sovereign_sms_runtime.py",
+    ".github/workflows/sovereign-sms.yml"
   ],
   "activation": {
     "source_implemented": true,
-    "targeted_validation": "pending",
-    "modem_bound": false,
+    "targeted_validation": "pending_observed_workflow_result",
+    "serial_runtime_implemented": true,
+    "readiness_orchestration_implemented": true,
+    "fresh_registration_before_send_implemented": true,
+    "physical_modem_bound": false,
     "sim_or_esim_bound": false,
-    "network_registered": false,
+    "network_registered_live_proof": false,
     "live_outbound_proof": false,
     "live_inbound_proof": false,
     "production_active": false
