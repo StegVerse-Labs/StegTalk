@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "contract_type": "stegtalk_sovereign_sms_transport",
   "task_id": "ST-029",
   "transport": "sms",
@@ -28,7 +28,8 @@
     "inherits_stegtalk_secure_channel_guarantees": false,
     "requires_explicit_plaintext_admission_for_current_text_mode": true,
     "carrier_network_untrusted_transport": true,
-    "stale_registration_may_not_authorize_submission": true
+    "stale_registration_may_not_authorize_submission": true,
+    "carrier_is_not_evidence_authority": true
   },
   "runtime_gate": {
     "serial_discovery": true,
@@ -39,7 +40,19 @@
     "requires_registration": ["HOME", "ROAMING"],
     "requires_sms_text_mode": true,
     "refresh_registration_immediately_before_send": true,
-    "durable_readiness_receipt": true
+    "same_live_session_for_readiness_and_submission": true
+  },
+  "evidence": {
+    "local_authority": "StegVerse",
+    "append_only_hash_chain": true,
+    "canonical_jsonl": true,
+    "fsync_on_append": true,
+    "verify_chain_on_restart": true,
+    "deterministic_receipt_replay": true,
+    "reconstruct_runtime_summary": true,
+    "inbound_duplicate_suppression_from_correlation_hash": true,
+    "duplicate_suppression_survives_restart": true,
+    "journal_failure_policy": "fail_closed_when_journal_requested"
   },
   "outbound": {
     "mode": "3gpp_at_command",
@@ -47,24 +60,29 @@
     "provider_account_credentials": false,
     "same_live_session_as_fresh_registration_gate": true,
     "submission_receipt": true,
+    "journaled_evidence_order": ["initial_capability", "readiness", "fresh_capability", "transport_submission", "session_submission"],
     "delivery_proven_by_submission": false
   },
   "inbound": {
     "mode": "3gpp_unsolicited_notification",
     "notification": "+CMT",
-    "configuration": "AT+CNMI=2,2,0,0,0"
+    "configuration": "AT+CNMI=2,2,0,0,0",
+    "correlation_hash": true,
+    "restart_safe_duplicate_suppression": true
   },
   "implementation_files": [
     "src/stegtalk/sovereign_sms_modem.py",
     "src/stegtalk/modem_capabilities.py",
     "src/stegtalk/serial_modem.py",
-    "src/stegtalk/sovereign_sms_runtime.py"
+    "src/stegtalk/sovereign_sms_runtime.py",
+    "src/stegtalk/sovereign_sms_journal.py"
   ],
   "verification_files": [
     "tests/test_sovereign_sms_modem.py",
     "tests/test_modem_capabilities.py",
     "tests/test_serial_modem.py",
     "tests/test_sovereign_sms_runtime.py",
+    "tests/test_sovereign_sms_journal.py",
     ".github/workflows/sovereign-sms.yml"
   ],
   "activation": {
@@ -73,6 +91,9 @@
     "serial_runtime_implemented": true,
     "readiness_orchestration_implemented": true,
     "fresh_registration_before_send_implemented": true,
+    "replayable_journal_implemented": true,
+    "restart_reconstruction_implemented": true,
+    "inbound_duplicate_suppression_implemented": true,
     "physical_modem_bound": false,
     "sim_or_esim_bound": false,
     "network_registered_live_proof": false,
