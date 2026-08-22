@@ -13,7 +13,10 @@ def test_managed_queue_has_no_unclaimed_pending_repository_task():
     assert tasks["ST-029"]["claim_state"] == "OPEN"
     assert tasks["ST-030"]["claim_state"] == "OPEN"
     assert tasks["ST-029"]["live_activation"] is False
-    assert tasks["ST-030"]["live_kv_backing_proof"] is False
+    assert tasks["ST-030"]["source_persistence_restart_proof"] is True
+    assert tasks["ST-030"]["connected_kv_validation_receipt"] is True
+    assert tasks["ST-030"]["live_bearer_generated_kv_attempt_proof"] is False
+    assert tasks["ST-030"]["physical_edge_restart_reconstruction_proof"] is False
     assert "KnowledgeVault" in queue["next_integration_goal"]
 
 

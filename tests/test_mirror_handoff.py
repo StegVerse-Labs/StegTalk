@@ -14,8 +14,8 @@ def test_mirror_handoff_exists_and_preserves_activation_boundary():
     assert "Durable continuity host: KnowledgeVault" in handoff
     assert "Device role: EPHEMERAL_TRANSPORT_EDGE" in handoff
     assert "Final bearer admissibility + selection authority: StegTalk" in handoff
-    assert "KnowledgeVault = durable intent, attempt, selection receipt, replay, reconstruction authority" in handoff
-    assert "ephemeral capability advertisement + execution" in handoff
-    assert "capability alone never grants execution authority" in handoff
-    assert "INDETERMINATE / timeout-after-dispatch -> VERIFY_EXTERNALLY" in handoff
-    assert "DO NOT archive as complete" in handoff
+    assert "KnowledgeVault = durable continuity/recovery authority" in handoff
+    assert "Edge device = ephemeral execution capability" in handoff
+    assert "Uncertainty never becomes permission to duplicate a side effect." in handoff
+    assert "INDETERMINATE / TIMEOUT_AFTER_DISPATCH / UNKNOWN_AFTER_DISPATCH -> VERIFY_EXTERNALLY" in handoff
+    assert "DO NOT archive as fully activated" in handoff
