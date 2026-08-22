@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stegverse.org/schemas/cross-edge-capability.schema.json",
+  "title": "StegTalk Cross-Edge Capability Advertisement",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["edge_id","advertisement_id","observed_at","expires_at","attested","available_bearers","metrics","capabilities"],
+  "properties": {
+    "edge_id": {"type":"string","minLength":1},
+    "advertisement_id": {"type":"string","minLength":1},
+    "observed_at": {"type":"string","format":"date-time"},
+    "expires_at": {"type":"string","format":"date-time"},
+    "attested": {"const":true},
+    "available_bearers": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+    "metrics": {
+      "type":"object",
+      "additionalProperties":{"type":"number","minimum":0,"maximum":1}
+    },
+    "capabilities": {
+      "type":"object",
+      "additionalProperties":true,
+      "properties": {
+        "local_bearers":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "requires_relay":{"type":"boolean"},
+        "store_and_forward":{"type":"boolean"}
+      }
+    }
+  }
+}
