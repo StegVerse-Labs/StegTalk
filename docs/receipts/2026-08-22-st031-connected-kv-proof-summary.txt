@@ -1,0 +1,12 @@
+ST-031 connected KnowledgeVault proof summary
+
+PR #27 merged: 23b4ab9fd058d03956ab3c45f3dfe0e837f37e28
+Exact-head required checks: 4/4 SUCCESS
+Connected KV receipt file: 1bSFQU4K6Mxv7sweDLCFKFky5SeakmZe2
+Connected KV attempt file: 14hzNW0ye5khX8jO4wub7_QjU3zP-YRrP
+Independent re-read: SUCCESS
+Scope: persistence/re-read only
+Execution authorized: false
+Physical edge admitted: false
+Transport dispatched: false
+Next proof: real admitted edges + real bearer dispatch + delivery evidence + restart reconstruction.
