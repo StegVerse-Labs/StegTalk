@@ -23,7 +23,6 @@ Goal: bidirectional ordinary SMS without a cloud messaging provider.
 
 ```text
 Software slice: IMPLEMENTED
-Dedicated CI lane: INSTALLED
 Serial discovery/POSIX binding: IMPLEMENTED
 SIM + registration gate: IMPLEMENTED
 Fresh registration immediately before send: IMPLEMENTED
@@ -42,75 +41,121 @@ Goal: keep durable personal communication authority, attempt state, replay, and 
 
 ```text
 KV extension request/binding: IMPLEMENTED
-KV recovery/extension host: IMPLEMENTED IN SOURCE
-KV portable execution store: IMPLEMENTED IN SOURCE
+KV recovery/extension host: IMPLEMENTED
+KV portable execution store: IMPLEMENTED
 Connected KnowledgeVault _System/Execution backing layout: CREATED AND VERIFIED
-Live communication attempt persisted/reconstructed through KV: NOT PROVEN
-Edge restart/device replacement proof: NOT PROVEN
+Source-level KV persistence/restart reconstruction: VALIDATED
+Connected-KV integration validation receipt: PRESENT UNDER _System/Execution/Receipts
+Live bearer-generated attempt persisted/reconstructed through connected KV: NOT PROVEN
+Physical edge restart/device replacement after real dispatch: NOT PROVEN
 Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
 ## ST-031 — Cross-Edge Best-Admissible Capability Resolver
 
-Goal: allow the messenger surface to express the communication outcome/posture while StegTalk deterministically selects the most capable currently admissible outbound path across all admitted user edges.
+Goal: let the messenger surface express communication posture/constraints while StegTalk deterministically selects the most capable currently admissible outbound path across admitted user edges.
 
 ```text
 Resolver source: IMPLEMENTED
 Edge capability advertisement contract: IMPLEMENTED
 Advertisement freshness/expiry gate: IMPLEMENTED
 Attestation requirement: IMPLEMENTED
-Recipient capability states KNOWN/UNKNOWN/UNREACHABLE: IMPLEMENTED
-Unknown recipient safe-fallback requirement: IMPLEMENTED
+Recipient KNOWN/UNKNOWN/UNREACHABLE states: IMPLEMENTED
+Unknown-recipient safe-fallback requirement: IMPLEMENTED
 Hard constraints before scoring: IMPLEMENTED
-Messenger relay/store-forward constraints: IMPLEMENTED
+Relay/store-forward/locality/emergency constraints: IMPLEMENTED
 Remote-edge denial enforcement: IMPLEMENTED
-Current-edge identity required when remote execution denied: IMPLEMENTED
+Current-edge identity requirement under remote denial: IMPLEMENTED
 Multidimensional deterministic scoring: IMPLEMENTED
 Single-primary-edge default: IMPLEMENTED
-Explicit multipath authorization flag: IMPLEMENTED
+Explicit multipath authorization: IMPLEMENTED
 Ordered fallback set: IMPLEMENTED
 Ambiguous-after-dispatch fallback block: IMPLEMENTED
 Confirmed-side-effect-absence fallback gate: IMPLEMENTED
 Execution lease primitive: IMPLEMENTED
 Hash-bound selection receipt: IMPLEMENTED
-Dedicated tests: IMPLEMENTED
-Dedicated CI lane: INSTALLED
-StegWhisper v0.2 messenger posture contract: IMPLEMENTED
-KnowledgeVault canonical selection-receipt schema/test: IMPLEMENTED
-Observed CI: PENDING
-Live cross-edge advertisements/selection: NOT PROVEN
-Live KV selection-receipt persistence: NOT PROVEN
-Live edge lease/failover/reconstruction: NOT PROVEN
+StegWhisper v0.2 posture contract: IMPLEMENTED
+KnowledgeVault selection receipt/store integration: IMPLEMENTED
+SDK conformance demonstration: VALIDATED
+Pinned StegTalk + KnowledgeVault source integration: VALIDATED
+Full StegWhisper -> StegTalk -> KnowledgeVault source integration: VALIDATED
+Physical/live edge advertisements and bearer execution: NOT PROVEN
 Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
-ST-031 artifacts:
+## Observed validation evidence
+
+### SDK conformance demonstration
+
+`StegVerse-org/StegVerse-SDK` now contains a non-authorizing communication-edge demonstrator.
 
 ```text
-src/stegtalk/cross_edge_resolver.py
-schemas/cross-edge-capability.schema.json
-tests/test_cross_edge_resolver.py
-.github/workflows/cross-edge-resolution.yml
-STEGTALK_TASK_QUEUE.json
-
-StegWhisper:
-network_preferences/adapter.py
-schemas/network-preference.schema.json
-fixtures/network-preferences/scenarios.json
-tests/test_network_preferences.py
-docs/STEGWHISPER_NETWORK_PREFERENCES.md
-
-KnowledgeVault:
-schemas/cross-edge-selection-receipt.schema.json
-tests/test_cross_edge_selection_receipt.py
-CROSS_EDGE_SELECTION_MIRROR_HANDOFF.md
+PR #54
+Communication Edge SDK Demo Validation
+workflow run 32602726148
+Python 3.9  SUCCESS
+Python 3.11 SUCCESS
+Python 3.12 SUCCESS
 ```
 
-### Messenger / resolver boundary
+It demonstrated deterministic edge scoring, native StegTalk-over-SMS selection under AUTO, remote-edge denial, unknown-recipient safe fallback, fail-closed unattested paths, ambiguity suppression, and exact ordered fallback while explicitly remaining `sdk_simulation_only` and non-authorizing.
 
-The messenger surface selects a posture and hard constraints, never a networking interface:
+### Pinned real StegTalk + KnowledgeVault source integration
+
+```text
+StegVerse-org/StegVerse-SDK PR #55
+workflow run 32602863793
+Python 3.9  SUCCESS
+Python 3.11 SUCCESS
+Python 3.12 SUCCESS
+
+StegTalk source exercised:
+2361d13ea09818f17aef5239ebf4771a161a0dc7
+
+KnowledgeVault source exercised:
+35e6d7ad881e0dea60ba191c49dfd4fba86e3fd7
+```
+
+The workflow imported and executed the real `stegtalk.cross_edge_resolver` and real `execution.vault_store`. It selected `stegtalk-ip` over SMS, retained SMS as fallback, issued a lease, persisted the actual ST-031 receipt and attempt/lease state through the KV store, reopened a fresh store, and reconstructed that state after restart. Ambiguous post-dispatch state returned `VERIFY_EXTERNALLY`; confirmed no-side-effect failure returned `TRY_FALLBACK` to the exact ordered edge.
+
+Observed selection hash:
+
+```text
+sha256:bcb923d56e548582f1bd303bf647bc958994197ca68cc6e402b3326d8dc48efc
+```
+
+### Full StegWhisper -> StegTalk -> KnowledgeVault source integration
+
+```text
+StegVerse-Labs/StegWhisper PR #15
+merged commit 4baf51a57100cb942b7aa8855f60e2995c9eb386
+Network Preference Validation run 32602979304
+SUCCESS
+```
+
+This proof used the real StegWhisper v0.2 preference adapter, the pinned real ST-031 resolver, and the pinned real KV execution store. It proved posture propagation, edge selection, remote-edge denial, selection/lease persistence, restart reconstruction, ambiguity suppression, and confirmed-safe fallback.
+
+## Connected KnowledgeVault evidence
+
+The connected KnowledgeVault contains:
+
+```text
+_System/Execution/
+    Attempts/
+    Extensions/
+    Receipts/
+    Recovery/
+```
+
+The durable validation receipt `ST031_Communication_Integration_Validation_2026-08-22` is now located under `_System/Execution/Receipts`. It records the validated commits, workflow runs, selection hash, authority boundary, and remaining runtime proof.
+
+This document is validation evidence. It is not classified as a production execution receipt from a live bearer transaction.
+
+## Messenger / resolver boundary
+
+The messenger surface selects posture and constraints, never a network interface:
 
 ```text
 AUTO
@@ -122,33 +167,9 @@ LOCAL_ONLY
 EMERGENCY_RESILIENT
 ```
 
-StegWhisper v0.2 also makes these policy choices explicit:
+StegTalk reads current admitted edge advertisements, rejects expired/unattested candidates, evaluates recipient capability, eliminates hard-constraint violations, scores remaining paths, deterministically selects one primary edge/bearer, records fallbacks, emits the selection receipt, and leases the selected edge.
 
-```text
-cross_edge_policy.scope = ALL_ADMITTED_EDGES
-remote_edge_execution_authorized = true | false
-multipath_authorized = true | false
-```
-
-StegTalk then:
-
-```text
-1. reads current admitted edge advertisements;
-2. rejects expired or unattested advertisements;
-3. evaluates recipient capability state;
-4. eliminates paths violating hard constraints;
-5. enforces remote-edge, relay, store-forward, locality, emergency, and metric constraints;
-6. scores only remaining paths;
-7. deterministically selects one primary edge + bearer;
-8. records ordered fallback candidates;
-9. emits a hash-bound selection receipt;
-10. leases the selected edge for the attempt;
-11. prevents fallback after ambiguous dispatch until external verification resolves side-effect uncertainty.
-```
-
-### "Most capable" vector
-
-The resolver scores admissible candidates across normalized dimensions:
+## Capability vector
 
 ```text
 security
@@ -167,121 +188,65 @@ metadata minimization
 
 Postures alter weights but never loosen hard authority, identity, locality, relay, expiry, recipient compatibility, or explicit cross-edge policy.
 
-### Recipient discovery state
-
-Recipient capability is never silently guessed:
-
-```text
-KNOWN       -> use advertised accepted bearers
-UNKNOWN     -> only explicitly safe fallback bearers may be used
-UNREACHABLE -> no admissible path
-```
-
-### Cross-edge authority / race boundary
-
-```text
-KnowledgeVault = durable intent, attempt, selection receipt, replay, reconstruction authority
-StegTalk       = admissibility, scoring, bearer/edge selection and delivery truth
-Messenger      = desired communication posture + user constraints
-Edge device    = ephemeral capability advertisement + execution
-```
-
-One edge is primary by default. Multipath requires explicit authorization. When remote-edge execution is denied, the resolver requires a current-edge identity and excludes every other edge even when it scores higher. An execution lease binds an attempt to the selected edge/lease epoch; capability alone never grants execution authority.
-
-### Fallback invariant
+## Fallback invariant
 
 ```text
 DELIVERED / ACKNOWLEDGED / EXECUTED -> STOP
-INDETERMINATE / timeout-after-dispatch -> VERIFY_EXTERNALLY
+INDETERMINATE / TIMEOUT_AFTER_DISPATCH / UNKNOWN_AFTER_DISPATCH -> VERIFY_EXTERNALLY
 FAILED without confirmed side-effect absence -> VERIFY_EXTERNALLY
 FAILED with confirmed side-effect absence -> next ordered fallback may execute
 ```
 
-This preserves the KnowledgeVault recovery invariant that uncertainty never becomes permission to duplicate a side effect.
+Uncertainty never becomes permission to duplicate a side effect.
 
-### Selection evidence
-
-KnowledgeVault now has a canonical `cross-edge-selection-receipt` schema and executable receipt-stream round-trip test. Each receipt binds:
+## Authority topology
 
 ```text
-attempt_id
-policy_version
-posture
-recipient_state
-candidate_set_sha256
-selected_edge_id
-selected_bearer
-primary score + component vector
-fallback order
-excluded paths + reasons
-selected advertisement hash
-decision timestamp
-multipath authorization state
-remote-edge execution policy
-selection_sha256
-```
-
-The connected KnowledgeVault already has `_System/Execution/Receipts/`; the remaining proof is an actual ST-031 receipt written to and reconstructed from that live surface.
-
-## Combined authority topology
-
-```text
-Messenger surface
-  | posture + constraints
-  v
-KnowledgeVault durable attempt
-  |
-  v
-StegTalk ST-031 cross-edge resolver
-  | admissibility + deterministic selection + lease
-  v
-Selected EPHEMERAL_TRANSPORT_EDGE
-  |
-  +--> ST-029 SMS modem
-  +--> StegTalk IP
-  +--> Wi-Fi / Wi-Fi Direct
-  +--> Bluetooth / local paths
-  +--> relay / store-forward when separately admissible
-  +--> other admitted bearers
-  |
-  v
+Messenger / StegWhisper
+    | posture + constraints
+    v
+KnowledgeVault durable attempt/continuity
+    |
+    v
+StegTalk ST-031
+    | admissibility + scoring + selection + lease
+    v
+EPHEMERAL_TRANSPORT_EDGE
+    |
+    +--> ST-029 SMS modem
+    +--> native StegTalk/IP
+    +--> Wi-Fi / Wi-Fi Direct
+    +--> Bluetooth/local
+    +--> admitted relay/store-forward
+    +--> other admitted bearers
+    |
+    v
 recipient
-  |
-  v
+    |
+    v
 receipts/evidence -> KnowledgeVault
 ```
 
-## Validation boundary
-
-- `.github/workflows/sovereign-sms.yml` covers ST-029/ST-030 software lanes.
-- `.github/workflows/cross-edge-resolution.yml` covers ST-031 compilation/tests.
-- StegWhisper `.github/workflows/network-preferences.yml` covers v0.2 messenger posture tests.
-- KnowledgeVault `.github/workflows/execution-recovery.yml` now covers selection-receipt persistence tests.
-- Combined-status endpoints returned no surfaced statuses for the current heads; validation remains pending rather than claimed green.
+```text
+KnowledgeVault = durable continuity/recovery authority
+StegTalk = bearer/admissibility/selection/delivery-truth authority
+StegWhisper = messenger posture/consent/presentation surface
+Edge device = ephemeral execution capability
+SDK = non-authorizing demonstration/conformance boundary
+```
 
 ## Required continuation
 
-1. Observe ST-031, StegWhisper preference, and KnowledgeVault recovery CI and repair any failure.
-2. Pass a real StegWhisper v0.2 posture/constraint packet into ST-031.
-3. Persist the resulting ST-031 selection receipt + lease into the actual connected KnowledgeVault execution surface.
-4. Feed real capability advertisements from at least two admitted edges and prove deterministic selection.
-5. Prove recipient UNKNOWN restricts selection to explicitly safe fallback rather than guessing compatibility.
-6. Prove remote-edge denial keeps execution on the current edge even when another edge scores higher.
-7. Dispatch through one selected edge, induce a confirmed pre-side-effect failure, and prove ordered fallback occurs once.
-8. Induce ambiguous post-dispatch state and prove fallback is suppressed pending verification.
-9. Restart/replace the selected edge and prove KnowledgeVault reconstructs attempt/selection/lease state without duplicate dispatch.
-10. Exercise ST-029 physical modem/SIM as one ST-031 edge and prove outbound/inbound/report correlation into KV.
-11. Only after observed live proof mark ST-029/ST-030/ST-031 activated as applicable.
+The source/software integration is now tested. Remaining activation work is runtime/physical:
+
+1. originate an actual running communication attempt against the connected KnowledgeVault;
+2. persist its runtime ST-031 selection receipt and lease into the connected KV execution streams;
+3. advertise at least two actual admitted device edges;
+4. execute through the selected real bearer and append delivery evidence;
+5. restart/replace that edge and reconstruct the live attempt from connected KV without duplicate dispatch;
+6. exercise ST-029 modem/SIM as an actual SMS edge and prove outbound, delivery report, and inbound correlation;
+7. only after those proofs mark applicable ST-029/ST-030/ST-031 runtime activation complete.
 
 ## Archive posture
 
-DO NOT archive as complete. Source/schema/tests/CI and the cross-repo ownership contracts are implemented, but live cross-edge capability advertisements, live KV receipt/lease persistence, fallback observation, physical transport proof, and production activation remain open.
-
-## Percentages
-
-```text
-ST-029 software slice: 100% implemented; goal activation remains 74%
-ST-030 software/host slice: 100% implemented; goal activation remains 52%
-ST-031 bounded software/cross-repo contract slice: 100% implemented; goal activation: 58%
-Developed active ST-029/ST-030/ST-031 artifacts vs placeholders: 28 developed / 0 placeholder artifacts
-```
+DO NOT archive as fully activated. The cross-repo source integration and SDK demonstration are implemented and observed passing; physical/network execution and connected-vault live-attempt proof remain open.
