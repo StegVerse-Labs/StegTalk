@@ -14,7 +14,9 @@ def edge(edge_id, bearer, score=0.8, *, expires="2026-08-22T23:00:00Z", attested
 class CrossEdgeResolverTests(unittest.TestCase):
     def test_auto_selects_highest_capability_edge(self):
         result=resolve_cross_edge_path(attempt_id="attempt:1",posture="AUTO",edge_advertisements=[edge("phone","sms",.4),edge("gateway","stegtalk-ip",.95)],recipient={"state":"KNOWN","accepted_bearers":["sms","stegtalk-ip"]},now=NOW)
-        self.assertEqual(result["selected_edge_id"],"gateway"); self.assertEqual(result["selected_bearer"],"stegtalk-ip"); self.assertEqual(result["fallback_order"][0]["edge_id"],"phone"); self.assertEqual(len(result["selection_sha256"]),64)
+        self.assertEqual(result["selected_edge_id"],"gateway"); self.assertEqual(result["selected_bearer"],"stegtalk-ip"); self.assertEqual(result["fallback_order"][0]["edge_id"],"phone")
+        for field in ("candidate_set_sha256", "selected_advertisement_sha256", "selection_sha256"):
+            self.assertRegex(result[field], r"^[a-f0-9]{64}$")
 
     def test_expired_advertisement_is_excluded(self):
         result=resolve_cross_edge_path(attempt_id="attempt:2",posture="AUTO",edge_advertisements=[edge("old","wifi",.99,expires="2026-08-22T21:00:00Z"),edge("fresh","sms",.5)],recipient={"state":"KNOWN","accepted_bearers":["wifi","sms"]},now=NOW)
