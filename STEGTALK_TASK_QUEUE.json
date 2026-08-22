@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.8.0",
+  "schema_version": "3.9.0",
   "queue_type": "stegtalk_queue",
   "goal": "activate sovereign bidirectional SMS without cloud messaging providers",
   "repo": "StegVerse-Labs/StegTalk",
@@ -35,7 +35,7 @@
     {"id": "ST-026", "title": "Personal Data Control Contract", "priority": 26, "status": "complete"},
     {"id": "ST-027", "title": "Executable Personal Data Control", "priority": 27, "status": "complete"},
     {"id": "ST-028", "title": "Optional ClickSend SMS Interop Adapter", "priority": 28, "status": "optional_noncanonical", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/clicksend-sms-transport.v1.json", "implementation_locations": ["src/stegtalk/sms_transport.py"], "verification_locations": ["tests/test_sms_transport.py"], "credential_authority": "TV/TVC_ONLY", "live_provider_activation": false, "claim_state": "NON_PRIMARY"},
-    {"id": "ST-029", "title": "Sovereign Direct-Modem SMS Transport", "priority": 29, "status": "implementation_expanded_validation_pending", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/sovereign-sms-modem.v1.json", "implementation_locations": ["src/stegtalk/sovereign_sms_modem.py", "src/stegtalk/modem_capabilities.py"], "verification_locations": ["tests/test_sovereign_sms_modem.py", "tests/test_modem_capabilities.py", ".github/workflows/sovereign-sms.yml"], "application_third_party_dependency": false, "cloud_messaging_provider": null, "mobile_carrier_required_for_public_sms": true, "modem_identity_interrogation": true, "sim_readiness_gate": true, "registration_gate": true, "signal_observation": true, "sms_mode_observation": true, "external_plaintext_boundary": true, "live_activation": false, "claim_state": "OPEN"}
+    {"id": "ST-029", "title": "Sovereign Direct-Modem SMS Transport", "priority": 29, "status": "serial_binding_implemented_validation_pending", "repository": "StegVerse-Labs/StegTalk", "task_manifest": "runtime/sovereign-sms-modem.v1.json", "implementation_locations": ["src/stegtalk/sovereign_sms_modem.py", "src/stegtalk/modem_capabilities.py", "src/stegtalk/serial_modem.py"], "verification_locations": ["tests/test_sovereign_sms_modem.py", "tests/test_modem_capabilities.py", "tests/test_serial_modem.py", ".github/workflows/sovereign-sms.yml"], "application_third_party_dependency": false, "cloud_messaging_provider": null, "mobile_carrier_required_for_public_sms": true, "serial_device_discovery": true, "posix_serial_runtime_binding": true, "modem_identity_interrogation": true, "sim_readiness_gate": true, "registration_gate": true, "signal_observation": true, "sms_mode_observation": true, "external_plaintext_boundary": true, "live_hardware_binding": false, "live_activation": false, "claim_state": "OPEN"}
   ],
-  "next_integration_goal": "observe sovereign-sms CI green, then add concrete local serial-device discovery/binding, bind StegVerse-owned modem plus SIM/eSIM, prove live network registration, and prove bidirectional SMS without aggregator or cloud messaging service"
+  "next_integration_goal": "observe sovereign-sms CI green, then bind a StegVerse-owned modem plus SIM/eSIM through the concrete serial runtime, persist hardware capability receipts, prove live network registration, and prove bidirectional SMS without aggregator or cloud messaging service"
 }
