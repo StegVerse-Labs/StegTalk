@@ -50,7 +50,6 @@ def build_kv_send_extension_request(
         "vault_continuity_authority": True,
         "receipt_required": True,
         "credential_material": None,
-        "stegtalk_envelope_hash": envelope["envelope_hash"],
     }
 
 
