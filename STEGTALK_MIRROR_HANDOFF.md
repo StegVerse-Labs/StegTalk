@@ -51,16 +51,6 @@ Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
-Connected KnowledgeVault backing layout:
-
-```text
-_System/Execution/
-    Attempts/
-    Extensions/
-    Receipts/
-    Recovery/
-```
-
 ## ST-031 — Cross-Edge Best-Admissible Capability Resolver
 
 Goal: allow the messenger surface to express the communication outcome/posture while StegTalk deterministically selects the most capable currently admissible outbound path across all admitted user edges.
@@ -71,10 +61,13 @@ Edge capability advertisement contract: IMPLEMENTED
 Advertisement freshness/expiry gate: IMPLEMENTED
 Attestation requirement: IMPLEMENTED
 Recipient capability states KNOWN/UNKNOWN/UNREACHABLE: IMPLEMENTED
+Unknown recipient safe-fallback requirement: IMPLEMENTED
 Hard constraints before scoring: IMPLEMENTED
+Messenger relay/store-forward constraints: IMPLEMENTED
+Remote-edge denial enforcement: IMPLEMENTED
+Current-edge identity required when remote execution denied: IMPLEMENTED
 Multidimensional deterministic scoring: IMPLEMENTED
 Single-primary-edge default: IMPLEMENTED
-Explicit remote-edge policy: IMPLEMENTED
 Explicit multipath authorization flag: IMPLEMENTED
 Ordered fallback set: IMPLEMENTED
 Ambiguous-after-dispatch fallback block: IMPLEMENTED
@@ -83,9 +76,11 @@ Execution lease primitive: IMPLEMENTED
 Hash-bound selection receipt: IMPLEMENTED
 Dedicated tests: IMPLEMENTED
 Dedicated CI lane: INSTALLED
+StegWhisper v0.2 messenger posture contract: IMPLEMENTED
+KnowledgeVault canonical selection-receipt schema/test: IMPLEMENTED
 Observed CI: PENDING
 Live cross-edge advertisements/selection: NOT PROVEN
-KV selection-receipt persistence: NOT PROVEN
+Live KV selection-receipt persistence: NOT PROVEN
 Live edge lease/failover/reconstruction: NOT PROVEN
 Production activation: NOT ACTIVE
 Claim state: OPEN
@@ -99,11 +94,23 @@ schemas/cross-edge-capability.schema.json
 tests/test_cross_edge_resolver.py
 .github/workflows/cross-edge-resolution.yml
 STEGTALK_TASK_QUEUE.json
+
+StegWhisper:
+network_preferences/adapter.py
+schemas/network-preference.schema.json
+fixtures/network-preferences/scenarios.json
+tests/test_network_preferences.py
+docs/STEGWHISPER_NETWORK_PREFERENCES.md
+
+KnowledgeVault:
+schemas/cross-edge-selection-receipt.schema.json
+tests/test_cross_edge_selection_receipt.py
+CROSS_EDGE_SELECTION_MIRROR_HANDOFF.md
 ```
 
 ### Messenger / resolver boundary
 
-The messenger surface does not directly select a network interface. It selects a posture and hard constraints:
+The messenger surface selects a posture and hard constraints, never a networking interface:
 
 ```text
 AUTO
@@ -115,6 +122,14 @@ LOCAL_ONLY
 EMERGENCY_RESILIENT
 ```
 
+StegWhisper v0.2 also makes these policy choices explicit:
+
+```text
+cross_edge_policy.scope = ALL_ADMITTED_EDGES
+remote_edge_execution_authorized = true | false
+multipath_authorized = true | false
+```
+
 StegTalk then:
 
 ```text
@@ -122,12 +137,13 @@ StegTalk then:
 2. rejects expired or unattested advertisements;
 3. evaluates recipient capability state;
 4. eliminates paths violating hard constraints;
-5. scores only remaining paths;
-6. deterministically selects one primary edge + bearer;
-7. records ordered fallback candidates;
-8. emits a hash-bound selection receipt;
-9. leases the selected edge for the attempt;
-10. prevents fallback after ambiguous dispatch until external verification resolves side-effect uncertainty.
+5. enforces remote-edge, relay, store-forward, locality, emergency, and metric constraints;
+6. scores only remaining paths;
+7. deterministically selects one primary edge + bearer;
+8. records ordered fallback candidates;
+9. emits a hash-bound selection receipt;
+10. leases the selected edge for the attempt;
+11. prevents fallback after ambiguous dispatch until external verification resolves side-effect uncertainty.
 ```
 
 ### "Most capable" vector
@@ -145,11 +161,11 @@ resilience
 latency
 bandwidth
 cost
-ergy
+energy
 metadata minimization
 ```
 
-Postures alter weights but never loosen hard authority, identity, locality, relay, expiry, or recipient-compatibility constraints.
+Postures alter weights but never loosen hard authority, identity, locality, relay, expiry, recipient compatibility, or explicit cross-edge policy.
 
 ### Recipient discovery state
 
@@ -164,17 +180,15 @@ UNREACHABLE -> no admissible path
 ### Cross-edge authority / race boundary
 
 ```text
-KnowledgeVault = durable intent, attempt, receipt, replay, reconstruction authority
+KnowledgeVault = durable intent, attempt, selection receipt, replay, reconstruction authority
 StegTalk       = admissibility, scoring, bearer/edge selection and delivery truth
 Messenger      = desired communication posture + user constraints
 Edge device    = ephemeral capability advertisement + execution
 ```
 
-One edge is primary by default. Multipath requires explicit authorization. An execution lease binds an attempt to the selected edge/lease epoch; stale or competing workers may not infer execution authority from capability alone.
+One edge is primary by default. Multipath requires explicit authorization. When remote-edge execution is denied, the resolver requires a current-edge identity and excludes every other edge even when it scores higher. An execution lease binds an attempt to the selected edge/lease epoch; capability alone never grants execution authority.
 
 ### Fallback invariant
-
-Fallback is a new transport execution and is not permitted merely because the primary path timed out.
 
 ```text
 DELIVERED / ACKNOWLEDGED / EXECUTED -> STOP
@@ -187,7 +201,7 @@ This preserves the KnowledgeVault recovery invariant that uncertainty never beco
 
 ### Selection evidence
 
-Each selection receipt contains or binds:
+KnowledgeVault now has a canonical `cross-edge-selection-receipt` schema and executable receipt-stream round-trip test. Each receipt binds:
 
 ```text
 attempt_id
@@ -207,7 +221,7 @@ remote-edge execution policy
 selection_sha256
 ```
 
-The receipt is intended to be persisted in the KnowledgeVault receipt stream so route choice is replayable and reconstructable rather than hidden runtime behavior.
+The connected KnowledgeVault already has `_System/Execution/Receipts/`; the remaining proof is an actual ST-031 receipt written to and reconstructed from that live surface.
 
 ## Combined authority topology
 
@@ -237,45 +251,37 @@ recipient
 receipts/evidence -> KnowledgeVault
 ```
 
-Edge invariant:
-
-```text
-device_authority = false
-device_continuity_authority = false
-vault_continuity_authority = true
-capability advertisement != execution authority
-selection != delivery
-workflow pass != runtime proof
-```
-
 ## Validation boundary
 
 - `.github/workflows/sovereign-sms.yml` covers ST-029/ST-030 software lanes.
-- `.github/workflows/cross-edge-resolution.yml` covers ST-031 compilation and resolver tests.
-- Available status endpoints have not yet surfaced observed success for these new heads; validation remains pending rather than claimed green.
+- `.github/workflows/cross-edge-resolution.yml` covers ST-031 compilation/tests.
+- StegWhisper `.github/workflows/network-preferences.yml` covers v0.2 messenger posture tests.
+- KnowledgeVault `.github/workflows/execution-recovery.yml` now covers selection-receipt persistence tests.
+- Combined-status endpoints returned no surfaced statuses for the current heads; validation remains pending rather than claimed green.
 
 ## Required continuation
 
-1. Observe ST-031 CI and repair any failure.
-2. Extend the messenger preference surface to emit the ST-031 posture/constraint vocabulary without assuming bearer authority.
-3. Persist ST-031 selection receipts + leases in the actual KnowledgeVault execution surface.
-4. Feed real edge advertisements from at least two admitted edges and prove deterministic selection.
-5. Prove recipient UNKNOWN state restricts selection to safe fallback rather than guessing compatibility.
-6. Dispatch through one selected edge, induce a confirmed pre-side-effect failure, and prove ordered fallback occurs once.
-7. Induce ambiguous post-dispatch state and prove fallback is suppressed pending verification.
-8. Restart/replace the selected edge and prove KnowledgeVault reconstructs the attempt and lease state without duplicate dispatch.
-9. Exercise ST-029 physical modem/SIM as one ST-031 edge and prove outbound/inbound/report correlation into KV.
-10. Only after observed live proof mark ST-029/ST-030/ST-031 activated as applicable.
+1. Observe ST-031, StegWhisper preference, and KnowledgeVault recovery CI and repair any failure.
+2. Pass a real StegWhisper v0.2 posture/constraint packet into ST-031.
+3. Persist the resulting ST-031 selection receipt + lease into the actual connected KnowledgeVault execution surface.
+4. Feed real capability advertisements from at least two admitted edges and prove deterministic selection.
+5. Prove recipient UNKNOWN restricts selection to explicitly safe fallback rather than guessing compatibility.
+6. Prove remote-edge denial keeps execution on the current edge even when another edge scores higher.
+7. Dispatch through one selected edge, induce a confirmed pre-side-effect failure, and prove ordered fallback occurs once.
+8. Induce ambiguous post-dispatch state and prove fallback is suppressed pending verification.
+9. Restart/replace the selected edge and prove KnowledgeVault reconstructs attempt/selection/lease state without duplicate dispatch.
+10. Exercise ST-029 physical modem/SIM as one ST-031 edge and prove outbound/inbound/report correlation into KV.
+11. Only after observed live proof mark ST-029/ST-030/ST-031 activated as applicable.
 
 ## Archive posture
 
-DO NOT archive as complete. ST-031 is now implemented in source/tests/CI, but live cross-edge capability advertisements, KV selection persistence, leasing, fallback behavior, physical transport proof, and production activation remain open.
+DO NOT archive as complete. Source/schema/tests/CI and the cross-repo ownership contracts are implemented, but live cross-edge capability advertisements, live KV receipt/lease persistence, fallback observation, physical transport proof, and production activation remain open.
 
 ## Percentages
 
 ```text
 ST-029 software slice: 100% implemented; goal activation remains 74%
 ST-030 software/host slice: 100% implemented; goal activation remains 52%
-ST-031 software slice: 100% implemented for bounded resolver contract; goal activation: 45%
-Developed active ST-029/ST-030/ST-031 artifacts vs placeholders: 25 developed / 0 placeholder artifacts
+ST-031 bounded software/cross-repo contract slice: 100% implemented; goal activation: 58%
+Developed active ST-029/ST-030/ST-031 artifacts vs placeholders: 28 developed / 0 placeholder artifacts
 ```
