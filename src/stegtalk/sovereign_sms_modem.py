@@ -5,6 +5,7 @@ from typing import Callable, Iterable
 
 from .entity_runtime import JsonObject, stable_hash, utc_now, with_receipt_identity
 from .message_envelope import build_local_message
+from .sms_pdu import SubmitPdu, build_ucs2_submit_pdus, parse_cds_notification
 from .sms_transport import SmsTransportError, normalize_e164
 
 
@@ -59,6 +60,14 @@ def initialize_sms_modem(port: ModemPort) -> JsonObject:
     }
 
 
+def _extract_cmgs_reference(lines: Iterable[str]) -> str | None:
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("+CMGS:"):
+            return stripped.split(":", 1)[1].strip()
+    return None
+
+
 def send_sms_via_modem(
     *,
     port: ModemPort,
@@ -85,13 +94,7 @@ def send_sms_via_modem(
     if any(line.strip() == "ERROR" for line in result_lines):
         raise SmsTransportError("modem failed to submit SMS")
 
-    reference = None
-    for line in result_lines:
-        stripped = line.strip()
-        if stripped.startswith("+CMGS:"):
-            reference = stripped.split(":", 1)[1].strip()
-            break
-
+    reference = _extract_cmgs_reference(result_lines)
     result = ModemSendResult(reference=reference, raw_lines=tuple(result_lines))
     receipt = with_receipt_identity(
         {
@@ -102,6 +105,7 @@ def send_sms_via_modem(
             "to": destination,
             "modem_reference": reference,
             "result": "submitted",
+            "encoding": "text_mode_gsm",
             "boundary": "external_plaintext_sms",
             "network_dependency": "mobile_carrier_only",
             "cloud_messaging_dependency": False,
@@ -109,6 +113,82 @@ def send_sms_via_modem(
         }
     )
     return result, receipt
+
+
+def submit_pdu_via_modem(*, port: ModemPort, pdu: SubmitPdu, envelope_hash: str) -> tuple[ModemSendResult, JsonObject]:
+    """Submit one pre-built SMS-SUBMIT PDU through a directly attached modem."""
+
+    port.command("AT+CMGF=0")
+    port.write_raw(f"AT+CMGS={pdu.tpdu_octets}\r")
+    prompt_lines = port.read_until((">", "ERROR"))
+    if any(line.strip() == "ERROR" for line in prompt_lines):
+        raise SmsTransportError("modem rejected SMS PDU length")
+    port.write_raw(pdu.pdu_hex + CTRL_Z)
+    result_lines = port.read_until(("OK", "ERROR"))
+    if any(line.strip() == "ERROR" for line in result_lines):
+        raise SmsTransportError("modem failed to submit SMS PDU")
+    reference = _extract_cmgs_reference(result_lines)
+    result = ModemSendResult(reference=reference, raw_lines=tuple(result_lines))
+    receipt = with_receipt_identity(
+        {
+            "type": "external_sms_transport_receipt",
+            "provider": "direct_cellular_modem",
+            "direction": "outbound",
+            "envelope_hash": envelope_hash,
+            "to": pdu.destination,
+            "modem_reference": reference,
+            "result": "submitted",
+            "encoding": "ucs2_pdu",
+            "part_number": pdu.part_number,
+            "total_parts": pdu.total_parts,
+            "concat_reference": pdu.concat_reference,
+            "pdu_hash": stable_hash({"pdu_hex": pdu.pdu_hex}),
+            "boundary": "external_plaintext_sms",
+            "network_dependency": "mobile_carrier_only",
+            "cloud_messaging_dependency": False,
+            "recorded_at": utc_now(),
+        }
+    )
+    return result, receipt
+
+
+def send_ucs2_sms_via_modem(
+    *,
+    port: ModemPort,
+    envelope: JsonObject,
+    to_number: str,
+    allow_plaintext_external: bool = False,
+    concat_reference: int | None = None,
+) -> tuple[tuple[ModemSendResult, ...], tuple[JsonObject, ...]]:
+    """Submit a Unicode message as one or more status-report-requesting PDUs."""
+
+    if not allow_plaintext_external:
+        raise SmsTransportError("external plaintext SMS transition was not admitted")
+    body = str(envelope.get("body") or "")
+    if not body:
+        raise SmsTransportError("message envelope body is required")
+    pdus = build_ucs2_submit_pdus(
+        to_number=to_number,
+        text=body,
+        concat_reference=concat_reference,
+        request_status_report=True,
+    )
+    results: list[ModemSendResult] = []
+    receipts: list[JsonObject] = []
+    for pdu in pdus:
+        result, receipt = submit_pdu_via_modem(port=port, pdu=pdu, envelope_hash=envelope["envelope_hash"])
+        results.append(result)
+        receipts.append(receipt)
+    # Restore text mode for +CMT text-mode inbound processing after PDU submission.
+    port.command("AT+CMGF=1")
+    return tuple(results), tuple(receipts)
+
+
+def ingest_delivery_report(lines: Iterable[str]) -> JsonObject:
+    """Parse a +CDS report into a StegVerse receipt without treating carrier state as authority."""
+
+    _report, receipt = parse_cds_notification(lines)
+    return receipt
 
 
 def parse_cmt_notification(lines: Iterable[str]) -> JsonObject:
