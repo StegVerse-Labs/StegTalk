@@ -5,8 +5,10 @@ on:
     paths:
       - "src/stegtalk/sovereign_sms_modem.py"
       - "src/stegtalk/modem_capabilities.py"
+      - "src/stegtalk/serial_modem.py"
       - "tests/test_sovereign_sms_modem.py"
       - "tests/test_modem_capabilities.py"
+      - "tests/test_serial_modem.py"
       - ".github/workflows/sovereign-sms.yml"
       - "STEGTALK_MIRROR_HANDOFF.md"
       - "STEGTALK_TASK_QUEUE.json"
@@ -14,8 +16,10 @@ on:
     paths:
       - "src/stegtalk/sovereign_sms_modem.py"
       - "src/stegtalk/modem_capabilities.py"
+      - "src/stegtalk/serial_modem.py"
       - "tests/test_sovereign_sms_modem.py"
       - "tests/test_modem_capabilities.py"
+      - "tests/test_serial_modem.py"
       - ".github/workflows/sovereign-sms.yml"
 
 jobs:
@@ -30,6 +34,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
-      - name: Validate direct-modem transport and capability gate
+      - name: Validate direct-modem transport, capability gate, and serial binding
         run: |
-          python -m pytest -q tests/test_sovereign_sms_modem.py tests/test_modem_capabilities.py
+          python -m pytest -q tests/test_sovereign_sms_modem.py tests/test_modem_capabilities.py tests/test_serial_modem.py
