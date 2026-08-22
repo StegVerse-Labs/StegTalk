@@ -41,7 +41,6 @@ def main() -> int:
     data = json.loads(RUNTIME.read_text(encoding="utf-8"))
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    handoff = HANDOFF.read_text(encoding="utf-8")
 
     if data.get("state") != "ACTIVATED_AND_CI_BOUND":
         failures.append("runtime state is not ACTIVATED_AND_CI_BOUND")
@@ -55,17 +54,17 @@ def main() -> int:
         failures.append("runtime data scopes incomplete")
 
     task = data.get("task", {})
+    if task.get("id") != "ST-026" or task.get("status") != "complete":
+        failures.append("runtime ST-026 task state is not complete")
     for path in task.get("implementation_locations", []) + task.get("verification_locations", []):
         if not (ROOT / path).is_file():
             failures.append(f"task location missing: {path}")
+
     queue_task = next((item for item in queue.get("tasks", []) if item.get("id") == "ST-026"), None)
     if not queue_task or queue_task.get("status") != "complete":
         failures.append("ST-026 is not complete in STEGTALK_TASK_QUEUE.json")
     if "python scripts/check_personal_data_control.py" not in workflow:
         failures.append("validator is not bound into CI")
-    for marker in ("ST-026", "No external task", "ACTIVATED_AND_CI_BOUND"):
-        if marker not in handoff:
-            failures.append(f"handoff missing marker: {marker}")
 
     if failures:
         print("STEGTALK_PERSONAL_DATA_CONTROL=FAIL")

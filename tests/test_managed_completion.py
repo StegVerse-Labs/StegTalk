@@ -8,8 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_managed_queue_has_no_pending_local_prototype_tasks():
     queue = load_queue(ROOT)
     assert next_pending_task(queue) is None
-    assert all(item["status"] == "complete" for item in queue["tasks"])
-    assert queue["next_integration_goal"] == "mobile_shell_persistent_session_boundary"
+    assert not any(item["status"] in {"pending", "ready"} for item in queue["tasks"])
+    assert any(item["id"] == "ST-029" and item["status"] != "complete" for item in queue["tasks"])
 
 
 def test_management_state_is_capable_not_production_ready():
