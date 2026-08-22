@@ -10,6 +10,7 @@ on:
       - "src/stegtalk/sovereign_sms_journal.py"
       - "src/stegtalk/sms_pdu.py"
       - "src/stegtalk/sovereign_sms_pdu_runtime.py"
+      - "src/stegtalk/knowledge_vault_extension.py"
       - "tests/test_sovereign_sms_modem.py"
       - "tests/test_modem_capabilities.py"
       - "tests/test_serial_modem.py"
@@ -17,6 +18,7 @@ on:
       - "tests/test_sovereign_sms_journal.py"
       - "tests/test_sms_pdu.py"
       - "tests/test_sovereign_sms_pdu_runtime.py"
+      - "tests/test_knowledge_vault_extension.py"
       - ".github/workflows/sovereign-sms.yml"
       - "STEGTALK_MIRROR_HANDOFF.md"
       - "STEGTALK_TASK_QUEUE.json"
@@ -30,6 +32,7 @@ on:
       - "src/stegtalk/sovereign_sms_journal.py"
       - "src/stegtalk/sms_pdu.py"
       - "src/stegtalk/sovereign_sms_pdu_runtime.py"
+      - "src/stegtalk/knowledge_vault_extension.py"
       - "tests/test_sovereign_sms_modem.py"
       - "tests/test_modem_capabilities.py"
       - "tests/test_serial_modem.py"
@@ -37,6 +40,7 @@ on:
       - "tests/test_sovereign_sms_journal.py"
       - "tests/test_sms_pdu.py"
       - "tests/test_sovereign_sms_pdu_runtime.py"
+      - "tests/test_knowledge_vault_extension.py"
       - ".github/workflows/sovereign-sms.yml"
 
 jobs:
@@ -51,7 +55,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
-      - name: Validate direct-modem transport, live registration gate, PDU multipart, reports, and replayable evidence
+      - name: Validate direct-modem transport, KV host binding, PDU multipart, reports, and replayable evidence
         run: |
           python -m pytest -q \
             tests/test_sovereign_sms_modem.py \
@@ -60,4 +64,5 @@ jobs:
             tests/test_sovereign_sms_runtime.py \
             tests/test_sovereign_sms_journal.py \
             tests/test_sms_pdu.py \
-            tests/test_sovereign_sms_pdu_runtime.py
+            tests/test_sovereign_sms_pdu_runtime.py \
+            tests/test_knowledge_vault_extension.py
