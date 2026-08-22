@@ -10,7 +10,6 @@ SCHEMA = ROOT / "schemas/personal-data-control.schema.json"
 RUNTIME = ROOT / "runtime/personal-data-control.v1.json"
 TEST = ROOT / "tests/test_personal_data_control.py"
 WORKFLOW = ROOT / ".github/workflows/ci.yml"
-HANDOFF = ROOT / "STEGTALK_MIRROR_HANDOFF.md"
 QUEUE = ROOT / "STEGTALK_TASK_QUEUE.json"
 
 REQUIRED_STATES = {
@@ -29,7 +28,7 @@ REQUIRED_SCOPES = {
 
 def main() -> int:
     failures: list[str] = []
-    for path in (STANDARD, SCHEMA, RUNTIME, TEST, WORKFLOW, HANDOFF, QUEUE):
+    for path in (STANDARD, SCHEMA, RUNTIME, TEST, WORKFLOW, QUEUE):
         if not path.is_file():
             failures.append(f"missing {path.relative_to(ROOT)}")
     if failures:
@@ -41,7 +40,6 @@ def main() -> int:
     data = json.loads(RUNTIME.read_text(encoding="utf-8"))
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    handoff = HANDOFF.read_text(encoding="utf-8")
 
     if data.get("state") != "ACTIVATED_AND_CI_BOUND":
         failures.append("runtime state is not ACTIVATED_AND_CI_BOUND")
@@ -55,6 +53,10 @@ def main() -> int:
         failures.append("runtime data scopes incomplete")
 
     task = data.get("task", {})
+    if task.get("id") != "ST-026":
+        failures.append("runtime task id is not ST-026")
+    if task.get("status") != "complete":
+        failures.append("runtime ST-026 task is not complete")
     for path in task.get("implementation_locations", []) + task.get("verification_locations", []):
         if not (ROOT / path).is_file():
             failures.append(f"task location missing: {path}")
@@ -63,9 +65,6 @@ def main() -> int:
         failures.append("ST-026 is not complete in STEGTALK_TASK_QUEUE.json")
     if "python scripts/check_personal_data_control.py" not in workflow:
         failures.append("validator is not bound into CI")
-    for marker in ("ST-026", "No external task", "ACTIVATED_AND_CI_BOUND"):
-        if marker not in handoff:
-            failures.append(f"handoff missing marker: {marker}")
 
     if failures:
         print("STEGTALK_PERSONAL_DATA_CONTROL=FAIL")

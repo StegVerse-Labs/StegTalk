@@ -46,9 +46,10 @@ def _chunks_for_ucs2(text: str, *, multipart_octets: int = 134) -> tuple[str, ..
     """Split Unicode text without breaking code points for concatenated UCS-2 SMS.
 
     A concatenated UCS-2 TP-UD has 140 octets total. The 6-octet 8-bit
-    concatenation UDH leaves 134 octets, or at most 67 BMP code points when
-    every code point encodes to one UTF-16BE code unit. Astral code points use
-    surrogate pairs and therefore consume four octets.
+    concatenation UDH leaves 134 octets. Astral code points consume a UTF-16
+    surrogate pair (four octets). Keep such a pair off the exact terminal
+    boundary of a multipart payload so no downstream UTF-16-unit handling can
+    reinterpret the segment edge as a split surrogate.
     """
 
     if not text:
@@ -60,7 +61,9 @@ def _chunks_for_ucs2(text: str, *, multipart_octets: int = 134) -> tuple[str, ..
         encoded = char.encode("utf-16-be")
         if len(encoded) > multipart_octets:
             raise SmsTransportError("single character exceeds SMS multipart capacity")
-        if current and used + len(encoded) > multipart_octets:
+        would_overflow = used + len(encoded) > multipart_octets
+        astral_at_terminal_boundary = len(encoded) == 4 and used + len(encoded) == multipart_octets
+        if current and (would_overflow or astral_at_terminal_boundary):
             parts.append(current)
             current = ""
             used = 0
@@ -172,15 +175,19 @@ def parse_status_report_pdu(pdu_hex: str) -> StatusReportPdu:
 
     smsc_len = data[0]
     cursor = 1 + smsc_len
-    if cursor + 1 >= len(data):
+    if cursor >= len(data):
         raise SmsTransportError("status-report PDU missing TPDU")
     first_octet = data[cursor]
     cursor += 1
     if first_octet & 0x03 != 0x02:
         raise SmsTransportError("PDU is not SMS-STATUS-REPORT")
+    if cursor >= len(data):
+        raise SmsTransportError("status-report PDU is truncated")
 
     message_reference = data[cursor]
     cursor += 1
+    if cursor >= len(data):
+        raise SmsTransportError("status-report PDU is truncated")
     digit_count = data[cursor]
     cursor += 1
     if cursor >= len(data):
