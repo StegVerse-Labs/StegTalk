@@ -10,6 +10,7 @@ from .entity_runtime import JsonObject, stable_hash, utc_now, with_receipt_ident
 from .modem_capabilities import ModemCapabilities, interrogate_modem, require_registered_sms_capability
 from .serial_modem import PosixSerialRuntime, SerialCandidate, discover_serial_modems
 from .sms_transport import SmsTransportError
+from .sovereign_sms_journal import SovereignSmsJournal
 from .sovereign_sms_modem import ModemPort, ModemSendResult, initialize_sms_modem, send_sms_via_modem
 
 
@@ -65,8 +66,8 @@ def select_ready_sovereign_modem(
     """Find and prove a locally attached SMS modem ready for governed use.
 
     This discovery helper closes each probe session before returning. Use
-    SovereignSmsSession for a send path where the readiness proof and submission
-    must share one live modem session.
+    SovereignSmsSession for a send path where readiness proof, evidence recording,
+    and submission must share one live modem session.
     """
 
     discovered = tuple(candidates) if candidates is not None else discover_serial_modems()
@@ -113,17 +114,25 @@ def select_ready_sovereign_modem(
 
 
 class SovereignSmsSession:
-    """One live serial session binding readiness proof to SMS submission.
+    """One governed live serial session binding readiness, evidence, and submission.
 
     The session opens one directly attached modem, initializes SMS, requires SIM
-    readiness and HOME/ROAMING registration, and re-checks those capabilities
-    immediately before each send. This prevents a stale discovery result from
-    authorizing a later submission after modem or network state has changed.
+    readiness and HOME/ROAMING registration, records evidence when a journal is
+    supplied, and re-checks capabilities immediately before each send. Journal
+    failure is fail-closed: the session will not silently communicate without the
+    requested StegVerse evidence chain.
     """
 
-    def __init__(self, candidate: SerialCandidate, *, runtime_factory: RuntimeFactory = _runtime_factory):
+    def __init__(
+        self,
+        candidate: SerialCandidate,
+        *,
+        runtime_factory: RuntimeFactory = _runtime_factory,
+        journal: SovereignSmsJournal | None = None,
+    ):
         self.candidate = candidate
         self.runtime_factory = runtime_factory
+        self.journal = journal
         self.runtime: PosixSerialRuntime | None = None
         self.port: ModemPort | None = None
         self.initialization_receipt: JsonObject | None = None
@@ -139,6 +148,15 @@ class SovereignSmsSession:
             initialization = initialize_sms_modem(port)
             capabilities, capability_receipt = interrogate_modem(port)
             require_registered_sms_capability(capabilities)
+            readiness_receipt = _readiness_receipt(
+                candidate=self.candidate,
+                capabilities=capabilities,
+                initialization=initialization,
+                capability_receipt=capability_receipt,
+            )
+            if self.journal is not None:
+                self.journal.append(capability_receipt)
+                self.journal.append(readiness_receipt)
         except Exception:
             runtime.close()
             raise
@@ -148,12 +166,7 @@ class SovereignSmsSession:
         self.initialization_receipt = initialization
         self.capabilities = capabilities
         self.capability_receipt = capability_receipt
-        self.readiness_receipt = _readiness_receipt(
-            candidate=self.candidate,
-            capabilities=capabilities,
-            initialization=initialization,
-            capability_receipt=capability_receipt,
-        )
+        self.readiness_receipt = readiness_receipt
         return self
 
     def refresh_registration(self) -> tuple[ModemCapabilities, JsonObject]:
@@ -176,6 +189,9 @@ class SovereignSmsSession:
             raise SmsTransportError("sovereign SMS session is not open")
 
         capabilities, freshness_receipt = self.refresh_registration()
+        if self.journal is not None:
+            self.journal.append(freshness_receipt)
+
         result, transport_receipt = send_sms_via_modem(
             port=self.port,
             envelope=envelope,
@@ -197,6 +213,9 @@ class SovereignSmsSession:
                 "recorded_at": utc_now(),
             }
         )
+        if self.journal is not None:
+            self.journal.append(transport_receipt)
+            self.journal.append(session_receipt)
         return result, transport_receipt, session_receipt
 
     def close(self) -> None:
@@ -210,7 +229,11 @@ class SovereignSmsSession:
 
 
 def persist_runtime_readiness_receipt(path: str | os.PathLike[str], receipt: JsonObject) -> Path:
-    """Append a canonical JSONL readiness receipt and force it to durable storage."""
+    """Append a canonical JSONL receipt and force it to durable storage.
+
+    Kept for compatibility with the first ST-029 readiness slice. New composed
+    runtimes should prefer SovereignSmsJournal for chained replay/reconstruction.
+    """
 
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
