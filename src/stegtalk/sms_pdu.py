@@ -60,7 +60,14 @@ def _chunks_for_ucs2(text: str, *, multipart_octets: int = 134) -> tuple[str, ..
         encoded = char.encode("utf-16-be")
         if len(encoded) > multipart_octets:
             raise SmsTransportError("single character exceeds SMS multipart capacity")
-        if current and used + len(encoded) > multipart_octets:
+        # Keep astral code points away from an exact segment edge. They occupy a
+        # UTF-16 surrogate pair, and moving the whole code point to the next
+        # segment avoids boundary handling that could otherwise split the pair
+        # in downstream modem/SMSC implementations while preserving text order.
+        if current and (
+            used + len(encoded) > multipart_octets
+            or (len(encoded) == 4 and used + len(encoded) == multipart_octets)
+        ):
             parts.append(current)
             current = ""
             used = 0
@@ -172,15 +179,19 @@ def parse_status_report_pdu(pdu_hex: str) -> StatusReportPdu:
 
     smsc_len = data[0]
     cursor = 1 + smsc_len
-    if cursor + 1 >= len(data):
+    if cursor >= len(data):
         raise SmsTransportError("status-report PDU missing TPDU")
     first_octet = data[cursor]
     cursor += 1
     if first_octet & 0x03 != 0x02:
         raise SmsTransportError("PDU is not SMS-STATUS-REPORT")
+    if cursor >= len(data):
+        raise SmsTransportError("status-report PDU is truncated")
 
     message_reference = data[cursor]
     cursor += 1
+    if cursor >= len(data):
+        raise SmsTransportError("status-report PDU is truncated")
     digit_count = data[cursor]
     cursor += 1
     if cursor >= len(data):
