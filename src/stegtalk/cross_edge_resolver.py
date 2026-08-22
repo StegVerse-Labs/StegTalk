@@ -44,6 +44,24 @@ def _now_utc(now: datetime | None = None) -> datetime:
     return current if current.tzinfo else current.replace(tzinfo=timezone.utc)
 
 
+def _sha256_hex(value: object) -> str:
+    """Return the raw 64-hex digest required by cross-repository KV schemas.
+
+    StegTalk's general stable_hash() representation is intentionally prefixed
+    with ``sha256:``. Cross-edge receipt fields named ``*_sha256`` are a
+    separate portable schema boundary and require the raw lowercase digest.
+    """
+
+    digest = stable_hash(value)
+    prefix = "sha256:"
+    if not digest.startswith(prefix):
+        raise CapabilityResolutionError("stable hash is not SHA-256 encoded")
+    raw = digest[len(prefix):]
+    if len(raw) != 64:
+        raise CapabilityResolutionError("stable SHA-256 digest has invalid length")
+    return raw
+
+
 def validate_edge_advertisement(ad: JsonObject, *, now: datetime | None = None) -> None:
     required = {"edge_id","advertisement_id","observed_at","expires_at","attested","available_bearers","metrics","capabilities"}
     missing = sorted(required - ad.keys())
@@ -138,11 +156,11 @@ def resolve_cross_edge_path(*, attempt_id: str, posture: str, edge_advertisement
         if reasons:
             exclusions.append({"edge_id":ad["edge_id"],"reasons":sorted(reasons)}); continue
         score, components = _score(ad, posture)
-        evaluated.append({"edge_id":ad["edge_id"],"advertisement_id":ad["advertisement_id"],"advertisement_sha256":stable_hash(ad),"available_bearers":sorted(ad["available_bearers"]),"score":score,"score_components":components})
+        evaluated.append({"edge_id":ad["edge_id"],"advertisement_id":ad["advertisement_id"],"advertisement_sha256":_sha256_hex(ad),"available_bearers":sorted(ad["available_bearers"]),"score":score,"score_components":components})
     if not evaluated: raise CapabilityResolutionError("no admissible cross-edge path")
     evaluated.sort(key=lambda item:(-item["score"],item["edge_id"],item["advertisement_id"]))
     primary, fallback = evaluated[0], evaluated[1:]
-    candidate_set_hash = stable_hash({"attempt_id":attempt_id,"posture":posture,"recipient":recipient,"constraints":constraints,"ads":sorted(stable_hash(ad) for ad in ads),"policy_version":policy_version})
+    candidate_set_hash = _sha256_hex({"attempt_id":attempt_id,"posture":posture,"recipient":recipient,"constraints":constraints,"ads":sorted(_sha256_hex(ad) for ad in ads),"policy_version":policy_version})
     receipt: JsonObject = {
         "schema_version":"0.1","receipt_type":"CROSS_EDGE_SELECTION","attempt_id":attempt_id,"policy_version":policy_version,"posture":posture,"recipient_state":recipient["state"],"candidate_set_sha256":candidate_set_hash,
         "selected_edge_id":primary["edge_id"],"selected_bearer":_select_bearer(primary["available_bearers"],recipient,constraints),"primary_score":primary["score"],"primary_score_components":primary["score_components"],
@@ -150,7 +168,7 @@ def resolve_cross_edge_path(*, attempt_id: str, posture: str, edge_advertisement
         "excluded_paths":sorted(exclusions,key=lambda item:str(item["edge_id"])),"selected_advertisement_sha256":primary["advertisement_sha256"],"decided_at":current.isoformat().replace("+00:00","Z"),
         "multipath_authorized":bool(constraints.get("multipath_authorized",False)),"remote_edge_execution_authorized":bool(constraints.get("remote_edge_execution_authorized",True)),
     }
-    receipt["selection_sha256"] = stable_hash(receipt); return receipt
+    receipt["selection_sha256"] = _sha256_hex(receipt); return receipt
 
 
 def issue_execution_lease(*, attempt_id: str, selection_receipt: JsonObject, lease_epoch: int, expires_at: str, now: datetime | None = None) -> Lease:
