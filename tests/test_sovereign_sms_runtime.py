@@ -5,6 +5,7 @@ import pytest
 from stegtalk.message_envelope import build_local_message
 from stegtalk.serial_modem import SerialCandidate
 from stegtalk.sms_transport import SmsTransportError
+from stegtalk.sovereign_sms_journal import SovereignSmsJournal
 from stegtalk.sovereign_sms_modem import ModemPort
 from stegtalk.sovereign_sms_runtime import (
     SovereignSmsSession,
@@ -167,6 +168,38 @@ def test_live_session_blocks_send_if_registration_changes_after_initial_readines
                 allow_plaintext_external=True,
             )
         assert not any("AT+CMGS=" in write for write in runtime.writes)
+
+
+def test_live_session_records_readiness_freshness_transport_and_submission_in_chain(tmp_path):
+    candidate = SerialCandidate(path="/dev/ttyUSB6", family="ttyUSB")
+    runtime = FakeRuntime(
+        candidate.path,
+        [*ready_responses(), *interrogation_responses(), ["OK"], [">"], ["+CMGS: 88", "OK"]],
+    )
+    journal = SovereignSmsJournal(tmp_path / "runtime.jsonl")
+    envelope, _ = build_local_message(
+        sender_entity="entity:stegverse",
+        receiver_entity="external:sms:+15551234567",
+        body="journaled hello",
+    )
+
+    with SovereignSmsSession(candidate, runtime_factory=lambda path: runtime, journal=journal) as session:
+        session.send(envelope=envelope, to_number="+15551234567", allow_plaintext_external=True)
+
+    receipt_types = [receipt["type"] for receipt in journal.replay_receipts()]
+    assert receipt_types == [
+        "sovereign_sms_modem_capability_receipt",
+        "sovereign_sms_runtime_readiness_receipt",
+        "sovereign_sms_modem_capability_receipt",
+        "external_sms_transport_receipt",
+        "sovereign_sms_session_submission_receipt",
+    ]
+    recovered = SovereignSmsJournal(journal.path)
+    summary = recovered.reconstruct_summary()
+    assert summary["journal_records"] == 5
+    assert summary["readiness_receipts"] == 1
+    assert summary["session_submission_receipts"] == 1
+    assert summary["outbound_transport_receipts"] == 1
 
 
 def test_persist_runtime_readiness_receipt_appends_canonical_jsonl(tmp_path):
