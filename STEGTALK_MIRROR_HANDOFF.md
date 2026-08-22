@@ -8,11 +8,12 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Active task: ST-029
+Active tasks: ST-029, ST-030
 Primary SMS architecture: sovereign direct cellular modem
+Durable continuity host: KnowledgeVault / StegVerse-Labs/continuity-vault-kit
 Cloud messaging dependency: none
 SMS aggregator dependency: none
-Public mobile-network dependency: yes
+Public mobile-network dependency: yes for ordinary public SMS
 ```
 
 ## Active workstream — ST-029 Sovereign Direct-Modem SMS
@@ -49,7 +50,25 @@ Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
-## Installed ST-029 artifacts
+## Active workstream — ST-030 KnowledgeVault-Hosted Communication Extension
+
+Goal: make StegTalk a communication execution extension of an individual's durable KnowledgeVault while keeping the handset/modem/device as an ephemeral edge rather than continuity authority.
+
+```text
+KV extension request builder: IMPLEMENTED
+Closed host binding validation: IMPLEMENTED
+KV extension tests: IMPLEMENTED
+StegTalk CI integration: IMPLEMENTED
+KnowledgeVault host schemas/runtime: IMPLEMENTED IN continuity-vault-kit SOURCE SLICE
+Live KnowledgeVault backing proof: NOT STARTED
+Edge restart/device replacement reconstruction proof: NOT STARTED
+Production activation: NOT ACTIVE
+Claim state: OPEN
+```
+
+ST-030 does not replace ST-029. ST-029 remains the transport implementation for direct public SMS. ST-030 changes where durable authority/state lives and how transport is invoked.
+
+## Installed ST-029/ST-030 artifacts
 
 ```text
 src/stegtalk/sovereign_sms_modem.py
@@ -59,6 +78,7 @@ src/stegtalk/sovereign_sms_runtime.py
 src/stegtalk/sovereign_sms_journal.py
 src/stegtalk/sms_pdu.py
 src/stegtalk/sovereign_sms_pdu_runtime.py
+src/stegtalk/knowledge_vault_extension.py
 tests/test_sovereign_sms_modem.py
 tests/test_modem_capabilities.py
 tests/test_serial_modem.py
@@ -66,6 +86,7 @@ tests/test_sovereign_sms_runtime.py
 tests/test_sovereign_sms_journal.py
 tests/test_sms_pdu.py
 tests/test_sovereign_sms_pdu_runtime.py
+tests/test_knowledge_vault_extension.py
 .github/workflows/sovereign-sms.yml
 runtime/sovereign-sms-modem.v1.json
 STEGTALK_TASK_QUEUE.json
@@ -73,11 +94,49 @@ STEGTALK_TASK_QUEUE.json
 
 ## Current software path
 
+The durable-hosted path is now:
+
 ```text
-StegTalk/Auri
+individual KnowledgeVault / cloud account
+    |
+    +--> durable subject + authority refs
+    +--> payload ref + hash
+    +--> idempotency + recoverable execution state
+    +--> replay / reconstruction / recovery truth
     |
     v
-StegVerse admissibility + receipt boundary
+ST-030 StegTalk communication extension
+    |
+    +--> exact host binding validation
+    +--> secure envelope / routing / bearer / delivery truth
+    |
+    v
+EPHEMERAL_TRANSPORT_EDGE
+(handset / cellular modem / radio / gateway)
+    |
+    v
+ST-029 direct cellular transport or another admitted StegTalk bearer
+    |
+    v
+recipient / external network
+```
+
+The edge device explicitly has:
+
+```text
+device_role = EPHEMERAL_TRANSPORT_EDGE
+device_authority = false
+device_continuity_authority = false
+vault_continuity_authority = true
+credential_material = null
+```
+
+The device may execute the consequence of a KV-hosted communication decision. It cannot become the durable source of identity, authorization, conversation continuity, replay state, or recovery authority merely because it transported the message.
+
+## ST-029 modem path
+
+```text
+StegTalk extension execution
     |
     v
 local serial discovery / POSIX modem runtime
@@ -85,7 +144,7 @@ local serial discovery / POSIX modem runtime
     v
 ATI / CPIN / CREG / CSQ / CMGF readiness gate
     |
-    +--> readiness + capability evidence --> hash-chained journal
+    +--> readiness + capability evidence --> evidence journal / KV host bridge target
     |
     v
 same open modem session
@@ -110,9 +169,6 @@ AT+CMGS="destination"                        AT+CMGS=<TPDU octets>
                   transport receipts
                            |
                            v
-                 hash-chained journal
-                           |
-                           v
                    carrier radio/SMSC
                            |
                            v
@@ -134,7 +190,7 @@ parse message reference / recipient / status / timestamps
 StegVerse delivery-report receipt + raw-PDU hash
     |
     v
-hash-chained journal
+local journal now; KV-hosted durable recovery target under ST-030
 ```
 
 Carrier delivery status is evidence only. It does not grant or alter StegVerse authority.
@@ -161,36 +217,21 @@ Carrier delivery status is evidence only. It does not grant or alter StegVerse a
 
 ## Evidence/recovery boundary
 
-`src/stegtalk/sovereign_sms_journal.py` remains local StegVerse state. It provides:
+`src/stegtalk/sovereign_sms_journal.py` remains the current local evidence implementation and provides append-only canonical JSONL, sequence/hash chaining, fsync, restart verification, deterministic replay, reconstruction, and duplicate suppression.
 
-```text
-append-only canonical JSONL
-sequence + prior-record hash
-receipt hash + record hash
-fsync on append
-full chain verification on restart
-deterministic receipt replay
-runtime-state reconstruction
-restart-safe inbound correlation set
-duplicate suppression across restart
-fail-closed corruption handling
-```
+ST-030 now establishes KnowledgeVault as the durable host target for the same class of continuity state. The local journal is therefore not the final ownership boundary; it remains useful as an edge-local cache/evidence source and fallback proof surface, while durable cross-device recovery belongs to KnowledgeVault.
 
-The carrier is an external transport network, not the evidentiary authority.
+The carrier is an external transport network, not the evidentiary authority. The device is an execution edge, not continuity authority.
 
 ## Validation boundary
 
-`.github/workflows/sovereign-sms.yml` now runs:
+`.github/workflows/sovereign-sms.yml` now validates:
 
 ```text
-python -m pytest -q \
-  tests/test_sovereign_sms_modem.py \
-  tests/test_modem_capabilities.py \
-  tests/test_serial_modem.py \
-  tests/test_sovereign_sms_runtime.py \
-  tests/test_sovereign_sms_journal.py \
-  tests/test_sms_pdu.py \
-  tests/test_sovereign_sms_pdu_runtime.py
+ST-029 modem + capability + serial runtime
+ST-029 journal/restart/replay/dedupe
+ST-029 PDU/multipart/delivery reports
+ST-030 KnowledgeVault extension request/binding
 ```
 
 The available combined-status endpoint for current main commits continues to return no surfaced statuses. Targeted validation therefore remains `AWAITING OBSERVED WORKFLOW RESULT`; it is not claimed passed.
@@ -198,6 +239,10 @@ The available combined-status endpoint for current main commits continues to ret
 ## Authority and security boundary
 
 ```text
+KnowledgeVault host != bearer selector
+StegTalk transport authority != durable personal continuity authority
+device execution != device authority
+device restart != loss of durable communication state
 no cloud messaging provider != no carrier
 carrier network != trusted StegVerse runtime
 carrier network != evidence authority
@@ -219,52 +264,42 @@ Ordinary SMS remains an external transport boundary. User-visible SMS content is
 ```text
 ST-028 state: OPTIONAL_NONCANONICAL
 ClickSend activation required: false
-ClickSend credentials required for ST-029: false
+ClickSend credentials required for ST-029/ST-030: false
 ```
 
-## Recent implementation commits
+## Recent ST-030 commits
 
 ```text
-149859dd0f3c6926ed2216249fa6d2050f6c25e1  append-only hash-chained SMS evidence journal
-2ae26b6d5cc759789fad930adb70d1240b74f73f  restart/replay/tamper/dedupe journal tests
-857af4405b84aeab6d5643c24f087a76977313ee  live session bound to evidence journal
-a6fd3986e9b370f5b636922241ab01a92ae22a0a  live-session journal integration tests
-0141556ae109275f9cb278ce9a9ed40192ffa8af  CI expanded across journal/recovery lane
-3b3b0a711d84fd39e8e1561b23d44a3fa4e17dbb  UCS-2 multipart PDU and status-report codec
-efbd601c17a0a9e078bdbb028642c40d8cefb8a8  PDU/status-report codec tests
-47ac5294b7acbc7d40866e020ba0b5df82bc1977  modem PDU submission + delivery-report ingestion
-ab071ad68555a0f834ec9d50ae5fb75afbac5004  modem PDU/report tests
-817e1c0134537f3feb2ce5522388aa31ec918a57  governed multipart/report runtime wrapper
-e92afbd9dbe8597adcc25164530cc33c24679cb5  governed multipart/report journal tests
-5ab1ca2a565542708918982188b39967603a8c74  CI expanded across PDU/report lane
-0fad898e84d7b7c4f030bd3e9b2bb0feaa4ed6e1  runtime contract v1.3.0
-8131fa6dbc77c18f3f0035476148f667c305e518  queue advanced through multipart/report implementation
+adbba9e4180c74031f1a9bf57b1b5827ed0b4d88  initial KnowledgeVault StegTalk extension adapter
+b903fb27834c10749a0f0d8e818837516ef504c8  adapter aligned to closed KV host contract
+c5f36b78e5d993544f8acc84cea38d7f5f214c40  StegTalk KV binding tests
+b7afb502504fc3aa40c6e6c6b573ee51c35a79bc  sovereign SMS CI expanded to KV extension
+5c71c2611401fa51bbaf796591740274d9e4eb6f  task queue adds ST-030
 ```
 
 ## Required continuation
 
-1. Observe the dedicated `StegTalk Sovereign SMS` workflow result and repair any failures.
-2. Exercise the existing serial/runtime/PDU code against an actual StegVerse-owned cellular modem.
-3. Bind SIM/eSIM and persist actual capability/readiness evidence.
-4. Prove HOME/ROAMING registration in the same open session used for send.
-5. Send a single-part ordinary SMS and retain the complete evidence chain.
-6. Send a multipart Unicode SMS and prove ordinary recipient reconstruction.
-7. Receive and journal a real `+CDS` delivery report and correlate its message reference to the submitted segment.
-8. Send ordinary phone -> StegVerse and prove direct `+CMT` ingestion plus restart-safe duplicate suppression.
-9. Add modem-reference-to-envelope/segment reconciliation if live reports expose device/vendor variance not covered by current parser.
-10. Only after live bidirectional proof mark ST-029 activated.
+1. Observe StegTalk sovereign-SMS/KV-extension CI and repair failures.
+2. Observe KnowledgeVault execution-recovery CI and repair failures.
+3. Bind ST-030 to an actual durable KnowledgeVault instance rather than only the schema/source contract.
+4. Move/correlate ST-029 readiness, dispatch, delivery-report, inbound, and duplicate-suppression evidence into KV-hosted attempt state while preserving edge-local evidence where useful.
+5. Restart or replace the edge device and prove the exact communication attempt is reconstructed from KV without new authority or duplicate dispatch.
+6. Exercise the existing serial/runtime/PDU code against an actual StegVerse-owned cellular modem.
+7. Prove HOME/ROAMING registration in the same open session used for send.
+8. Send single-part and multipart ordinary SMS and retain KV-hosted + edge-local evidence.
+9. Receive a real `+CDS` and inbound `+CMT`, correlate them to the KV-hosted attempt, and prove restart-safe dedupe.
+10. Only after those proofs mark ST-029/ST-030 activated as applicable.
 
 ## Archive posture
 
-DO NOT archive as complete. The unblocked repository software slice now includes multipart/PDU and delivery-report evidence, but observed CI, physical modem/SIM binding, live registration, recipient reconstruction, real delivery reports, inbound proof, and production activation remain open.
+DO NOT archive as complete. ST-030 now has a real source/test/CI binding and the durable authority topology is recorded, but observed CI, a real KV backing instance, edge restart/device replacement reconstruction, physical modem/SIM binding, live registration, recipient reconstruction, delivery reports, inbound proof, and production activation remain open.
 
 ## Percentages
 
 ```text
 ST-029 current software slice: 100% implemented
-ST-029 targeted validation: 0% observed until a workflow result is surfaced
-ST-029 hardware/runtime integration: 55% (governed text + PDU paths, evidence/recovery, and report ingestion implemented; physical device not bound)
-ST-029 live bidirectional proof: 0%
 ST-029 goal activation: 74%
-Developed active ST-029 artifacts vs placeholders: 17 developed / 0 placeholder artifacts; remaining activation work is primarily observed validation + physical modem/SIM/network proof
+ST-030 current software slice: 100% implemented for KV request/binding adapter
+ST-030 goal activation: 35% (source/tests/CI and host contract exist; no live KV-backed edge execution/recovery proof yet)
+Developed active ST-029/ST-030 artifacts vs placeholders: 19 developed / 0 placeholder artifacts
 ```
