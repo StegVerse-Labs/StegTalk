@@ -2,10 +2,12 @@ import json
 
 import pytest
 
+from stegtalk.message_envelope import build_local_message
 from stegtalk.serial_modem import SerialCandidate
 from stegtalk.sms_transport import SmsTransportError
 from stegtalk.sovereign_sms_modem import ModemPort
 from stegtalk.sovereign_sms_runtime import (
+    SovereignSmsSession,
     persist_runtime_readiness_receipt,
     select_ready_sovereign_modem,
 )
@@ -16,14 +18,25 @@ class FakeRuntime:
         self.path = path
         self.responses = list(responses)
         self.writes = []
+        self.is_open = False
+
+    def open(self):
+        self.is_open = True
+
+    def close(self):
+        self.is_open = False
 
     def __enter__(self):
+        self.open()
         return self
 
     def __exit__(self, exc_type, exc, tb):
+        self.close()
         return None
 
     def write(self, data):
+        if not self.is_open:
+            raise SmsTransportError("fake serial runtime is closed")
         self.writes.append(data)
 
     def read_until(self, expect):
@@ -35,6 +48,16 @@ class FakeRuntime:
         return ModemPort(self.write, self.read_until)
 
 
+def interrogation_responses(*, registration="1"):
+    return [
+        ["Quectel EC25", "OK"],
+        ["+CPIN: READY", "OK"],
+        [f"+CREG: 0,{registration}", "OK"],
+        ["+CSQ: 20,99", "OK"],
+        ["+CMGF: 1", "OK"],
+    ]
+
+
 def ready_responses():
     return [
         ["OK"],
@@ -42,11 +65,7 @@ def ready_responses():
         ["OK"],
         ["OK"],
         ["OK"],
-        ["Quectel EC25", "OK"],
-        ["+CPIN: READY", "OK"],
-        ["+CREG: 0,1", "OK"],
-        ["+CSQ: 20,99", "OK"],
-        ["+CMGF: 1", "OK"],
+        *interrogation_responses(),
     ]
 
 
@@ -71,13 +90,14 @@ def test_select_ready_modem_composes_discovery_initialization_and_registration_g
     assert "AT\r" in runtimes[0].writes
     assert "ATI\r" in runtimes[0].writes
     assert "AT+CREG?\r" in runtimes[0].writes
+    assert runtimes[0].is_open is False
 
 
 def test_select_ready_modem_rejects_unregistered_candidate_and_uses_next_ready_candidate():
     bad = SerialCandidate(path="/dev/ttyUSB0", family="ttyUSB")
     good = SerialCandidate(path="/dev/ttyUSB1", family="ttyUSB")
     responses_by_path = {
-        bad.path: ready_responses()[:-3] + [["+CREG: 0,2", "OK"], ["+CSQ: 10,99", "OK"], ["+CMGF: 1", "OK"]],
+        bad.path: [["OK"], ["OK"], ["OK"], ["OK"], ["OK"], *interrogation_responses(registration="2")],
         good.path: ready_responses(),
     }
 
@@ -94,6 +114,59 @@ def test_select_ready_modem_rejects_unregistered_candidate_and_uses_next_ready_c
 def test_select_ready_modem_fails_closed_when_no_candidate_is_available():
     with pytest.raises(SmsTransportError, match="no local serial modem candidates"):
         select_ready_sovereign_modem(candidates=[])
+
+
+def test_live_session_refreshes_registration_immediately_before_submission():
+    candidate = SerialCandidate(path="/dev/ttyUSB4", family="ttyUSB")
+    responses = [
+        *ready_responses(),
+        *interrogation_responses(),
+        ["OK"],
+        [">"],
+        ["+CMGS: 77", "OK"],
+    ]
+    runtime = FakeRuntime(candidate.path, responses)
+    envelope, _ = build_local_message(
+        sender_entity="entity:stegverse",
+        receiver_entity="external:sms:+15551234567",
+        body="governed hello",
+    )
+
+    with SovereignSmsSession(candidate, runtime_factory=lambda path: runtime) as session:
+        result, transport_receipt, session_receipt = session.send(
+            envelope=envelope,
+            to_number="+15551234567",
+            allow_plaintext_external=True,
+        )
+        assert runtime.is_open is True
+        assert result.reference == "77"
+        assert transport_receipt["result"] == "submitted"
+        assert session_receipt["registration_at_submission"] == "home"
+        assert session_receipt["delivery_proven"] is False
+        assert runtime.writes.count("AT+CREG?\r") == 2
+        assert any('AT+CMGS="+15551234567"' in write for write in runtime.writes)
+
+    assert runtime.is_open is False
+
+
+def test_live_session_blocks_send_if_registration_changes_after_initial_readiness():
+    candidate = SerialCandidate(path="/dev/ttyUSB5", family="ttyUSB")
+    responses = [*ready_responses(), *interrogation_responses(registration="2")]
+    runtime = FakeRuntime(candidate.path, responses)
+    envelope, _ = build_local_message(
+        sender_entity="entity:stegverse",
+        receiver_entity="external:sms:+15551234567",
+        body="must not submit",
+    )
+
+    with SovereignSmsSession(candidate, runtime_factory=lambda path: runtime) as session:
+        with pytest.raises(SmsTransportError, match="not registered"):
+            session.send(
+                envelope=envelope,
+                to_number="+15551234567",
+                allow_plaintext_external=True,
+            )
+        assert not any("AT+CMGS=" in write for write in runtime.writes)
 
 
 def test_persist_runtime_readiness_receipt_appends_canonical_jsonl(tmp_path):
