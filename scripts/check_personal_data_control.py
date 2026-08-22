@@ -41,7 +41,6 @@ def main() -> int:
     data = json.loads(RUNTIME.read_text(encoding="utf-8"))
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    handoff = HANDOFF.read_text(encoding="utf-8")
 
     if data.get("state") != "ACTIVATED_AND_CI_BOUND":
         failures.append("runtime state is not ACTIVATED_AND_CI_BOUND")
@@ -63,9 +62,11 @@ def main() -> int:
         failures.append("ST-026 is not complete in STEGTALK_TASK_QUEUE.json")
     if "python scripts/check_personal_data_control.py" not in workflow:
         failures.append("validator is not bound into CI")
-    for marker in ("ST-026", "No external task", "ACTIVATED_AND_CI_BOUND"):
-        if marker not in handoff:
-            failures.append(f"handoff missing marker: {marker}")
+
+    # Historical completion is machine-owned by the structured runtime and task
+    # queue above. The current mirror handoff may legitimately advance to a new
+    # active task (currently ST-029), so validation must not require stale prose
+    # markers from ST-026 to remain in the handoff forever.
 
     if failures:
         print("STEGTALK_PERSONAL_DATA_CONTROL=FAIL")
