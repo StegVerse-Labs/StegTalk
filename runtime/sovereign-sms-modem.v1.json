@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "contract_type": "stegtalk_sovereign_sms_transport",
   "task_id": "ST-029",
   "transport": "sms",
@@ -26,7 +26,7 @@
   "security_boundary": {
     "classification": "external_sms_transport",
     "inherits_stegtalk_secure_channel_guarantees": false,
-    "requires_explicit_plaintext_admission_for_current_text_mode": true,
+    "requires_explicit_plaintext_admission_for_current_rendered_sms": true,
     "carrier_network_untrusted_transport": true,
     "stale_registration_may_not_authorize_submission": true,
     "carrier_is_not_evidence_authority": true
@@ -52,30 +52,58 @@
     "reconstruct_runtime_summary": true,
     "inbound_duplicate_suppression_from_correlation_hash": true,
     "duplicate_suppression_survives_restart": true,
+    "delivery_report_receipts_journalable": true,
     "journal_failure_policy": "fail_closed_when_journal_requested"
   },
   "outbound": {
-    "mode": "3gpp_at_command",
-    "commands": ["AT+CMGF=1", "AT+CMGS"],
+    "text_mode": {
+      "commands": ["AT+CMGF=1", "AT+CMGS"],
+      "submission_receipt": true
+    },
+    "pdu_mode": {
+      "implemented": true,
+      "encoding": "UCS2_UTF16BE",
+      "smsc_selection": "MODEM_SIM_CONFIGURED",
+      "commands": ["AT+CMGF=0", "AT+CMGS"],
+      "status_report_requested": true,
+      "multipart_concat_udh": "8_BIT_IEI_00",
+      "max_parts": 255,
+      "restore_text_mode_after_submission": true,
+      "aggregate_submission_receipt": true
+    },
     "provider_account_credentials": false,
     "same_live_session_as_fresh_registration_gate": true,
-    "submission_receipt": true,
-    "journaled_evidence_order": ["initial_capability", "readiness", "fresh_capability", "transport_submission", "session_submission"],
     "delivery_proven_by_submission": false
   },
   "inbound": {
-    "mode": "3gpp_unsolicited_notification",
-    "notification": "+CMT",
-    "configuration": "AT+CNMI=2,2,0,0,0",
-    "correlation_hash": true,
-    "restart_safe_duplicate_suppression": true
+    "text_message": {
+      "mode": "3gpp_unsolicited_notification",
+      "notification": "+CMT",
+      "configuration": "AT+CNMI=2,2,0,0,0",
+      "correlation_hash": true,
+      "restart_safe_duplicate_suppression": true
+    },
+    "delivery_report": {
+      "implemented": true,
+      "notification": "+CDS",
+      "parses_sms_status_report_core": true,
+      "captures_message_reference": true,
+      "captures_recipient": true,
+      "captures_status_code": true,
+      "captures_service_center_timestamp": true,
+      "captures_discharge_time": true,
+      "raw_pdu_hash": true,
+      "carrier_status_is_evidence_not_authority": true
+    }
   },
   "implementation_files": [
     "src/stegtalk/sovereign_sms_modem.py",
     "src/stegtalk/modem_capabilities.py",
     "src/stegtalk/serial_modem.py",
     "src/stegtalk/sovereign_sms_runtime.py",
-    "src/stegtalk/sovereign_sms_journal.py"
+    "src/stegtalk/sovereign_sms_journal.py",
+    "src/stegtalk/sms_pdu.py",
+    "src/stegtalk/sovereign_sms_pdu_runtime.py"
   ],
   "verification_files": [
     "tests/test_sovereign_sms_modem.py",
@@ -83,6 +111,8 @@
     "tests/test_serial_modem.py",
     "tests/test_sovereign_sms_runtime.py",
     "tests/test_sovereign_sms_journal.py",
+    "tests/test_sms_pdu.py",
+    "tests/test_sovereign_sms_pdu_runtime.py",
     ".github/workflows/sovereign-sms.yml"
   ],
   "activation": {
@@ -94,6 +124,8 @@
     "replayable_journal_implemented": true,
     "restart_reconstruction_implemented": true,
     "inbound_duplicate_suppression_implemented": true,
+    "multipart_pdu_implemented": true,
+    "delivery_report_ingestion_implemented": true,
     "physical_modem_bound": false,
     "sim_or_esim_bound": false,
     "network_registered_live_proof": false,
