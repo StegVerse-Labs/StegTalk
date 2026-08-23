@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.1.0",
+  "task_id": "ST-032-KV-PERSISTED-PHYSICAL-EDGE-RUNTIME",
+  "repository": "StegVerse-Labs/StegTalk",
+  "entrypoint": "python -m stegtalk.physical_edge_runtime",
+  "goal": "persist ST-031 selection and lease, execute only through ST-032, reconstruct ST-032 idempotency from KnowledgeVault after restart, and expose ST-029 as one bounded selected-edge executor",
+  "knowledge_vault": {
+    "continuity_authority": true,
+    "canonical_store": "StegVerse-Labs/continuity-vault-kit/execution/vault_store.py::KnowledgeVaultExecutionStore",
+    "required_runtime_visibility": true,
+    "credential_material_allowed": false,
+    "attempt_stream": "_System/Execution/Attempts/<attempt_id>.jsonl",
+    "receipt_stream": "_System/Execution/Receipts/<attempt_id>.jsonl",
+    "recovery_stream": "_System/Execution/Recovery/<attempt_id>.jsonl",
+    "restart_reconstruction_source": "Receipts/<attempt_id>.jsonl",
+    "duplicate_dispatch_suppression_source": "persisted EDGE_EXECUTION idempotency_key"
+  },
+  "selection": {
+    "authority": "StegTalk ST-031",
+    "admitted_edge_advertisements_required": true,
+    "attested_advertisements_required": true,
+    "single_primary_edge_default": true,
+    "execution_lease_required": true,
+    "selection_receipt_persisted_before_dispatch": true,
+    "selection_receipt_grants_dispatch_authority": false
+  },
+  "execution": {
+    "coordinator": "StegTalk ST-032 edge_runtime.execute_selected_edge",
+    "coordinator_selects_bearer": false,
+    "selection_hash_exact_match_required": true,
+    "lease_exact_match_required": true,
+    "payload_ref_required": true,
+    "idempotency_key_required": true,
+    "edge_execution_receipt_persisted": true,
+    "process_restart_reconstructs_execution_cache_from_kv": true,
+    "same_binding_same_idempotency_key_redispatch": false,
+    "changed_binding_same_idempotency_key": "FAIL_CLOSED"
+  },
+  "sms_binding": {
+    "adapter_role": "ST-032 EdgeExecutor",
+    "implementation": "StegTalk ST-029 SovereignSmsSession",
+    "selected_bearer_must_equal": "sms",
+    "selected_advertisement_capability_required": "modem_path",
+    "submission_outcome_before_delivery_report": "INDETERMINATE",
+    "cloud_messaging_provider_required": false,
+    "sms_aggregator_required": false,
+    "delivery_report_required_for_delivery_proof": true
+  },
+  "fallback": {
+    "ambiguous_after_dispatch": "VERIFY_EXTERNALLY",
+    "failed_without_confirmed_side_effect_absence": "VERIFY_EXTERNALLY",
+    "failed_with_confirmed_side_effect_absence": "TRY_ORDERED_FALLBACK",
+    "automatic_duplicate_dispatch_allowed": false
+  },
+  "authority": {
+    "credential_authority": "TV/TVC_ONLY",
+    "github_token_runtime_authority": "NONE",
+    "device_role": "EPHEMERAL_TRANSPORT_EDGE",
+    "device_continuity_authority": false,
+    "knowledge_vault_continuity_authority": true,
+    "st031_selection_authority": true,
+    "st032_execution_coordination_only": true,
+    "production_activation_effect_of_source_or_test_pass": false
+  },
+  "activation_evidence_still_required": [
+    "live bearer-generated attempt persisted in connected KnowledgeVault",
+    "at least two actual admitted device-edge advertisements",
+    "selected physical bearer execution",
+    "delivery evidence appended to KnowledgeVault",
+    "edge restart or replacement followed by connected-vault reconstruction without duplicate dispatch",
+    "ST-029 outbound plus delivery report plus inbound correlation"
+  ]
+}
