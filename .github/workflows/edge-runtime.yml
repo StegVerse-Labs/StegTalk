@@ -1,0 +1,41 @@
+name: Edge Runtime Validation
+
+on:
+  pull_request:
+    paths:
+      - "src/stegtalk/edge_runtime.py"
+      - "src/stegtalk/cross_edge_resolver.py"
+      - "tests/test_edge_runtime.py"
+      - ".github/workflows/edge-runtime.yml"
+      - "STEGTALK_MIRROR_HANDOFF.md"
+      - "STEGTALK_TASK_QUEUE.json"
+  push:
+    branches: ["main"]
+    paths:
+      - "src/stegtalk/edge_runtime.py"
+      - "src/stegtalk/cross_edge_resolver.py"
+      - "tests/test_edge_runtime.py"
+      - ".github/workflows/edge-runtime.yml"
+      - "STEGTALK_MIRROR_HANDOFF.md"
+      - "STEGTALK_TASK_QUEUE.json"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and tests
+        run: python -m pip install -e . pytest
+      - name: Compile runtime surfaces
+        run: python -m py_compile src/stegtalk/cross_edge_resolver.py src/stegtalk/edge_runtime.py tests/test_edge_runtime.py
+      - name: Run edge runtime tests
+        run: python -m pytest tests/test_edge_runtime.py -q
