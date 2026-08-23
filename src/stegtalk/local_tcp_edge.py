@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import socket
 import struct
@@ -63,18 +64,12 @@ def _recv_frame(sock: socket.socket) -> dict[str, object]:
     return value
 
 
-def tcp_edge_executor(
-    *,
-    endpoint: TcpEndpoint,
-    payload_loader: PayloadLoader,
-    expected_bearer: str = "stegtalk-tcp",
-) -> EdgeExecutor:
+def tcp_edge_executor(*, endpoint: TcpEndpoint, payload_loader: PayloadLoader, expected_bearer: str = "stegtalk-tcp") -> EdgeExecutor:
     """Execute an already-selected ST-032 request over a framed TCP socket.
 
-    A successful return means the remote StegTalk edge acknowledged the exact
-    framed request. It does not mean a human recipient rendered or read it.
+    ACKNOWLEDGED means the remote StegTalk edge accepted the exact frame. It does
+    not establish human rendering/read receipt or production activation.
     """
-
     endpoint.validate()
 
     def _execute(request: EdgeExecutionRequest) -> Mapping[str, object]:
@@ -83,7 +78,7 @@ def tcp_edge_executor(
         payload = payload_loader(request.payload_ref)
         if not isinstance(payload, bytes):
             raise LocalTcpEdgeError("payload loader must return bytes")
-        payload_sha256 = stable_hash(payload.decode("utf-8", errors="surrogateescape"))
+        payload_sha256 = "sha256:" + hashlib.sha256(payload).hexdigest()
         message: dict[str, object] = {
             "protocol": "stegtalk.edge-tcp.v0.1",
             "attempt_id": request.attempt_id,
@@ -107,18 +102,8 @@ def tcp_edge_executor(
                 response = _recv_frame(sock)
         except (OSError, LocalTcpEdgeError, UnicodeError, json.JSONDecodeError):
             if sent:
-                return {
-                    "dispatch_state": "DISPATCHED",
-                    "outcome": "INDETERMINATE",
-                    "side_effect_absence_confirmed": False,
-                    "observed_at": utc_now(),
-                }
-            return {
-                "dispatch_state": "NOT_DISPATCHED",
-                "outcome": "FAILED",
-                "side_effect_absence_confirmed": True,
-                "observed_at": utc_now(),
-            }
+                return {"dispatch_state": "DISPATCHED", "outcome": "INDETERMINATE", "side_effect_absence_confirmed": False, "observed_at": utc_now()}
+            return {"dispatch_state": "NOT_DISPATCHED", "outcome": "FAILED", "side_effect_absence_confirmed": True, "observed_at": utc_now()}
 
         if response.get("protocol") != "stegtalk.edge-tcp-ack.v0.1":
             return {"dispatch_state": "DISPATCHED", "outcome": "INDETERMINATE", "side_effect_absence_confirmed": False, "observed_at": utc_now()}
@@ -126,22 +111,13 @@ def tcp_edge_executor(
             return {"dispatch_state": "DISPATCHED", "outcome": "INDETERMINATE", "side_effect_absence_confirmed": False, "observed_at": utc_now()}
         if response.get("accepted") is not True:
             return {"dispatch_state": "DISPATCHED", "outcome": "INDETERMINATE", "side_effect_absence_confirmed": False, "observed_at": utc_now()}
-        return {
-            "dispatch_state": "OBSERVED",
-            "outcome": "ACKNOWLEDGED",
-            "side_effect_absence_confirmed": False,
-            "observed_at": utc_now(),
-        }
+        return {"dispatch_state": "OBSERVED", "outcome": "ACKNOWLEDGED", "side_effect_absence_confirmed": False, "observed_at": utc_now()}
 
     return _execute
 
 
 def receive_one_tcp_edge_message(listener: socket.socket) -> dict[str, object]:
-    """Receive and acknowledge one framed edge message on an already-bound socket.
-
-    This helper is suitable for controlled edge tests and reference adapters. The
-    caller owns admission/attestation of the listening edge before exposing it.
-    """
+    """Receive and acknowledge one framed message on an already-admitted edge."""
     conn, _address = listener.accept()
     with conn:
         message = _recv_frame(conn)
