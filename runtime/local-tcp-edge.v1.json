@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "ST-033",
+  "repository": "StegVerse-Labs/StegTalk",
+  "title": "Admitted non-loopback local TCP edge adapter",
+  "implementation": "src/stegtalk/local_tcp_edge.py",
+  "coordinator": "StegTalk ST-032",
+  "selection_authority": "StegTalk ST-031",
+  "bearer": "stegtalk-tcp",
+  "runtime": {
+    "real_os_socket_io": true,
+    "framing_protocol": "stegtalk.edge-tcp.v0.1",
+    "ack_protocol": "stegtalk.edge-tcp-ack.v0.1",
+    "payload_hash_bound": true,
+    "request_hash_bound": true,
+    "application_ack_correlated": true,
+    "acknowledged_is_recipient_delivery": false,
+    "acknowledged_is_human_rendering": false,
+    "loopback_test_is_activation_proof": false
+  },
+  "failure_semantics": {
+    "connection_failure_before_send": "FAILED_WITH_SIDE_EFFECT_ABSENCE_CONFIRMED",
+    "failure_after_send": "INDETERMINATE",
+    "invalid_or_mismatched_ack": "INDETERMINATE",
+    "automatic_fallback_after_indeterminate": false
+  },
+  "admission": {
+    "selected_attested_edge_advertisement_required": true,
+    "synthetic_attestation_allowed": false,
+    "public_endpoint_requires_tls": true,
+    "plaintext_tcp_scope": "explicitly admitted local-network edge only"
+  },
+  "authority": {
+    "credential_authority": "TV/TVC_ONLY",
+    "github_token_runtime_authority": "NONE",
+    "cloud_messaging_provider_authority": "NONE",
+    "knowledge_vault_continuity_authority": true,
+    "edge_device_role": "EPHEMERAL_TRANSPORT_EDGE",
+    "production_activation_effect_of_source_or_ci_pass": false
+  },
+  "hosted_validation": {
+    "pull_request": 34,
+    "head_sha": "ae359adaf568d8cedb3b4875ad62b6165c7c294b",
+    "edge_runtime_validation_run": 32609103130,
+    "test_readiness_run": 32609103116,
+    "managed_completion_run": 32609103120,
+    "device_continuity_run": 32609103119,
+    "all_success": true,
+    "merge_sha": "c3654655a075124fd1ab3e864aa67db5e2b2a8fd"
+  },
+  "activation_evidence_still_required": [
+    "at least two actual admitted device-edge advertisements",
+    "ST-031 selection of one admitted edge",
+    "non-loopback dispatch between distinct runtime edges",
+    "connected KnowledgeVault execution evidence",
+    "recipient delivery or acknowledgement evidence beyond socket acceptance where applicable",
+    "process restart or edge replacement reconstruction without duplicate dispatch",
+    "TLS-bound public-network adapter before any public endpoint use"
+  ]
+}
