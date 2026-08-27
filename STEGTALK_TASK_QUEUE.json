@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.9.0",
+  "schema_version": "5.0.0",
   "queue_type": "stegtalk_queue",
   "goal": "activate sovereign bidirectional communication with KnowledgeVault-hosted continuity, cross-edge best-admissible routing, bounded edge execution, and no cloud messaging provider authority",
   "repo": "StegVerse-Labs/StegTalk",
@@ -445,7 +445,36 @@
         "device_continuity": 33032871855
       },
       "merge_sha": "772428118cfb033a8d5a55eea8a3b1eb8320f8f2"
+    },
+    {
+      "id": "ST-035",
+      "title": "TLS Receiving-Edge Admission Surface",
+      "priority": 35,
+      "status": "source_implemented_validation_pending_live_tls_receiver_pending",
+      "repository": "StegVerse-Labs/StegTalk",
+      "issue": 39,
+      "task_manifest": "runtime/public-tls-receiver.v1.json",
+      "implementation_locations": [
+        "src/stegtalk/public_tls_receiver.py"
+      ],
+      "verification_locations": [
+        "tests/test_public_tls_receiver.py",
+        ".github/workflows/edge-runtime.yml"
+      ],
+      "server_tls_context_supplied_externally": true,
+      "stegtalk_loads_private_key": false,
+      "credential_authority": "TV/TVC_ONLY",
+      "st031_admission_callback_required": true,
+      "exact_request_hash_required": true,
+      "exact_execution_binding_required": true,
+      "negative_ack_on_invalid_or_unadmitted_request": true,
+      "application_ack_claims_final_delivery": false,
+      "real_server_certificate_runtime_proof": false,
+      "real_public_network_receive_proof": false,
+      "connected_kv_receive_evidence_proof": false,
+      "production_activation": false,
+      "claim_state": "OPEN"
     }
   ],
-  "next_integration_goal": "admit at least two actual device edges, let ST-031 select one, execute a real ST-033/ST-034 bearer between distinct runtime edges with connected-KnowledgeVault evidence, append independently meaningful acknowledgement/delivery evidence, and prove restart or edge replacement without duplicate dispatch; complete any receiver-side public TLS admission surface required for that proof without introducing new credential authority; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
+  "next_integration_goal": "hosted-validate and merge ST-035 receiver source; then configure an actual TLS server context under TV/TVC, admit at least two actual device edges, let ST-031 select one, execute a real ST-034 public TLS dispatch into ST-035 across distinct runtime edges with connected-KnowledgeVault evidence, append independently meaningful acknowledgement/delivery evidence, and prove restart or edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
 }
