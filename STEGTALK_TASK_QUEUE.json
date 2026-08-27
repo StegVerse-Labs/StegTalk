@@ -1,5 +1,5 @@
 {
-  "schema_version": "5.0.0",
+  "schema_version": "5.1.0",
   "queue_type": "stegtalk_queue",
   "goal": "activate sovereign bidirectional communication with KnowledgeVault-hosted continuity, cross-edge best-admissible routing, bounded edge execution, and no cloud messaging provider authority",
   "repo": "StegVerse-Labs/StegTalk",
@@ -450,7 +450,7 @@
       "id": "ST-035",
       "title": "TLS Receiving-Edge Admission Surface",
       "priority": 35,
-      "status": "source_implemented_validation_pending_live_tls_receiver_pending",
+      "status": "source_validated_merged_live_tls_receiver_pending",
       "repository": "StegVerse-Labs/StegTalk",
       "issue": 39,
       "task_manifest": "runtime/public-tls-receiver.v1.json",
@@ -473,8 +473,46 @@
       "real_public_network_receive_proof": false,
       "connected_kv_receive_evidence_proof": false,
       "production_activation": false,
+      "claim_state": "OPEN",
+      "pull_request": 40,
+      "exact_head": "a1f086b0d1dbc5545f872c9fb1144171348e3c01",
+      "validation_runs": {
+        "edge_runtime": 33033096653,
+        "managed_completion": 33033096602,
+        "test_readiness": 33033096983,
+        "device_continuity": 33033096643
+      },
+      "merge_sha": "dcda8a8405f510d9abce239ecd246c87220d2c6b"
+    },
+    {
+      "id": "ST-036",
+      "title": "KnowledgeVault Durability Before Positive TLS ACK",
+      "priority": 36,
+      "status": "source_implemented_validation_pending_live_connected_kv_pending",
+      "repository": "StegVerse-Labs/StegTalk",
+      "issue": 41,
+      "task_manifest": "runtime/tls-kv-before-ack.v1.json",
+      "implementation_locations": [
+        "src/stegtalk/public_tls_receiver.py"
+      ],
+      "verification_locations": [
+        "tests/test_public_tls_receiver.py",
+        ".github/workflows/edge-runtime.yml"
+      ],
+      "continuity_host_repository": "StegVerse-Labs/continuity-vault-kit",
+      "continuity_receive_evidence_merge": "08011eea59ad2b7613102c032f6fe25035b8f765",
+      "canonical_communication_runtime_journal": true,
+      "positive_ack_requires_durable_acceptance": true,
+      "durability_failure_can_emit_positive_ack": false,
+      "durability_failure_sender_state": "INDETERMINATE_VERIFY_EXTERNALLY",
+      "negative_or_unadmitted_persisted_as_acceptance": false,
+      "persistence_creates_authority": false,
+      "credential_authority": "TV/TVC_ONLY",
+      "connected_kv_live_receive_proof": false,
+      "real_public_network_proof": false,
+      "production_activation": false,
       "claim_state": "OPEN"
     }
   ],
-  "next_integration_goal": "hosted-validate and merge ST-035 receiver source; then configure an actual TLS server context under TV/TVC, admit at least two actual device edges, let ST-031 select one, execute a real ST-034 public TLS dispatch into ST-035 across distinct runtime edges with connected-KnowledgeVault evidence, append independently meaningful acknowledgement/delivery evidence, and prove restart or edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
+  "next_integration_goal": "hosted-validate and merge ST-036; then configure an actual ST-035 TLS server context under TV/TVC, admit at least two actual device edges, let ST-031 select one, execute ST-034 -> ST-035 across distinct runtime edges with both sender execution and receiver acceptance durably persisted to the connected KnowledgeVault before positive ACK, append independently meaningful delivery evidence, and prove restart/edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
 }
