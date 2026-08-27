@@ -7,11 +7,14 @@ on:
       - "src/stegtalk/cross_edge_resolver.py"
       - "src/stegtalk/local_tcp_edge.py"
       - "src/stegtalk/public_tls_edge.py"
+      - "src/stegtalk/public_tls_receiver.py"
       - "runtime/local-tcp-edge.v1.json"
       - "runtime/public-tls-edge.v1.json"
+      - "runtime/public-tls-receiver.v1.json"
       - "tests/test_edge_runtime.py"
       - "tests/test_local_tcp_edge.py"
       - "tests/test_public_tls_edge.py"
+      - "tests/test_public_tls_receiver.py"
       - ".github/workflows/edge-runtime.yml"
       - "STEGTALK_MIRROR_HANDOFF.md"
       - "STEGTALK_TASK_QUEUE.json"
@@ -22,11 +25,14 @@ on:
       - "src/stegtalk/cross_edge_resolver.py"
       - "src/stegtalk/local_tcp_edge.py"
       - "src/stegtalk/public_tls_edge.py"
+      - "src/stegtalk/public_tls_receiver.py"
       - "runtime/local-tcp-edge.v1.json"
       - "runtime/public-tls-edge.v1.json"
+      - "runtime/public-tls-receiver.v1.json"
       - "tests/test_edge_runtime.py"
       - "tests/test_local_tcp_edge.py"
       - "tests/test_public_tls_edge.py"
+      - "tests/test_public_tls_receiver.py"
       - ".github/workflows/edge-runtime.yml"
       - "STEGTALK_MIRROR_HANDOFF.md"
       - "STEGTALK_TASK_QUEUE.json"
@@ -48,6 +54,6 @@ jobs:
       - name: Install package and tests
         run: python -m pip install -e . pytest
       - name: Compile runtime surfaces
-        run: python -m py_compile src/stegtalk/cross_edge_resolver.py src/stegtalk/edge_runtime.py src/stegtalk/local_tcp_edge.py src/stegtalk/public_tls_edge.py tests/test_edge_runtime.py tests/test_local_tcp_edge.py tests/test_public_tls_edge.py
+        run: python -m py_compile src/stegtalk/cross_edge_resolver.py src/stegtalk/edge_runtime.py src/stegtalk/local_tcp_edge.py src/stegtalk/public_tls_edge.py src/stegtalk/public_tls_receiver.py tests/test_edge_runtime.py tests/test_local_tcp_edge.py tests/test_public_tls_edge.py tests/test_public_tls_receiver.py
       - name: Run edge runtime tests
-        run: python -m pytest tests/test_edge_runtime.py tests/test_local_tcp_edge.py tests/test_public_tls_edge.py -q
+        run: python -m pytest tests/test_edge_runtime.py tests/test_local_tcp_edge.py tests/test_public_tls_edge.py tests/test_public_tls_receiver.py -q
