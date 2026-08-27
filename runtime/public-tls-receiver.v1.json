@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "ST-035",
+  "name": "TLS receiving-edge admission surface",
+  "repository": "StegVerse-Labs/StegTalk",
+  "authority": {
+    "selection_and_edge_admission_authority": "ST-031",
+    "execution_coordinator": "ST-032",
+    "credential_authority": "TV/TVC_ONLY",
+    "server_tls_context_supplied_externally": true,
+    "stegtalk_loads_private_key": false,
+    "github_token_runtime_authority": false,
+    "cloud_messaging_provider_authority": false
+  },
+  "receiver": {
+    "protocol": "stegtalk.edge-tls.v0.1",
+    "ack_protocol": "stegtalk.edge-tls-ack.v0.1",
+    "request_hash_required": true,
+    "application_admission_callback_required": true,
+    "exact_execution_binding_required": true,
+    "negative_ack_on_invalid_or_unadmitted_request": true,
+    "application_ack_equals_final_delivery_truth": false
+  },
+  "validation": {
+    "source": "src/stegtalk/public_tls_receiver.py",
+    "tests": "tests/test_public_tls_receiver.py",
+    "workflow": ".github/workflows/edge-runtime.yml",
+    "source_validation_is_live_tls_activation": false,
+    "real_server_certificate_runtime_proof": false,
+    "real_public_network_receive_proof": false,
+    "connected_kv_receive_evidence_proof": false,
+    "production_activation": false
+  }
+}
