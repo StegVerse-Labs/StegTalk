@@ -408,7 +408,7 @@
       "id": "ST-034",
       "title": "TLS-Bound Public IP Edge",
       "priority": 34,
-      "status": "source_implemented_validation_pending_live_public_edge_pending",
+      "status": "source_validated_merged_live_public_edge_pending",
       "repository": "StegVerse-Labs/StegTalk",
       "issue": 36,
       "task_manifest": "runtime/public-tls-edge.v1.json",
@@ -435,8 +435,17 @@
       "distinct_device_delivery_proof": false,
       "edge_restart_or_replacement_proof": false,
       "production_activation": false,
-      "claim_state": "OPEN"
+      "claim_state": "OPEN",
+      "pull_request": 37,
+      "exact_head": "b9cdea0505adabc4a5ecab316caf6f454c907f81",
+      "validation_runs": {
+        "edge_runtime": 33032871912,
+        "managed_completion": 33032871878,
+        "test_readiness": 33032871859,
+        "device_continuity": 33032871855
+      },
+      "merge_sha": "772428118cfb033a8d5a55eea8a3b1eb8320f8f2"
     }
   ],
-  "next_integration_goal": "hosted-validate and merge ST-034 TLS-bound public IP source contract; then admit at least two actual device edges, let ST-031 select one, execute a real ST-033/ST-034 bearer between distinct runtime edges with connected-KnowledgeVault evidence, append independently meaningful acknowledgement/delivery evidence, and prove restart or edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
+  "next_integration_goal": "admit at least two actual device edges, let ST-031 select one, execute a real ST-033/ST-034 bearer between distinct runtime edges with connected-KnowledgeVault evidence, append independently meaningful acknowledgement/delivery evidence, and prove restart or edge replacement without duplicate dispatch; complete any receiver-side public TLS admission surface required for that proof without introducing new credential authority; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
 }

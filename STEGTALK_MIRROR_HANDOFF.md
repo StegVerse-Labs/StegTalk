@@ -133,7 +133,7 @@ Merge c3654655a075124fd1ab3e864aa67db5e2b2a8fd
 Distinct runtime-edge dispatch proof: NOT PROVEN
 Connected-KV live ST-033 execution receipt: NOT PROVEN
 Edge restart/replacement proof after real dispatch: NOT PROVEN
-Public-network TLS adapter: ST-034 SOURCE IMPLEMENTED / HOSTED VALIDATION PENDING
+Public-network TLS adapter: ST-034 SOURCE VALIDATED AND MERGED / LIVE PUBLIC EDGE PENDING
 Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
@@ -168,7 +168,13 @@ ACKNOWLEDGED != human rendering/read receipt/final delivery truth
 Source adapter: IMPLEMENTED
 Deterministic TLS policy/failure/ACK tests: IMPLEMENTED
 Runtime manifest: IMPLEMENTED
-Hosted validation: PENDING
+Hosted validation: SUCCESS
+PR #37 exact head b9cdea0505adabc4a5ecab316caf6f454c907f81
+Edge Runtime Validation run 33032871912: SUCCESS
+Managed Completion run 33032871878: SUCCESS
+Test Readiness run 33032871859: SUCCESS
+device-continuity run 33032871855: SUCCESS
+Merge 772428118cfb033a8d5a55eea8a3b1eb8320f8f2
 Real admitted public TLS endpoint dispatch: NOT PROVEN
 Connected-KV live ST-034 execution receipt: NOT PROVEN
 Distinct-device delivery evidence: NOT PROVEN
@@ -228,7 +234,7 @@ The next integration goal is now live/runtime evidence rather than another local
 3. run ST-033 between distinct runtime edges and persist selection + lease + execution evidence through the connected KnowledgeVault;
 4. obtain independently meaningful acknowledgement/delivery evidence beyond mere local socket acceptance where applicable;
 5. restart or replace the selected edge and reconstruct from connected KV without duplicate dispatch;
-6. hosted-validate and merge ST-034, then use it only with an actually admitted public TLS endpoint;
+6. use merged ST-034 only with an actually admitted public TLS endpoint;
 7. prove a real TLS handshake/public-network dispatch and persist that execution evidence into connected KV;
 8. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
 9. only after those proofs mark the relevant runtime activation states complete.
