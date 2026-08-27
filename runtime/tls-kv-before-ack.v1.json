@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "ST-036",
+  "name": "KnowledgeVault durability before positive TLS ACK",
+  "repository": "StegVerse-Labs/StegTalk",
+  "authority": {
+    "selection_and_admission_authority": "ST-031",
+    "execution_coordinator": "ST-032",
+    "receiver_surface": "ST-035",
+    "durable_continuity_authority": "KnowledgeVault",
+    "credential_authority": "TV/TVC_ONLY",
+    "github_token_runtime_authority": false,
+    "cloud_messaging_provider_authority": false,
+    "persistence_creates_authority": false
+  },
+  "durability": {
+    "canonical_host_repository": "StegVerse-Labs/continuity-vault-kit",
+    "canonical_journal": "execution.communication_runtime.CommunicationRuntimeJournal",
+    "receiver_evidence_merge": "08011eea59ad2b7613102c032f6fe25035b8f765",
+    "positive_ack_requires_durable_acceptance": true,
+    "negative_or_unadmitted_request_persisted_as_acceptance": false,
+    "durability_failure_can_emit_positive_ack": false,
+    "durability_failure_sender_state": "INDETERMINATE_VERIFY_EXTERNALLY"
+  },
+  "validation": {
+    "source": "src/stegtalk/public_tls_receiver.py",
+    "tests": "tests/test_public_tls_receiver.py",
+    "workflow": ".github/workflows/edge-runtime.yml",
+    "source_validation_is_connected_kv_live_proof": false,
+    "connected_kv_live_receive_proof": false,
+    "real_public_network_proof": false,
+    "production_activation": false
+  }
+}
