@@ -254,7 +254,13 @@ positive ACK != human rendering/read receipt/final delivery truth
 StegTalk source: IMPLEMENTED
 continuity-vault-kit receiver persistence: MERGED
 ST-036 runtime manifest: IMPLEMENTED
-Hosted validation: PENDING
+Hosted validation: SUCCESS
+PR #42 exact head ea47653b370efc0971042ca0ad1b89fb307be109
+Edge Runtime Validation run 33033510743: SUCCESS
+Managed Completion run 33033510701: SUCCESS
+Test Readiness run 33033510657: SUCCESS
+device-continuity run 33033510687: SUCCESS
+Merge ce0f605d313b2af981f7c6b6e37369c0057a7ef6
 Connected personal KnowledgeVault live receive proof: NOT PROVEN
 Real distinct-device TLS dispatch+receive proof: NOT PROVEN
 Production activation: NOT ACTIVE
@@ -315,7 +321,7 @@ The next integration goal is now live/runtime evidence rather than another local
 3. run ST-033 between distinct runtime edges and persist selection + lease + execution evidence through the connected KnowledgeVault;
 4. obtain independently meaningful acknowledgement/delivery evidence beyond mere local socket acceptance where applicable;
 5. restart or replace the selected edge and reconstruct from connected KV without duplicate dispatch;
-6. hosted-validate and merge ST-036;
+6. use merged ST-036 as the mandatory durability gate before positive receiver ACK;
 7. configure ST-035 server TLS context only through TV/TVC-owned runtime authority;
 8. use merged ST-034 only with an actually admitted ST-035 public TLS endpoint;
 9. prove a real TLS handshake/public-network dispatch+receive with sender execution and receiver acceptance durably persisted to connected KV before positive ACK;
