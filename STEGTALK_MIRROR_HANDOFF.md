@@ -8,13 +8,14 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033, ST-034
+Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033, ST-034, ST-035
 Durable continuity host: KnowledgeVault / StegVerse-Labs/continuity-vault-kit
 Messenger surface authority: communication posture / constraints
 Final bearer admissibility + selection authority: StegTalk ST-031
 Selected-edge execution coordinator: StegTalk ST-032
 First non-loopback IP/local edge adapter: StegTalk ST-033
 TLS-bound public IP edge adapter: StegTalk ST-034
+TLS receiving-edge admission surface: StegTalk ST-035
 Device role: EPHEMERAL_TRANSPORT_EDGE
 Cloud messaging dependency: none
 SMS aggregator dependency: none
@@ -183,6 +184,41 @@ Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
+
+## ST-035 — TLS Receiving-Edge Admission Surface
+
+Issue #39 owns the receiver-side public TLS surface required to turn ST-034 from an outbound client primitive into a distinct-edge runtime path.
+
+```text
+src/stegtalk/public_tls_receiver.py
+runtime/public-tls-receiver.v1.json
+tests/test_public_tls_receiver.py
+.github/workflows/edge-runtime.yml
+```
+
+StegTalk does not load, mint, store, or expose the TLS server private key. A preconfigured `ssl.SSLContext` is supplied by the runtime under TV/TVC-owned credential authority. The receiver then verifies the exact framed request hash, requires machine-visible attempt/selection/edge/bearer/idempotency bindings, and invokes a caller-supplied admission check against that exact request before returning application acceptance.
+
+```text
+invalid protocol -> negative ACK + fail closed
+request hash mismatch -> negative ACK + fail closed
+missing execution binding -> negative ACK + fail closed
+admission callback false -> negative ACK + fail closed
+admitted exact request -> correlated application ACK
+application ACK != human rendering/read receipt/final delivery truth
+```
+
+```text
+Source receiver: IMPLEMENTED
+Runtime manifest: IMPLEMENTED
+Deterministic receiver/admission tests: IMPLEMENTED
+Hosted validation: PENDING
+Real server certificate/runtime context proof: NOT PROVEN
+Real public-network receive proof: NOT PROVEN
+Connected-KV receive evidence: NOT PROVEN
+Production activation: NOT ACTIVE
+Claim state: OPEN
+```
+
 ## Authority topology
 
 ```text
@@ -202,7 +238,8 @@ EPHEMERAL_TRANSPORT_EDGE
     |
     +--> ST-033 admitted local TCP
     +--> ST-029 SMS modem
-    +--> ST-034 TLS-bound public IP
+    +--> ST-034 TLS-bound public IP client
+    +--> ST-035 TLS receiving edge
     +--> Wi-Fi / Wi-Fi Direct
     +--> Bluetooth/local
     +--> admitted relay/store-forward
@@ -220,6 +257,7 @@ StegTalk ST-031 = bearer/admissibility/selection authority
 StegTalk ST-032 = bounded selected-edge execution coordinator
 StegTalk ST-033 = non-loopback local TCP edge implementation
 StegTalk ST-034 = TLS-bound public IP edge implementation
+StegTalk ST-035 = TLS receiving-edge admission implementation
 StegWhisper = posture/consent/presentation surface
 Edge device = ephemeral execution capability
 SDK = non-authorizing demonstration/conformance boundary
@@ -234,10 +272,11 @@ The next integration goal is now live/runtime evidence rather than another local
 3. run ST-033 between distinct runtime edges and persist selection + lease + execution evidence through the connected KnowledgeVault;
 4. obtain independently meaningful acknowledgement/delivery evidence beyond mere local socket acceptance where applicable;
 5. restart or replace the selected edge and reconstruct from connected KV without duplicate dispatch;
-6. use merged ST-034 only with an actually admitted public TLS endpoint;
-7. prove a real TLS handshake/public-network dispatch and persist that execution evidence into connected KV;
-8. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
-9. only after those proofs mark the relevant runtime activation states complete.
+6. hosted-validate and merge ST-035, then configure its server TLS context only through TV/TVC-owned runtime authority;
+7. use merged ST-034 only with an actually admitted ST-035 public TLS endpoint;
+8. prove a real TLS handshake/public-network dispatch+receive and persist that execution evidence into connected KV;
+9. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
+10. only after those proofs mark the relevant runtime activation states complete.
 
 ## Archive posture
 
