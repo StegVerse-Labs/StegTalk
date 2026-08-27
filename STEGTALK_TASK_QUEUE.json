@@ -488,7 +488,7 @@
       "id": "ST-036",
       "title": "KnowledgeVault Durability Before Positive TLS ACK",
       "priority": 36,
-      "status": "source_implemented_validation_pending_live_connected_kv_pending",
+      "status": "source_validated_merged_live_connected_kv_pending",
       "repository": "StegVerse-Labs/StegTalk",
       "issue": 41,
       "task_manifest": "runtime/tls-kv-before-ack.v1.json",
@@ -511,8 +511,17 @@
       "connected_kv_live_receive_proof": false,
       "real_public_network_proof": false,
       "production_activation": false,
-      "claim_state": "OPEN"
+      "claim_state": "OPEN",
+      "pull_request": 42,
+      "exact_head": "ea47653b370efc0971042ca0ad1b89fb307be109",
+      "validation_runs": {
+        "edge_runtime": 33033510743,
+        "managed_completion": 33033510701,
+        "test_readiness": 33033510657,
+        "device_continuity": 33033510687
+      },
+      "merge_sha": "ce0f605d313b2af981f7c6b6e37369c0057a7ef6"
     }
   ],
-  "next_integration_goal": "hosted-validate and merge ST-036; then configure an actual ST-035 TLS server context under TV/TVC, admit at least two actual device edges, let ST-031 select one, execute ST-034 -> ST-035 across distinct runtime edges with both sender execution and receiver acceptance durably persisted to the connected KnowledgeVault before positive ACK, append independently meaningful delivery evidence, and prove restart/edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
+  "next_integration_goal": "configure an actual ST-035 TLS server context under TV/TVC, admit at least two actual device edges, let ST-031 select one, execute ST-034 -> ST-035 across distinct runtime edges with both sender execution and receiver acceptance durably persisted to the connected KnowledgeVault before positive ACK, append independently meaningful delivery evidence, and prove restart/edge replacement without duplicate dispatch; also complete ST-029 modem/SIM outbound + CDS + inbound physical proof"
 }
