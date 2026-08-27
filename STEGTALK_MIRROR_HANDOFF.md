@@ -8,12 +8,13 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033
+Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033, ST-034
 Durable continuity host: KnowledgeVault / StegVerse-Labs/continuity-vault-kit
 Messenger surface authority: communication posture / constraints
 Final bearer admissibility + selection authority: StegTalk ST-031
 Selected-edge execution coordinator: StegTalk ST-032
 First non-loopback IP/local edge adapter: StegTalk ST-033
+TLS-bound public IP edge adapter: StegTalk ST-034
 Device role: EPHEMERAL_TRANSPORT_EDGE
 Cloud messaging dependency: none
 SMS aggregator dependency: none
@@ -132,12 +133,49 @@ Merge c3654655a075124fd1ab3e864aa67db5e2b2a8fd
 Distinct runtime-edge dispatch proof: NOT PROVEN
 Connected-KV live ST-033 execution receipt: NOT PROVEN
 Edge restart/replacement proof after real dispatch: NOT PROVEN
-Public-network TLS adapter: NOT INSTALLED
+Public-network TLS adapter: ST-034 SOURCE IMPLEMENTED / HOSTED VALIDATION PENDING
 Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
 
 Plaintext `stegtalk-tcp` is restricted to explicitly admitted local-network edges. Any public-network endpoint requires a TLS-bound adapter before use. Endpoint/admission metadata must come from the selected attested ST-031 advertisement; synthetic attestation is not authorized.
+
+
+## ST-034 — TLS-Bound Public IP Edge
+
+Issue #36 owns the first public-network-capable ST-032 executor. It is intentionally separate from plaintext ST-033 local TCP.
+
+```text
+src/stegtalk/public_tls_edge.py
+runtime/public-tls-edge.v1.json
+tests/test_public_tls_edge.py
+.github/workflows/edge-runtime.yml
+```
+
+ST-034 requires certificate-chain verification and hostname verification with no insecure/verification-disabled mode. The client TLS context is built from the platform trust store or an explicitly supplied non-secret CA file, requires `CERT_REQUIRED`, enables `check_hostname`, and enforces a minimum TLS version of TLSv1.2. Endpoint, server-name, and trust-policy inputs do not grant admission; the selected bearer and edge must already have been admitted and selected by ST-031.
+
+Execution semantics preserve the ST-032 uncertainty boundary:
+
+```text
+connection/TLS handshake failure before frame send -> FAILED + confirmed side-effect absence
+failure after request frame send -> INDETERMINATE
+invalid/mismatched ACK -> INDETERMINATE
+correlated application ACK -> ACKNOWLEDGED
+ACKNOWLEDGED != human rendering/read receipt/final delivery truth
+```
+
+```text
+Source adapter: IMPLEMENTED
+Deterministic TLS policy/failure/ACK tests: IMPLEMENTED
+Runtime manifest: IMPLEMENTED
+Hosted validation: PENDING
+Real admitted public TLS endpoint dispatch: NOT PROVEN
+Connected-KV live ST-034 execution receipt: NOT PROVEN
+Distinct-device delivery evidence: NOT PROVEN
+Edge restart/replacement proof after real dispatch: NOT PROVEN
+Production activation: NOT ACTIVE
+Claim state: OPEN
+```
 
 ## Authority topology
 
@@ -158,7 +196,7 @@ EPHEMERAL_TRANSPORT_EDGE
     |
     +--> ST-033 admitted local TCP
     +--> ST-029 SMS modem
-    +--> future TLS-bound public IP
+    +--> ST-034 TLS-bound public IP
     +--> Wi-Fi / Wi-Fi Direct
     +--> Bluetooth/local
     +--> admitted relay/store-forward
@@ -175,6 +213,7 @@ KnowledgeVault = durable continuity/recovery authority
 StegTalk ST-031 = bearer/admissibility/selection authority
 StegTalk ST-032 = bounded selected-edge execution coordinator
 StegTalk ST-033 = non-loopback local TCP edge implementation
+StegTalk ST-034 = TLS-bound public IP edge implementation
 StegWhisper = posture/consent/presentation surface
 Edge device = ephemeral execution capability
 SDK = non-authorizing demonstration/conformance boundary
@@ -189,10 +228,11 @@ The next integration goal is now live/runtime evidence rather than another local
 3. run ST-033 between distinct runtime edges and persist selection + lease + execution evidence through the connected KnowledgeVault;
 4. obtain independently meaningful acknowledgement/delivery evidence beyond mere local socket acceptance where applicable;
 5. restart or replace the selected edge and reconstruct from connected KV without duplicate dispatch;
-6. before any public-network endpoint use, install and validate a TLS-bound public IP executor adapter;
-7. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
-8. only after those proofs mark the relevant runtime activation states complete.
+6. hosted-validate and merge ST-034, then use it only with an actually admitted public TLS endpoint;
+7. prove a real TLS handshake/public-network dispatch and persist that execution evidence into connected KV;
+8. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
+9. only after those proofs mark the relevant runtime activation states complete.
 
 ## Archive posture
 
-DO NOT archive as fully activated. ST-033 now supplies real OS TCP socket execution under ST-032, but actual admitted distinct-device edges, connected-KV live execution, public-network TLS, physical/network delivery, edge replacement proof, and production activation remain open.
+DO NOT archive as fully activated. ST-033 now supplies real OS TCP socket execution under ST-032, but actual admitted distinct-device edges, connected-KV live execution, real public-network TLS dispatch, physical/network delivery, edge replacement proof, and production activation remain open.

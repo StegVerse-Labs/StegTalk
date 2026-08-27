@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "ST-034",
+  "name": "TLS-bound public IP edge adapter",
+  "repository": "StegVerse-Labs/StegTalk",
+  "authority": {
+    "selection_authority": "ST-031",
+    "execution_coordinator": "ST-032",
+    "durable_continuity_authority": "KnowledgeVault",
+    "credential_authority": "TV/TVC_ONLY",
+    "github_token_runtime_authority": false,
+    "cloud_messaging_provider_authority": false
+  },
+  "bearer": {
+    "id": "stegtalk-tls",
+    "public_network_capable": true,
+    "tls_required": true,
+    "minimum_tls_version": "TLSv1.2",
+    "certificate_chain_verification_required": true,
+    "hostname_verification_required": true,
+    "insecure_mode_available": false,
+    "endpoint_must_be_admitted_by_st031": true,
+    "synthetic_attestation_allowed": false
+  },
+  "receipt_semantics": {
+    "tls_handshake_failure_before_send": "FAILED_WITH_CONFIRMED_SIDE_EFFECT_ABSENCE",
+    "failure_after_request_frame_send": "INDETERMINATE",
+    "correlated_application_ack": "ACKNOWLEDGED",
+    "acknowledged_equals_human_rendered": false,
+    "acknowledged_equals_final_delivery_truth": false,
+    "uncertain_dispatch_allows_automatic_fallback": false
+  },
+  "validation": {
+    "source_adapter": "src/stegtalk/public_tls_edge.py",
+    "tests": "tests/test_public_tls_edge.py",
+    "workflow": ".github/workflows/edge-runtime.yml",
+    "source_validation_is_runtime_activation": false,
+    "real_public_tls_dispatch_proof": false,
+    "connected_kv_live_execution_receipt_proof": false,
+    "distinct_device_delivery_proof": false,
+    "restart_or_replacement_proof": false,
+    "production_activation": false
+  }
+}
