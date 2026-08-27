@@ -8,7 +8,7 @@ This file is the current handoff and task source of truth for `StegVerse-Labs/St
 Repository: StegVerse-Labs/StegTalk
 Branch: main
 Production ready: false
-Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033, ST-034, ST-035
+Active tasks: ST-029, ST-030, ST-031, ST-032, ST-033, ST-034, ST-035, ST-036
 Durable continuity host: KnowledgeVault / StegVerse-Labs/continuity-vault-kit
 Messenger surface authority: communication posture / constraints
 Final bearer admissibility + selection authority: StegTalk ST-031
@@ -16,6 +16,7 @@ Selected-edge execution coordinator: StegTalk ST-032
 First non-loopback IP/local edge adapter: StegTalk ST-033
 TLS-bound public IP edge adapter: StegTalk ST-034
 TLS receiving-edge admission surface: StegTalk ST-035
+Durable-before-positive-ACK gate: StegTalk ST-036 + KnowledgeVault
 Device role: EPHEMERAL_TRANSPORT_EDGE
 Cloud messaging dependency: none
 SMS aggregator dependency: none
@@ -211,10 +212,51 @@ application ACK != human rendering/read receipt/final delivery truth
 Source receiver: IMPLEMENTED
 Runtime manifest: IMPLEMENTED
 Deterministic receiver/admission tests: IMPLEMENTED
-Hosted validation: PENDING
+Hosted validation: SUCCESS
+PR #40 exact head a1f086b0d1dbc5545f872c9fb1144171348e3c01
+Edge Runtime Validation run 33033096653: SUCCESS
+Managed Completion run 33033096602: SUCCESS
+Test Readiness run 33033096983: SUCCESS
+device-continuity run 33033096643: SUCCESS
+Merge dcda8a8405f510d9abce239ecd246c87220d2c6b
 Real server certificate/runtime context proof: NOT PROVEN
 Real public-network receive proof: NOT PROVEN
 Connected-KV receive evidence: NOT PROVEN
+Production activation: NOT ACTIVE
+Claim state: OPEN
+```
+
+
+## ST-036 — KnowledgeVault Durability Before Positive TLS ACK
+
+Issue #41 closes the receiver-side durability race between ST-035 admission and application acknowledgement. A positive TLS application ACK is no longer permitted merely because the frame is syntactically valid and admitted.
+
+The exact admitted request is converted into receiver-acceptance evidence and handed to an `AcceptanceSink` before any `accepted=true` ACK is emitted. The canonical live sink dynamically consumes continuity-vault-kit rather than duplicating its persistence contract:
+
+```text
+execution.vault_store.KnowledgeVaultExecutionStore
+execution.communication_runtime.CommunicationRuntimeJournal
+continuity-vault-kit receiver-evidence merge:
+08011eea59ad2b7613102c032f6fe25035b8f765
+```
+
+The sink recovers the already-bound selection + lease for the attempt and calls `CommunicationRuntimeJournal.record_receive(...)`. Therefore KnowledgeVault validates the exact attempt, selection hash, selected edge, bearer, idempotency key, request hash, positive acceptance, and no-new-authority boundary.
+
+```text
+invalid/unadmitted request -> negative ACK; no acceptance persistence
+admitted + durable KV acceptance -> positive ACK
+admitted + KV/sink failure -> negative ACK / receiver error
+sender interpretation after any post-dispatch negative/missing ACK -> INDETERMINATE / VERIFY_EXTERNALLY
+positive ACK != human rendering/read receipt/final delivery truth
+```
+
+```text
+StegTalk source: IMPLEMENTED
+continuity-vault-kit receiver persistence: MERGED
+ST-036 runtime manifest: IMPLEMENTED
+Hosted validation: PENDING
+Connected personal KnowledgeVault live receive proof: NOT PROVEN
+Real distinct-device TLS dispatch+receive proof: NOT PROVEN
 Production activation: NOT ACTIVE
 Claim state: OPEN
 ```
@@ -258,6 +300,7 @@ StegTalk ST-032 = bounded selected-edge execution coordinator
 StegTalk ST-033 = non-loopback local TCP edge implementation
 StegTalk ST-034 = TLS-bound public IP edge implementation
 StegTalk ST-035 = TLS receiving-edge admission implementation
+StegTalk ST-036 = durable-before-positive-ACK gate into KnowledgeVault
 StegWhisper = posture/consent/presentation surface
 Edge device = ephemeral execution capability
 SDK = non-authorizing demonstration/conformance boundary
@@ -272,11 +315,12 @@ The next integration goal is now live/runtime evidence rather than another local
 3. run ST-033 between distinct runtime edges and persist selection + lease + execution evidence through the connected KnowledgeVault;
 4. obtain independently meaningful acknowledgement/delivery evidence beyond mere local socket acceptance where applicable;
 5. restart or replace the selected edge and reconstruct from connected KV without duplicate dispatch;
-6. hosted-validate and merge ST-035, then configure its server TLS context only through TV/TVC-owned runtime authority;
-7. use merged ST-034 only with an actually admitted ST-035 public TLS endpoint;
-8. prove a real TLS handshake/public-network dispatch+receive and persist that execution evidence into connected KV;
-9. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
-10. only after those proofs mark the relevant runtime activation states complete.
+6. hosted-validate and merge ST-036;
+7. configure ST-035 server TLS context only through TV/TVC-owned runtime authority;
+8. use merged ST-034 only with an actually admitted ST-035 public TLS endpoint;
+9. prove a real TLS handshake/public-network dispatch+receive with sender execution and receiver acceptance durably persisted to connected KV before positive ACK;
+10. complete ST-029 modem/SIM outbound, `+CDS` delivery report, inbound correlation, and multipart partial-failure evidence on physical hardware;
+11. only after those proofs mark the relevant runtime activation states complete.
 
 ## Archive posture
 
