@@ -1,0 +1,1 @@
+python -m pytest tests/test_message_envelope.py tests/test_contact_routing.py

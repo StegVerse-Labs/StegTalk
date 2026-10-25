@@ -1,0 +1,1 @@
+python -m pytest tests/test_device_continuity_handoff.py tests/test_device_continuity_receipt.py

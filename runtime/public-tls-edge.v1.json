@@ -33,7 +33,7 @@
   "validation": {
     "source_adapter": "src/stegtalk/public_tls_edge.py",
     "tests": "tests/test_public_tls_edge.py",
-    "workflow": ".github/workflows/edge-runtime.yml",
+    "workflow": "tools/tasks/folded/edge-runtime.yml",
     "source_validation_is_runtime_activation": false,
     "real_public_tls_dispatch_proof": false,
     "connected_kv_live_execution_receipt_proof": false,

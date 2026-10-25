@@ -1,0 +1,1 @@
+python -m pytest tests/test_managed_completion.py tests/test_queue_executor.py

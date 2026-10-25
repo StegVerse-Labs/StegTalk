@@ -1,0 +1,1 @@
+python scripts/check_personal_data_control.py

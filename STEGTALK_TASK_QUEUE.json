@@ -210,7 +210,7 @@
         "tests/test_sovereign_sms_journal.py",
         "tests/test_sms_pdu.py",
         "tests/test_sovereign_sms_pdu_runtime.py",
-        ".github/workflows/sovereign-sms.yml"
+        "tools/tasks/folded/sovereign-sms.yml"
       ],
       "application_third_party_dependency": false,
       "cloud_messaging_provider": null,
@@ -250,8 +250,8 @@
       "verification_locations": [
         "tests/test_knowledge_vault_extension.py",
         "tests/test_physical_edge_runtime.py",
-        ".github/workflows/sovereign-sms.yml",
-        ".github/workflows/cross-edge-resolution.yml"
+        "tools/tasks/folded/sovereign-sms.yml",
+        "tools/tasks/folded/cross-edge-resolution.yml"
       ],
       "continuity_authority": "KnowledgeVault",
       "transport_authority": "StegTalk",
@@ -284,7 +284,7 @@
       "verification_locations": [
         "tests/test_cross_edge_resolver.py",
         "tests/test_physical_edge_runtime.py",
-        ".github/workflows/cross-edge-resolution.yml"
+        "tools/tasks/folded/cross-edge-resolution.yml"
       ],
       "messenger_surface_selects_posture": true,
       "stegtalk_final_admissibility_authority": true,
@@ -332,8 +332,8 @@
       "verification_locations": [
         "tests/test_edge_runtime.py",
         "tests/test_physical_edge_runtime.py",
-        ".github/workflows/edge-runtime.yml",
-        ".github/workflows/cross-edge-resolution.yml"
+        "tools/tasks/folded/edge-runtime.yml",
+        "tools/tasks/folded/cross-edge-resolution.yml"
       ],
       "exact_selection_binding": true,
       "exact_lease_binding": true,
@@ -375,7 +375,7 @@
       ],
       "verification_locations": [
         "tests/test_local_tcp_edge.py",
-        ".github/workflows/edge-runtime.yml"
+        "tools/tasks/folded/edge-runtime.yml"
       ],
       "st032_executor_adapter": true,
       "st031_selected_bearer_required": "stegtalk-tcp",
@@ -417,7 +417,7 @@
       ],
       "verification_locations": [
         "tests/test_public_tls_edge.py",
-        ".github/workflows/edge-runtime.yml"
+        "tools/tasks/folded/edge-runtime.yml"
       ],
       "st032_executor_adapter": true,
       "st031_selected_bearer_required": "stegtalk-tls",
@@ -459,7 +459,7 @@
       ],
       "verification_locations": [
         "tests/test_public_tls_receiver.py",
-        ".github/workflows/edge-runtime.yml"
+        "tools/tasks/folded/edge-runtime.yml"
       ],
       "server_tls_context_supplied_externally": true,
       "stegtalk_loads_private_key": false,
@@ -497,7 +497,7 @@
       ],
       "verification_locations": [
         "tests/test_public_tls_receiver.py",
-        ".github/workflows/edge-runtime.yml"
+        "tools/tasks/folded/edge-runtime.yml"
       ],
       "continuity_host_repository": "StegVerse-Labs/continuity-vault-kit",
       "continuity_receive_evidence_merge": "08011eea59ad2b7613102c032f6fe25035b8f765",

@@ -1,0 +1,1 @@
+python -m pytest tests/test_personal_data_control.py

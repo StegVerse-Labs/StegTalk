@@ -24,7 +24,7 @@
   "validation": {
     "source": "src/stegtalk/public_tls_receiver.py",
     "tests": "tests/test_public_tls_receiver.py",
-    "workflow": ".github/workflows/edge-runtime.yml",
+    "workflow": "tools/tasks/folded/edge-runtime.yml",
     "source_validation_is_live_tls_activation": false,
     "real_server_certificate_runtime_proof": false,
     "real_public_network_receive_proof": false,

@@ -1,0 +1,1 @@
+python scripts/verify_auri_stegtalk_session_binding.py

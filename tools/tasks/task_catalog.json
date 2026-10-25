@@ -1,0 +1,520 @@
+{
+ "schema": "stegverse.task-catalog/v1",
+ "repository": "StegVerse-Labs/StegTalk",
+ "goal_id": "G17-WORKFLOW-SURFACE-MINIMIZATION",
+ "authority": "Rigel 2026-10-24 retroactive G17 enforcement (StegVerse-org/.github#166); pattern StegVerse-Labs/StegDB#60 (eab2e773)",
+ "dispatcher": ".github/workflows/validation-dispatcher.yml",
+ "runner": "tools/tasks/run_catalog.py",
+ "runner_source": "StegVerse-Labs/StegDB tools/tasks/run_catalog.py @ eab2e773271f3e63466a710f1b4555f677882848 (sha256 f741f30557888fd8e4852a52adfc65736a08898d49ade7519f6bcc2672921e9b), copied unmodified",
+ "rule": "Every check a folded workflow job ran is one group here; its step bodies are the original run blocks byte for byte, pinned by sha256, except the repairs listed. A new check is a new group (or a step in one), never a new workflow file.",
+ "path_filters": "Dropped: every group runs on every pull_request and push to main (a superset of the original path-filtered runs). workflow_dispatch/schedule triggers are not carried (no manual dispatch, no cron).",
+ "repairs": [
+  "Contract readers repointed to the verbatim records. Before this change, `src/stegtalk/managed_completion.py`, `scripts/verify_managed_completion.py` and `scripts/check_personal_data_control.py` read `.github/workflows/ci.yml`, and `scripts/verify_auri_deployment_package.py` read `.github/workflows/auri-package-smoke.yml`. Each now reads `tools/tasks/folded/<same file>`. Those records are byte-identical to the originals and sha256-pinned in the registry, and the catalog runs their run blocks byte for byte. Every content check is unchanged.",
+  "Path filters are dropped. Every folded group runs on its declared pull_request and push events, a superset of the original path-filtered runs. workflow_dispatch is not carried."
+ ],
+ "folded_from_commit": "82ed633b7f0e8b25b96aef41d1cd84fb20c33698",
+ "groups": [
+  {
+   "id": "auri-package-smoke.verify-package",
+   "source": {
+    "workflow": ".github/workflows/auri-package-smoke.yml",
+    "workflow_name": "Auri Package Smoke",
+    "job": "verify-package",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request",
+     "workflow_dispatch"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Verify deployment package",
+     "run_file": "tools/tasks/steps/auri-package-smoke.verify-package/01-verify-deployment-package.sh",
+     "run_sha256": "02d2c97fb211f152273ac2b0535f522beae52606239401c2a2b4a185b042f558"
+    },
+    {
+     "name": "Build fail-closed OCI image",
+     "run_file": "tools/tasks/steps/auri-package-smoke.verify-package/02-build-fail-closed-oci-image.sh",
+     "run_sha256": "883a12fdfe1925177c7eba658d86ff60dab696c0a8015707fc13f90b7ef51818"
+    },
+    {
+     "name": "Verify fail-closed default health",
+     "run_file": "tools/tasks/steps/auri-package-smoke.verify-package/03-verify-fail-closed-default-health.sh",
+     "run_sha256": "0c4695572e4672a81053f53dffc9f7c65136b277847e9f37683acfbff607328b"
+    },
+    {
+     "name": "Verify reference smoke mode",
+     "run_file": "tools/tasks/steps/auri-package-smoke.verify-package/04-verify-reference-smoke-mode.sh",
+     "run_sha256": "5928351365c1b9af5f40efa36eb773fd3994171ead9dc5be2244d762954a8bb8"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "auri-stegtalk-integration.verify",
+   "source": {
+    "workflow": ".github/workflows/auri-stegtalk-integration.yml",
+    "workflow_name": "Auri StegTalk Integration Verification",
+    "job": "verify",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "workflow_dispatch"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Verify activation-gated session binding",
+     "run_file": "tools/tasks/steps/auri-stegtalk-integration.verify/01-verify-activation-gated-session-binding.sh",
+     "run_sha256": "fd11d621e63825c281264bf3fac734047df0de8a9c2227e6b82b79e1014e755c"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "ci.managed-completion",
+   "source": {
+    "workflow": ".github/workflows/ci.yml",
+    "workflow_name": "StegTalk Managed Completion",
+    "job": "managed-completion",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request"
+    ],
+    "permissions_before": null
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install test/runtime support",
+     "run_file": "tools/tasks/steps/ci.managed-completion/01-install-test-runtime-support.sh",
+     "run_sha256": "fda5da2bd2aca45d6ec27892d084f0ce971832b381ee5691a54d73fab0d356fa"
+    },
+    {
+     "name": "Verify managed completion state",
+     "run_file": "tools/tasks/steps/ci.managed-completion/02-verify-managed-completion-state.sh",
+     "run_sha256": "396098631a4f8e1e5ecc1c1411d4d0417c8b82443867c4548bfc409a6b271604"
+    },
+    {
+     "name": "Determine next managed task",
+     "run_file": "tools/tasks/steps/ci.managed-completion/03-determine-next-managed-task.sh",
+     "run_sha256": "7ea5d25827013224572f2a13b925d0ddf8c0627e79e7fcae11dacae1e50ab8d5"
+    },
+    {
+     "name": "Summarize queue execution state",
+     "run_file": "tools/tasks/steps/ci.managed-completion/04-summarize-queue-execution-state.sh",
+     "run_sha256": "8a8d6d7849ace0f5a2fb50a79723e6683f53754b4f5e438166ad1b806b03f1da"
+    },
+    {
+     "name": "Validate personal data control layer",
+     "run_file": "tools/tasks/steps/ci.managed-completion/05-validate-personal-data-control-layer.sh",
+     "run_sha256": "4226e5f18bad3442e1e79ca93ee9e9fa0b52f9f9c2ec509840230db355968cbf"
+    },
+    {
+     "name": "Run personal data control tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/06-run-personal-data-control-tests.sh",
+     "run_sha256": "726f355b8b2d2d706448a7166acae8c91e2e7de62522e42e580f6eb3590bca21"
+    },
+    {
+     "name": "Run managed completion tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/07-run-managed-completion-tests.sh",
+     "run_sha256": "4e0358038b21093593eee4e7fc9abd5078a880fe81200b47596600946336b3dc"
+    },
+    {
+     "name": "Run entity runtime tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/08-run-entity-runtime-tests.sh",
+     "run_sha256": "f4951993790a0dbf95cc1b7bdc2b9b442c07592393dafee454155f2ef0cbb513"
+    },
+    {
+     "name": "Run messaging runtime tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/09-run-messaging-runtime-tests.sh",
+     "run_sha256": "befd266f5c4622705be22339c6711074695dc753a7128e73cb01e1b6f962a631"
+    },
+    {
+     "name": "Run local-state runtime tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/10-run-local-state-runtime-tests.sh",
+     "run_sha256": "7a9cdb8f811f172e63863d26b53dc210b43d97b889f680330a9fa215611c4edf"
+    },
+    {
+     "name": "Validate mobile session boundaries",
+     "run_file": "tools/tasks/steps/ci.managed-completion/11-validate-mobile-session-boundaries.sh",
+     "run_sha256": "c5361a8d2262517e0c0902f2208c9e00c41922695970c9bef892e43f12d03fcb"
+    },
+    {
+     "name": "Validate managed checkpoint recovery and policy",
+     "run_file": "tools/tasks/steps/ci.managed-completion/12-validate-managed-checkpoint-recovery-and-policy.sh",
+     "run_sha256": "8f87d22a0b236f04e5cd6a4195acc4e44378c28649768eefbe16bb190daf52df"
+    },
+    {
+     "name": "Run unattended session verifiers",
+     "run_file": "tools/tasks/steps/ci.managed-completion/13-run-unattended-session-verifiers.sh",
+     "run_sha256": "9c37b89d34fc8898653c9371f1cf7d245c7dcb236c0a99155e82db78f9857b3c"
+    },
+    {
+     "name": "Run release artifact tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/14-run-release-artifact-tests.sh",
+     "run_sha256": "312e67dedf4534a93bce039ffa92caeb34871438f29435e0734159355bde9f0e"
+    },
+    {
+     "name": "Run mirror handoff test",
+     "run_file": "tools/tasks/steps/ci.managed-completion/15-run-mirror-handoff-test.sh",
+     "run_sha256": "cee642a605ac42807366ba8078298a3ac148763ad82446395c6347012c79bf4f"
+    },
+    {
+     "name": "Run discovery and shell tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/16-run-discovery-and-shell-tests.sh",
+     "run_sha256": "bce575f0e4730b63ddf139683199e135e2c685e48ec3d0b38800358f18a77f2b"
+    },
+    {
+     "name": "Run account and wiki tests",
+     "run_file": "tools/tasks/steps/ci.managed-completion/17-run-account-and-wiki-tests.sh",
+     "run_sha256": "8d82163bf43b51247bb1f9944977f6bb5dd5e6c2004f9f4c3f805201962c9517"
+    },
+    {
+     "name": "Run runtime demos",
+     "run_file": "tools/tasks/steps/ci.managed-completion/18-run-runtime-demos.sh",
+     "run_sha256": "756922f27c1778df6e9a7193e9a8aadf8b46f322804b2a29d21b034f03400f27"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "cross-edge-resolution.validate-cross-edge-resolution",
+   "source": {
+    "workflow": ".github/workflows/cross-edge-resolution.yml",
+    "workflow_name": "StegTalk Cross-Edge Resolution",
+    "job": "validate-cross-edge-resolution",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install package",
+     "run_file": "tools/tasks/steps/cross-edge-resolution.validate-cross-edge-resolution/01-install-package.sh",
+     "run_sha256": "29845d986c9d802a5694464194c33d3f14b85b20e9565d2b312709fa00b664e0"
+    },
+    {
+     "name": "Compile resolver and runtime harness",
+     "run_file": "tools/tasks/steps/cross-edge-resolution.validate-cross-edge-resolution/02-compile-resolver-and-runtime-harness.sh",
+     "run_sha256": "a8bc9e6c4f0e3c5b32c97c0bf74e860981dd974da1e2189246fb4be6c53932d7"
+    },
+    {
+     "name": "Run resolver and runtime tests",
+     "run_file": "tools/tasks/steps/cross-edge-resolution.validate-cross-edge-resolution/03-run-resolver-and-runtime-tests.sh",
+     "run_sha256": "83af40a0e627a7b8692cf1745e1845186c672f3ccd03b97017467a28ca60eb1a"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 10,
+    "python_version": "3.12"
+   }
+  },
+  {
+   "id": "device-continuity.validate-device-continuity",
+   "source": {
+    "workflow": ".github/workflows/device-continuity.yml",
+    "workflow_name": "device-continuity",
+    "job": "validate-device-continuity",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request",
+     "workflow_dispatch"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install test support",
+     "run_file": "tools/tasks/steps/device-continuity.validate-device-continuity/01-install-test-support.sh",
+     "run_sha256": "d5cf1ea8dcdee09f04f8232a17689623c901ff0221f86fc8dbad251f8475d96a"
+    },
+    {
+     "name": "Validate handoff payload",
+     "run_file": "tools/tasks/steps/device-continuity.validate-device-continuity/02-validate-handoff-payload.sh",
+     "run_sha256": "8511a3b2f5581c03fccc6fd26316dcd827204ea16339dd56014f4f34ca73ca92"
+    },
+    {
+     "name": "Validate destination receipt",
+     "run_file": "tools/tasks/steps/device-continuity.validate-device-continuity/03-validate-destination-receipt.sh",
+     "run_sha256": "e6ad56e983ba39d286f754b1c1c9c0c1be1480ae96dcc6168a91a0442d7f2fc8"
+    },
+    {
+     "name": "Run Device Continuity tests",
+     "run_file": "tools/tasks/steps/device-continuity.validate-device-continuity/04-run-device-continuity-tests.sh",
+     "run_sha256": "999a21c7bd2be532ef5ee46997ce440d752882de27cd3d7c6670f17fbb944b25"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "edge-runtime.validate-python3.11",
+   "source": {
+    "workflow": ".github/workflows/edge-runtime.yml",
+    "workflow_name": "Edge Runtime Validation",
+    "job": "validate",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "pull_request",
+     "push"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    },
+    "matrix_cell": {
+     "python-version": "3.11"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install package and tests",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.11/01-install-package-and-tests.sh",
+     "run_sha256": "87b5da70402dca8834032346e6fda7cf4d47041959d78aba3986d4a8fdf50af4"
+    },
+    {
+     "name": "Compile runtime surfaces",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.11/02-compile-runtime-surfaces.sh",
+     "run_sha256": "1db9ff2cb2e75f279fe907169446ba3ce0728a9f0963f4468da682a308fb06a3"
+    },
+    {
+     "name": "Run edge runtime tests",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.11/03-run-edge-runtime-tests.sh",
+     "run_sha256": "b12255cc93bfe5fd1de859279b42b36aefc39a7dc3ccbd46e21d9ccf9624a5a7"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "edge-runtime.validate-python3.12",
+   "source": {
+    "workflow": ".github/workflows/edge-runtime.yml",
+    "workflow_name": "Edge Runtime Validation",
+    "job": "validate",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "pull_request",
+     "push"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    },
+    "matrix_cell": {
+     "python-version": "3.12"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install package and tests",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.12/01-install-package-and-tests.sh",
+     "run_sha256": "87b5da70402dca8834032346e6fda7cf4d47041959d78aba3986d4a8fdf50af4"
+    },
+    {
+     "name": "Compile runtime surfaces",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.12/02-compile-runtime-surfaces.sh",
+     "run_sha256": "1db9ff2cb2e75f279fe907169446ba3ce0728a9f0963f4468da682a308fb06a3"
+    },
+    {
+     "name": "Run edge runtime tests",
+     "run_file": "tools/tasks/steps/edge-runtime.validate-python3.12/03-run-edge-runtime-tests.sh",
+     "run_sha256": "b12255cc93bfe5fd1de859279b42b36aefc39a7dc3ccbd46e21d9ccf9624a5a7"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.12"
+   }
+  },
+  {
+   "id": "sovereign-sms.validate-sovereign-sms",
+   "source": {
+    "workflow": ".github/workflows/sovereign-sms.yml",
+    "workflow_name": "StegTalk Sovereign SMS",
+    "job": "validate-sovereign-sms",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request"
+    ],
+    "permissions_before": null
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Install package and test support",
+     "run_file": "tools/tasks/steps/sovereign-sms.validate-sovereign-sms/01-install-package-and-test-support.sh",
+     "run_sha256": "fda5da2bd2aca45d6ec27892d084f0ce971832b381ee5691a54d73fab0d356fa"
+    },
+    {
+     "name": "Validate direct-modem transport, KV host binding, PDU multipart, reports, and replayable evidence",
+     "run_file": "tools/tasks/steps/sovereign-sms.validate-sovereign-sms/02-validate-direct-modem-transport-kv-host-binding-pdu-multipar.sh",
+     "run_sha256": "c8f6a1c1c9fe1ea0b93caa7f69ffab48ecdfcef1eee0d5d78140b4ee724bc73c"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 30,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "test-readiness.repo-smoke",
+   "source": {
+    "workflow": ".github/workflows/test-readiness.yml",
+    "workflow_name": "Test Readiness",
+    "job": "repo-smoke",
+    "job_name": null,
+    "commit": "82ed633",
+    "triggers_before": [
+     "push",
+     "pull_request",
+     "workflow_dispatch"
+    ],
+    "permissions_before": {
+     "contents": "read"
+    }
+   },
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Baseline repository smoke test",
+     "run_file": "tools/tasks/steps/test-readiness.repo-smoke/01-baseline-repository-smoke-test.sh",
+     "run_sha256": "b9ca9ed2406c9532b40bd3c46ae13c4eb0924562a3232a0b9308a04329377ec1"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "true",
+    "timeout_minutes": 5,
+    "python_version": "3.11"
+   }
+  },
+  {
+   "id": "workflow-surface-registry.validate",
+   "catalog_addition": "G17 registry gate (no folded source workflow)",
+   "events": [
+    "pull_request",
+    "push"
+   ],
+   "env": {},
+   "steps": [
+    {
+     "name": "Workflow files equal the registered surfaces; catalog verifies ALLOW",
+     "run_file": "tools/tasks/steps/workflow-surface-registry.validate/01-registry.sh",
+     "run_sha256": "811824e88664923006be2eeb35632d710f5504145967f61632ad9e8fbdcb35ca"
+    }
+   ],
+   "artifacts": [],
+   "runner": {
+    "fetch_depth": "1",
+    "persist_credentials": "false",
+    "timeout_minutes": 10,
+    "python_version": "3.11"
+   }
+  }
+ ]
+}

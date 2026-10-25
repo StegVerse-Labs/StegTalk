@@ -1,0 +1,230 @@
+{
+  "schema": "stegverse.workflow-surface-registry/v1",
+  "goal_id": "G17-WORKFLOW-SURFACE-MINIMIZATION",
+  "repository": "StegVerse-Labs/StegTalk",
+  "policy_issue": "StegVerse-Labs/.github#167, #168; StegVerse-org/.github#166",
+  "preferred_repository_workflow_count_max": 2,
+  "exception_repository_workflow_count_max": 3,
+  "credential_authority": "the SKAP Vault inside KV is the only PII and credential store for every user, including the StegVerse ecosystem's own; no secret or token is referenced, introduced or moved by this fold",
+  "invariants": [
+    "Every workflow file is registered in surfaces[]; an unregistered or changed one fails closed (tests/test_workflow_surface_registry.py).",
+    "A new check is a group in tools/tasks/task_catalog.json, never a new workflow file.",
+    "The stable dispatcher carries no workflow_dispatch, schedule, repository_dispatch, issues or workflow_run trigger; a kept surface is pinned by sha256 and unchanged by the fold.",
+    "G17 documented exception: above 2 workflow files, every kept surface other than the dispatcher carries an exception record (lifecycle and technical-necessity justification); the count never exceeds exception_repository_workflow_count_max (3)."
+  ],
+  "unregistered_workflow_outcome": {
+    "disposition": "FAIL_CLOSED",
+    "failure_code": "UNREGISTERED_WORKFLOW_SURFACE",
+    "failed_predicate": "EVERY_WORKFLOW_FILE_IS_REGISTERED",
+    "required_evidence_or_repair": "register the file in control/workflow-surface-registry.json surfaces[] or fold it into tools/tasks/task_catalog.json",
+    "retry_entrypoint": "tests/test_workflow_surface_registry.py",
+    "owning_existing_goal": "G17-WORKFLOW-SURFACE-MINIMIZATION (StegVerse-Labs/.github#167/#168); StegVerse-org/.github#166",
+    "next_attempt": "the next pull request touching .github/workflows/"
+  },
+  "surfaces": [
+    {
+      "path": ".github/workflows/validation-dispatcher.yml",
+      "classification": "KEEP_STABLE_DISPATCHER",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "permissions": {
+        "contents": "read"
+      }
+    },
+    {
+      "path": ".github/workflows/auri-live-proof.yml",
+      "classification": "KEEP_EXISTING_SURFACE_UNCHANGED",
+      "triggers": [
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "permissions": {
+        "contents": "write"
+      },
+      "reason": "KEEP_EXISTING_SURFACE_UNCHANGED (documented exception, destination-owned writer): contents: write. It commits and pushes the live-proof record and is triggered by repository_dispatch `auri_deployment_ready` and by auri-authorization-intake. The read-only dispatcher cannot carry the write.",
+      "verbatim_sha256": "2b6663fb1c9f4d45190ea4172032f73ff9abe391f852510864799522c8ade225",
+      "exception": {
+        "lifecycle": "destination-owned writer (contents: write)",
+        "justification": "KEEP_EXISTING_SURFACE_UNCHANGED (documented exception, destination-owned writer): contents: write. It commits and pushes the live-proof record and is triggered by repository_dispatch `auri_deployment_ready` and by auri-authorization-intake. The read-only dispatcher cannot carry the write.",
+        "within_exception_ceiling": true
+      }
+    },
+    {
+      "path": ".github/workflows/auri-authorization-intake.yml",
+      "classification": "KEEP_EXISTING_SURFACE_UNCHANGED",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "permissions": {
+        "contents": "read",
+        "actions": "write"
+      },
+      "reason": "KEEP_EXISTING_SURFACE_UNCHANGED (credential-bound): actions: write, and it binds github.token to start auri-live-proof once the canonical authorization records exist. This lane neither moves nor changes a token-bearing surface. Byte-unchanged.",
+      "verbatim_sha256": "1ed8792ce7cda638668a11309c276fc9c6ea403a4fc27bd938c80202ddcdf9f4",
+      "exception": {
+        "lifecycle": "credential-bound surface (github.token, actions: write)",
+        "justification": "KEEP_EXISTING_SURFACE_UNCHANGED (credential-bound): actions: write, and it binds github.token to start auri-live-proof once the canonical authorization records exist. This lane neither moves nor changes a token-bearing surface. Byte-unchanged.",
+        "within_exception_ceiling": true
+      }
+    },
+    {
+      "path": ".github/workflows/sync-to-canonical.yml",
+      "classification": "KEEP_EXISTING_SURFACE_UNCHANGED",
+      "triggers": [
+        "workflow_dispatch",
+        "schedule",
+        "repository_dispatch"
+      ],
+      "permissions": {
+        "contents": "write",
+        "pull-requests": "write"
+      },
+      "reason": "KEEP_EXISTING_SURFACE_UNCHANGED (destination-owned writer, repository_dispatch target): contents: write and pull-requests: write, binds github.token to push a branch and open the canonical sync PR, and is the target of repository_dispatch `sync-to-canonical`. Byte-unchanged.",
+      "verbatim_sha256": "7186a65635c93444f008cad6e4527540b9466e9b9e22cfccd58a384c9bf24ed8",
+      "exception": {
+        "lifecycle": "destination-owned writer and repository_dispatch target",
+        "justification": "KEEP_EXISTING_SURFACE_UNCHANGED (destination-owned writer, repository_dispatch target): contents: write and pull-requests: write, binds github.token to push a branch and open the canonical sync PR, and is the target of repository_dispatch `sync-to-canonical`. Byte-unchanged.",
+        "within_exception_ceiling": true
+      }
+    }
+  ],
+  "folded": [
+    {
+      "workflow": ".github/workflows/auri-package-smoke.yml",
+      "name": "Auri Package Smoke",
+      "triggers_before": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "auri-package-smoke.verify-package"
+      ],
+      "verbatim_record": "tools/tasks/folded/auri-package-smoke.yml",
+      "verbatim_sha256": "d73da77748102cfbd1a2aec5c2bcd3a07fad7833066858f57be03fb1a73da6ee"
+    },
+    {
+      "workflow": ".github/workflows/auri-stegtalk-integration.yml",
+      "name": "Auri StegTalk Integration Verification",
+      "triggers_before": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "auri-stegtalk-integration.verify"
+      ],
+      "verbatim_record": "tools/tasks/folded/auri-stegtalk-integration.yml",
+      "verbatim_sha256": "fc76d54956a114fc387b97270cc71ca58f76709b05d6a19115d0358108cc1394"
+    },
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "name": "StegTalk Managed Completion",
+      "triggers_before": [
+        "push",
+        "pull_request"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "ci.managed-completion"
+      ],
+      "verbatim_record": "tools/tasks/folded/ci.yml",
+      "verbatim_sha256": "894abeb9026d0c9cce8aa0f7802e2245752f2e4515038794efc29e83b0996be2"
+    },
+    {
+      "workflow": ".github/workflows/cross-edge-resolution.yml",
+      "name": "StegTalk Cross-Edge Resolution",
+      "triggers_before": [
+        "push",
+        "pull_request"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "cross-edge-resolution.validate-cross-edge-resolution"
+      ],
+      "verbatim_record": "tools/tasks/folded/cross-edge-resolution.yml",
+      "verbatim_sha256": "a675429301b26565b51c1c2bbed1e2674c218303f04f0b1ac38465d77c77c833"
+    },
+    {
+      "workflow": ".github/workflows/device-continuity.yml",
+      "name": "device-continuity",
+      "triggers_before": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "device-continuity.validate-device-continuity"
+      ],
+      "verbatim_record": "tools/tasks/folded/device-continuity.yml",
+      "verbatim_sha256": "18a6cb357eda8099d4260f2b34a952be529c7fbcbd1e7ca15c21fea927dc8744"
+    },
+    {
+      "workflow": ".github/workflows/edge-runtime.yml",
+      "name": "Edge Runtime Validation",
+      "triggers_before": [
+        "pull_request",
+        "push"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "edge-runtime.validate-python3.11",
+        "edge-runtime.validate-python3.12"
+      ],
+      "verbatim_record": "tools/tasks/folded/edge-runtime.yml",
+      "verbatim_sha256": "58fa4f24d9fb85b112972cba08e70384bc5836a00963326d4da78fae67dea93f"
+    },
+    {
+      "workflow": ".github/workflows/sovereign-sms.yml",
+      "name": "StegTalk Sovereign SMS",
+      "triggers_before": [
+        "push",
+        "pull_request"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "sovereign-sms.validate-sovereign-sms"
+      ],
+      "verbatim_record": "tools/tasks/folded/sovereign-sms.yml",
+      "verbatim_sha256": "1c4ca39b0e700f9c234cd8d3fbdf4642abfd7629bb73d7ee317c7c1bc1539fae"
+    },
+    {
+      "workflow": ".github/workflows/test-readiness.yml",
+      "name": "Test Readiness",
+      "triggers_before": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "classification": "CONSOLIDATE_INTO_STABLE_DISPATCHER",
+      "status": "DONE",
+      "catalog_groups": [
+        "test-readiness.repo-smoke"
+      ],
+      "verbatim_record": "tools/tasks/folded/test-readiness.yml",
+      "verbatim_sha256": "8508ba02eab5538440c83e9d43a26fd5a9a4c66185cdc0d4b73f8fcb49225f17"
+    }
+  ],
+  "ceiling_fail_closed": {
+    "disposition": "FAIL_CLOSED",
+    "workflow_count": 4,
+    "failure_code": "G17_CONTRACT_FLOOR_ABOVE_EXCEPTION_CEILING",
+    "failed_predicate": "workflow_count <= exception_repository_workflow_count_max (3)",
+    "required_evidence_or_repair": "Retiring a kept surface needs its own admitted repair. auri-live-proof and sync-to-canonical write to the repository and are repository_dispatch targets. auri-authorization-intake binds github.token and dispatches. Their credentials belong only in the SKAP Vault inside KV, and moving them is outside this lane.",
+    "retry_entrypoint": "tests/test_workflow_surface_registry.py",
+    "owning_existing_goal": "G17-WORKFLOW-SURFACE-MINIMIZATION (StegVerse-Labs/.github#167/#168); StegVerse-org/.github#166",
+    "next_attempt": "the next pull request touching .github/workflows/ or those contracts"
+  }
+}

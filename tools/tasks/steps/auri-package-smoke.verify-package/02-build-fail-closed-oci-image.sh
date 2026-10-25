@@ -1,0 +1,1 @@
+docker build -f Dockerfile.auri -t auri-l1:smoke .

@@ -1,0 +1,1 @@
+python -m pytest tests/test_local_prototype_review.py tests/test_release_status.py tests/test_release_handoff.py tests/test_next_build_lane.py tests/test_candidate_status.py tests/test_local_candidate.py

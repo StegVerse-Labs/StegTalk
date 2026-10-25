@@ -1,0 +1,48 @@
+{
+  "decision": {
+    "candidate_count": 1,
+    "candidates": [],
+    "decided_at": "2026-10-25T05:15:52Z",
+    "decision_hash": "sha256:0de1b2c5239016732e4113e8b998f4f74310bbee7d9762e4aa3717fb6fb40bbb",
+    "envelope_hash": "sha256:6f45feb3915695081c539eee63d2b335a6ff173adf35d633770197a14f92966a",
+    "reason": "one recognized contact matched receiver hint",
+    "receipt_chain_head": "sha256:b68e8199ed15e3496f3fcdca5b19b6c04ed24073455559fef6e70f8b1ced9717",
+    "receipt_ref": "rcpt_ebdf397fea526a203c40a0d6",
+    "receiver_hint": "weather",
+    "result": "routed",
+    "selected_entity": "stegweather",
+    "sender_entity": "Rigel",
+    "type": "contact_routing_decision"
+  },
+  "message_envelope": {
+    "body": "Will it rain tomorrow?",
+    "created_at": "2026-10-25T05:15:52Z",
+    "envelope_hash": "sha256:6f45feb3915695081c539eee63d2b335a6ff173adf35d633770197a14f92966a",
+    "envelope_type": "stegtalk_local_message_envelope",
+    "envelope_with_receipt_hash": "sha256:a8c4223e7a9b965af7bf967fc1fbda9cf488525d896b12ce4f10b615636c53eb",
+    "message_type": "text",
+    "metadata": {
+      "receiver_hint": "weather",
+      "routed_by": "contact_routing"
+    },
+    "receipt_chain_head": "sha256:213753605d215f2bfc8034a29e3ea01a520a4a7051870c7bcba9d9981713e739",
+    "receipt_ref": "rcpt_7d9f65655d8b76f329f2dfd8",
+    "receiver_entity": "stegweather",
+    "schema_version": "1.0.0",
+    "scope": "private",
+    "sender_entity": "Rigel"
+  },
+  "message_receipt": {
+    "created_at": "2026-10-25T05:15:52Z",
+    "envelope_hash": "sha256:6f45feb3915695081c539eee63d2b335a6ff173adf35d633770197a14f92966a",
+    "id": "rcpt_7d9f65655d8b76f329f2dfd8",
+    "message_type": "text",
+    "receipt_chain_head": "sha256:213753605d215f2bfc8034a29e3ea01a520a4a7051870c7bcba9d9981713e739",
+    "receiver_entity": "stegweather",
+    "result": "created",
+    "scope": "private",
+    "sender_entity": "Rigel",
+    "type": "message_envelope_receipt"
+  },
+  "trace_type": "stegtalk_contact_routing_demo"
+}

@@ -1,0 +1,1 @@
+python -m pytest tests/test_public_discovery.py tests/test_discovery_index.py tests/test_discovery_demo.py tests/test_shell_state.py tests/test_shell_actions.py tests/test_shell_demo.py tests/test_shell_review.py
