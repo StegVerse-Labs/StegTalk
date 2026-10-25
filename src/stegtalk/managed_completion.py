@@ -43,7 +43,7 @@ def verify_management_state(root: Path = ROOT) -> dict[str, Any]:
         "STEGTALK_MANAGEMENT_STATE.json",
         "src/stegtalk/__init__.py",
         "src/stegtalk/managed_completion.py",
-        ".github/workflows/ci.yml",
+        "tools/tasks/folded/ci.yml",
         "scripts/verify_managed_completion.py",
         "scripts/managed_next_task.py",
     ]

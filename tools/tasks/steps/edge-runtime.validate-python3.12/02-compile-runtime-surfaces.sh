@@ -1,0 +1,1 @@
+python -m py_compile src/stegtalk/cross_edge_resolver.py src/stegtalk/edge_runtime.py src/stegtalk/local_tcp_edge.py src/stegtalk/public_tls_edge.py src/stegtalk/public_tls_receiver.py tests/test_edge_runtime.py tests/test_local_tcp_edge.py tests/test_public_tls_edge.py tests/test_public_tls_receiver.py

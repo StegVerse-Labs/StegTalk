@@ -9,7 +9,7 @@ STANDARD = ROOT / "docs/PERSONAL_DATA_CONTROL_RUNTIME.md"
 SCHEMA = ROOT / "schemas/personal-data-control.schema.json"
 RUNTIME = ROOT / "runtime/personal-data-control.v1.json"
 TEST = ROOT / "tests/test_personal_data_control.py"
-WORKFLOW = ROOT / ".github/workflows/ci.yml"
+WORKFLOW = ROOT / "tools/tasks/folded/ci.yml"
 QUEUE = ROOT / "STEGTALK_TASK_QUEUE.json"
 
 REQUIRED_STATES = {

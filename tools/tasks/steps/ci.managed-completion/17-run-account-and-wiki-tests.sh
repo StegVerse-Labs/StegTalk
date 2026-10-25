@@ -1,0 +1,1 @@
+python -m pytest tests/test_account_model.py tests/test_account_session.py tests/test_wiki_staging_install.py tests/test_wiki_target_blocker.py

@@ -25,7 +25,7 @@ def verify() -> dict[str, object]:
     dockerfile = require_file("Dockerfile.auri")
     http_service = require_file("src/stegtalk/auri/http_service.py")
     entrypoint = require_file("src/stegtalk/auri/__main__.py")
-    workflow = require_file(".github/workflows/auri-package-smoke.yml")
+    workflow = require_file("tools/tasks/folded/auri-package-smoke.yml")
 
     if contract.get("entity_id") != "stegverse:auri":
         raise ValueError("deployment contract entity mismatch")

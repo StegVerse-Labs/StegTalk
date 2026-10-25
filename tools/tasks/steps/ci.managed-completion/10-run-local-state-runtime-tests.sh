@@ -1,0 +1,1 @@
+python -m pytest tests/test_local_inbox.py tests/test_local_store.py tests/test_activation_readiness.py tests/test_boundary.py tests/test_mobile_shell.py

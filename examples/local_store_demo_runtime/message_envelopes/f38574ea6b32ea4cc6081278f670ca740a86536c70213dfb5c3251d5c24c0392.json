@@ -1,0 +1,21 @@
+{
+  "collection": "message_envelopes",
+  "record": {
+    "body": "Store this local envelope.",
+    "created_at": "2026-10-25T05:16:23Z",
+    "envelope_hash": "sha256:f38574ea6b32ea4cc6081278f670ca740a86536c70213dfb5c3251d5c24c0392",
+    "envelope_type": "stegtalk_local_message_envelope",
+    "envelope_with_receipt_hash": "sha256:be9c0b332cc281b2716a539f5fab9aff4b435cbdfc9ce86a5b801af28bc24dd9",
+    "message_type": "text",
+    "metadata": {},
+    "receipt_chain_head": "sha256:d3688a66952be0012fb7f7903c1dab6a3fada80962d58fd1466ffe62efcd8591",
+    "receipt_ref": "rcpt_8bc68d145f9690b81ea3b8dd",
+    "receiver_entity": "stegweather",
+    "schema_version": "1.0.0",
+    "scope": "private",
+    "sender_entity": "Rigel"
+  },
+  "record_hash": "sha256:8a38fc33092ad360a4497c66af026454100905de2998a9b70f6848643c05a489",
+  "record_id": "f38574ea6b32ea4cc6081278f670ca740a86536c70213dfb5c3251d5c24c0392",
+  "written_at": "2026-10-25T05:16:23Z"
+}

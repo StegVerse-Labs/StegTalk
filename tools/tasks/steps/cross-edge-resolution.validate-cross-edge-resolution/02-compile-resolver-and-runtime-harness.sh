@@ -1,0 +1,1 @@
+python -m py_compile src/stegtalk/cross_edge_resolver.py src/stegtalk/physical_edge_runtime.py tests/test_cross_edge_resolver.py tests/test_physical_edge_runtime.py

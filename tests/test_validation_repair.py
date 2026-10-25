@@ -34,13 +34,13 @@ def test_project_version_is_pep440_compatible() -> None:
 
 
 def test_device_continuity_workflow_installs_pytest() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "device-continuity.yml").read_text(encoding="utf-8")
+    workflow = (ROOT / "tools" / "tasks" / "folded" / "device-continuity.yml").read_text(encoding="utf-8")
     assert "python -m pip install pytest" in workflow
     assert "python -m pytest tests/test_device_continuity_handoff.py tests/test_device_continuity_receipt.py" in workflow
 
 
 def test_managed_completion_workflow_has_diagnostic_lanes() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    workflow = (ROOT / "tools" / "tasks" / "folded" / "ci.yml").read_text(encoding="utf-8")
     assert "Run entity runtime tests" in workflow
     assert "Run messaging runtime tests" in workflow
     assert "Run local-state runtime tests" in workflow

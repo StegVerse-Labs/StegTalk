@@ -1,0 +1,1 @@
+python -m pytest -vv tests/test_mobile_shell_session.py tests/test_mobile_shell_session_receipts.py tests/test_mobile_shell_session_receipt_store.py

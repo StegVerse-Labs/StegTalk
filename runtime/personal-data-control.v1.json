@@ -55,7 +55,7 @@
     "verification_locations": [
       "scripts/check_personal_data_control.py",
       "tests/test_personal_data_control.py",
-      ".github/workflows/ci.yml"
+      "tools/tasks/folded/ci.yml"
     ],
     "validator_command": "python scripts/check_personal_data_control.py",
     "success_marker": "STEGTALK_PERSONAL_DATA_CONTROL=PASS",

@@ -32,7 +32,7 @@ REQUIRED = [
     "tests/test_contact_routing.py",
     "tests/test_local_inbox.py",
     "tests/test_local_store.py",
-    ".github/workflows/ci.yml",
+    "tools/tasks/folded/ci.yml",
 ]
 
 missing = [path for path in REQUIRED if not (ROOT / path).exists()]

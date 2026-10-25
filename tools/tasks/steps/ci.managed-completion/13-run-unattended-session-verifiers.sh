@@ -1,0 +1,1 @@
+python scripts/verify_mobile_shell_session_receipts.py && python scripts/verify_mobile_shell_session_receipt_store.py && python scripts/verify_mobile_shell_session_checkpoint.py && python scripts/verify_mobile_shell_session_recovery_receipt.py && python scripts/verify_mobile_shell_session_recovery_policy.py

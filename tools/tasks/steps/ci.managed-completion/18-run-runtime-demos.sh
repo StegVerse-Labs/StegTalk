@@ -1,0 +1,1 @@
+python scripts/run_entity_runtime_demo.py && python scripts/run_message_envelope_demo.py && python scripts/run_contact_routing_demo.py && python scripts/run_local_inbox_demo.py && python scripts/run_local_store_demo.py && python scripts/verify_activation_readiness.py

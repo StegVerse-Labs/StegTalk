@@ -1,0 +1,18 @@
+{
+  "collection": "receipts",
+  "record": {
+    "created_at": "2026-10-25T05:16:18Z",
+    "envelope_hash": "sha256:569c3e852a1a89158352cd2b5794bc5fe4db0cd340c934a765398bcf829ecc74",
+    "id": "rcpt_7c50b6bc0ec695670362c656",
+    "message_type": "text",
+    "receipt_chain_head": "sha256:d54d86adf0b0a89ed91826c040b9374a96d7525ef422e36b2d93b551d405382a",
+    "receiver_entity": "stegweather",
+    "result": "created",
+    "scope": "private",
+    "sender_entity": "Rigel",
+    "type": "message_envelope_receipt"
+  },
+  "record_hash": "sha256:a31e2e99a3ff43c3493ff7cb1c8675a2d33945ee4def68ab99d70d3ea268e759",
+  "record_id": "rcpt_7c50b6bc0ec695670362c656",
+  "written_at": "2026-10-25T05:16:18Z"
+}

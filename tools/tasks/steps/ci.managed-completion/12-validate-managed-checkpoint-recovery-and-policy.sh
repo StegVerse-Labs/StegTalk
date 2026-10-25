@@ -1,0 +1,1 @@
+python -m pytest -vv tests/test_mobile_shell_session_checkpoint.py tests/test_mobile_shell_session_checkpoint_rotation.py tests/test_mobile_shell_session_recovery_receipt.py tests/test_mobile_shell_session_recovery_policy.py

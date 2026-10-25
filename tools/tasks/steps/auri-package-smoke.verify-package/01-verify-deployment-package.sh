@@ -1,0 +1,1 @@
+python scripts/verify_auri_deployment_package.py

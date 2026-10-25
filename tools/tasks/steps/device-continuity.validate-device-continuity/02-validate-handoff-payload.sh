@@ -1,0 +1,1 @@
+python tools/validate_device_continuity_handoff.py
