@@ -5,9 +5,9 @@
  "authority": "Rigel 2026-10-24 retroactive G17 enforcement (StegVerse-org/.github#166); pattern StegVerse-Labs/StegDB#60 (eab2e773)",
  "dispatcher": ".github/workflows/validation-dispatcher.yml",
  "runner": "tools/tasks/run_catalog.py",
- "runner_source": "StegVerse-Labs/StegDB tools/tasks/run_catalog.py @ eab2e773271f3e63466a710f1b4555f677882848 (sha256 f741f30557888fd8e4852a52adfc65736a08898d49ade7519f6bcc2672921e9b), copied unmodified",
+ "runner_source": "StegVerse-Labs/StegDB tools/tasks/run_catalog.py @ eab2e773271f3e63466a710f1b4555f677882848 (sha256 f741f30557888fd8e4852a52adfc65736a08898d49ade7519f6bcc2672921e9b), copied unmodified; then patched with the original-path-filter selection (matrix marks cells selected; StegVerse-Labs/Site#1647 pattern), so it no longer equals that sha256",
  "rule": "Every check a folded workflow job ran is one group here; its step bodies are the original run blocks byte for byte, pinned by sha256, except the repairs listed. A new check is a new group (or a step in one), never a new workflow file.",
- "path_filters": "Dropped: every group runs on every pull_request and push to main (a superset of the original path-filtered runs). workflow_dispatch/schedule triggers are not carried (no manual dispatch, no cron).",
+ "path_filters": "Restored: each folded group carries its original workflow's push / pull_request paths or paths-ignore filter as path_filters (a folded workflow's own path names its tools/tasks/folded copy and its tools/tasks/steps directory). A group the event's changed files do not select records NOT_SELECTED and exits 0 (a run, never a skipped job; pattern StegVerse-org/StegVerse-SDK#561, StegVerse-Labs/Site#1647). Not carried: branches filters, workflow_dispatch/schedule triggers (no manual dispatch, no cron), job-level if, and GitHub's 300-changed-file rule (an undeterminable diff selects every group).",
  "repairs": [
   "Contract readers repointed to the verbatim records. Before this change, `src/stegtalk/managed_completion.py`, `scripts/verify_managed_completion.py` and `scripts/check_personal_data_control.py` read `.github/workflows/ci.yml`, and `scripts/verify_auri_deployment_package.py` read `.github/workflows/auri-package-smoke.yml`. Each now reads `tools/tasks/folded/<same file>`. Those records are byte-identical to the originals and sha256-pinned in the registry, and the catalog runs their run blocks byte for byte. Every content check is unchanged.",
   "Path filters are dropped. Every folded group runs on its declared pull_request and push events, a superset of the original path-filtered runs. workflow_dispatch is not carried."
@@ -64,6 +64,28 @@
     "persist_credentials": "true",
     "timeout_minutes": 30,
     "python_version": "3.11"
+   },
+   "path_filters": {
+    "pull_request": {
+     "paths": [
+      "src/stegtalk/auri/**",
+      "auri/**",
+      "Dockerfile.auri",
+      "scripts/verify_auri_deployment_package.py",
+      "tools/tasks/folded/auri-package-smoke.yml",
+      "tools/tasks/steps/auri-package-smoke.verify-package/**"
+     ]
+    },
+    "push": {
+     "paths": [
+      "src/stegtalk/auri/**",
+      "auri/**",
+      "Dockerfile.auri",
+      "scripts/verify_auri_deployment_package.py",
+      "tools/tasks/folded/auri-package-smoke.yml",
+      "tools/tasks/steps/auri-package-smoke.verify-package/**"
+     ]
+    }
    }
   },
   {
@@ -100,6 +122,17 @@
     "persist_credentials": "true",
     "timeout_minutes": 30,
     "python_version": "3.11"
+   },
+   "path_filters": {
+    "push": {
+     "paths": [
+      "src/stegtalk/auri/**",
+      "auri/schemas/session-binding-receipt.schema.json",
+      "scripts/verify_auri_stegtalk_session_binding.py",
+      "tools/tasks/folded/auri-stegtalk-integration.yml",
+      "tools/tasks/steps/auri-stegtalk-integration.verify/**"
+     ]
+    }
    }
   },
   {
@@ -265,6 +298,34 @@
     "persist_credentials": "true",
     "timeout_minutes": 10,
     "python_version": "3.12"
+   },
+   "path_filters": {
+    "pull_request": {
+     "paths": [
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/physical_edge_runtime.py",
+      "runtime/cross-edge-physical-runtime.v1.json",
+      "schemas/cross-edge-capability.schema.json",
+      "tests/test_cross_edge_resolver.py",
+      "tests/test_physical_edge_runtime.py",
+      "tools/tasks/folded/cross-edge-resolution.yml",
+      "tools/tasks/steps/cross-edge-resolution.validate-cross-edge-resolution/**"
+     ]
+    },
+    "push": {
+     "paths": [
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/physical_edge_runtime.py",
+      "runtime/cross-edge-physical-runtime.v1.json",
+      "schemas/cross-edge-capability.schema.json",
+      "tests/test_cross_edge_resolver.py",
+      "tests/test_physical_edge_runtime.py",
+      "tools/tasks/folded/cross-edge-resolution.yml",
+      "tools/tasks/steps/cross-edge-resolution.validate-cross-edge-resolution/**",
+      "STEGTALK_TASK_QUEUE.json",
+      "STEGTALK_MIRROR_HANDOFF.md"
+     ]
+    }
    }
   },
   {
@@ -366,6 +427,50 @@
     "persist_credentials": "true",
     "timeout_minutes": 30,
     "python_version": "3.11"
+   },
+   "path_filters": {
+    "pull_request": {
+     "paths": [
+      "src/stegtalk/edge_runtime.py",
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/local_tcp_edge.py",
+      "src/stegtalk/public_tls_edge.py",
+      "src/stegtalk/public_tls_receiver.py",
+      "runtime/tls-kv-before-ack.v1.json",
+      "runtime/local-tcp-edge.v1.json",
+      "runtime/public-tls-edge.v1.json",
+      "runtime/public-tls-receiver.v1.json",
+      "tests/test_edge_runtime.py",
+      "tests/test_local_tcp_edge.py",
+      "tests/test_public_tls_edge.py",
+      "tests/test_public_tls_receiver.py",
+      "tools/tasks/folded/edge-runtime.yml",
+      "tools/tasks/steps/edge-runtime.validate-python3.11/**",
+      "STEGTALK_MIRROR_HANDOFF.md",
+      "STEGTALK_TASK_QUEUE.json"
+     ]
+    },
+    "push": {
+     "paths": [
+      "src/stegtalk/edge_runtime.py",
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/local_tcp_edge.py",
+      "src/stegtalk/public_tls_edge.py",
+      "src/stegtalk/public_tls_receiver.py",
+      "runtime/tls-kv-before-ack.v1.json",
+      "runtime/local-tcp-edge.v1.json",
+      "runtime/public-tls-edge.v1.json",
+      "runtime/public-tls-receiver.v1.json",
+      "tests/test_edge_runtime.py",
+      "tests/test_local_tcp_edge.py",
+      "tests/test_public_tls_edge.py",
+      "tests/test_public_tls_receiver.py",
+      "tools/tasks/folded/edge-runtime.yml",
+      "tools/tasks/steps/edge-runtime.validate-python3.11/**",
+      "STEGTALK_MIRROR_HANDOFF.md",
+      "STEGTALK_TASK_QUEUE.json"
+     ]
+    }
    }
   },
   {
@@ -415,6 +520,50 @@
     "persist_credentials": "true",
     "timeout_minutes": 30,
     "python_version": "3.12"
+   },
+   "path_filters": {
+    "pull_request": {
+     "paths": [
+      "src/stegtalk/edge_runtime.py",
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/local_tcp_edge.py",
+      "src/stegtalk/public_tls_edge.py",
+      "src/stegtalk/public_tls_receiver.py",
+      "runtime/tls-kv-before-ack.v1.json",
+      "runtime/local-tcp-edge.v1.json",
+      "runtime/public-tls-edge.v1.json",
+      "runtime/public-tls-receiver.v1.json",
+      "tests/test_edge_runtime.py",
+      "tests/test_local_tcp_edge.py",
+      "tests/test_public_tls_edge.py",
+      "tests/test_public_tls_receiver.py",
+      "tools/tasks/folded/edge-runtime.yml",
+      "tools/tasks/steps/edge-runtime.validate-python3.12/**",
+      "STEGTALK_MIRROR_HANDOFF.md",
+      "STEGTALK_TASK_QUEUE.json"
+     ]
+    },
+    "push": {
+     "paths": [
+      "src/stegtalk/edge_runtime.py",
+      "src/stegtalk/cross_edge_resolver.py",
+      "src/stegtalk/local_tcp_edge.py",
+      "src/stegtalk/public_tls_edge.py",
+      "src/stegtalk/public_tls_receiver.py",
+      "runtime/tls-kv-before-ack.v1.json",
+      "runtime/local-tcp-edge.v1.json",
+      "runtime/public-tls-edge.v1.json",
+      "runtime/public-tls-receiver.v1.json",
+      "tests/test_edge_runtime.py",
+      "tests/test_local_tcp_edge.py",
+      "tests/test_public_tls_edge.py",
+      "tests/test_public_tls_receiver.py",
+      "tools/tasks/folded/edge-runtime.yml",
+      "tools/tasks/steps/edge-runtime.validate-python3.12/**",
+      "STEGTALK_MIRROR_HANDOFF.md",
+      "STEGTALK_TASK_QUEUE.json"
+     ]
+    }
    }
   },
   {
@@ -454,6 +603,55 @@
     "persist_credentials": "true",
     "timeout_minutes": 30,
     "python_version": "3.11"
+   },
+   "path_filters": {
+    "pull_request": {
+     "paths": [
+      "src/stegtalk/sovereign_sms_modem.py",
+      "src/stegtalk/modem_capabilities.py",
+      "src/stegtalk/serial_modem.py",
+      "src/stegtalk/sovereign_sms_runtime.py",
+      "src/stegtalk/sovereign_sms_journal.py",
+      "src/stegtalk/sms_pdu.py",
+      "src/stegtalk/sovereign_sms_pdu_runtime.py",
+      "src/stegtalk/knowledge_vault_extension.py",
+      "tests/test_sovereign_sms_modem.py",
+      "tests/test_modem_capabilities.py",
+      "tests/test_serial_modem.py",
+      "tests/test_sovereign_sms_runtime.py",
+      "tests/test_sovereign_sms_journal.py",
+      "tests/test_sms_pdu.py",
+      "tests/test_sovereign_sms_pdu_runtime.py",
+      "tests/test_knowledge_vault_extension.py",
+      "tools/tasks/folded/sovereign-sms.yml",
+      "tools/tasks/steps/sovereign-sms.validate-sovereign-sms/**"
+     ]
+    },
+    "push": {
+     "paths": [
+      "src/stegtalk/sovereign_sms_modem.py",
+      "src/stegtalk/modem_capabilities.py",
+      "src/stegtalk/serial_modem.py",
+      "src/stegtalk/sovereign_sms_runtime.py",
+      "src/stegtalk/sovereign_sms_journal.py",
+      "src/stegtalk/sms_pdu.py",
+      "src/stegtalk/sovereign_sms_pdu_runtime.py",
+      "src/stegtalk/knowledge_vault_extension.py",
+      "tests/test_sovereign_sms_modem.py",
+      "tests/test_modem_capabilities.py",
+      "tests/test_serial_modem.py",
+      "tests/test_sovereign_sms_runtime.py",
+      "tests/test_sovereign_sms_journal.py",
+      "tests/test_sms_pdu.py",
+      "tests/test_sovereign_sms_pdu_runtime.py",
+      "tests/test_knowledge_vault_extension.py",
+      "tools/tasks/folded/sovereign-sms.yml",
+      "tools/tasks/steps/sovereign-sms.validate-sovereign-sms/**",
+      "STEGTALK_MIRROR_HANDOFF.md",
+      "STEGTALK_TASK_QUEUE.json",
+      "runtime/sovereign-sms-modem.v1.json"
+     ]
+    }
    }
   },
   {
@@ -506,6 +704,11 @@
      "name": "Workflow files equal the registered surfaces; catalog verifies ALLOW",
      "run_file": "tools/tasks/steps/workflow-surface-registry.validate/01-registry.sh",
      "run_sha256": "811824e88664923006be2eeb35632d710f5504145967f61632ad9e8fbdcb35ca"
+    },
+    {
+     "name": "Folded groups keep their original path filters (NOT_SELECTED, never skipped)",
+     "run_file": "tools/tasks/steps/workflow-surface-registry.validate/02-original-path-filters.sh",
+     "run_sha256": "9db82fbdf49b831995929ec2919b6ead95a650d1b9929cfb760742654aa3dbc7"
     }
    ],
    "artifacts": [],
